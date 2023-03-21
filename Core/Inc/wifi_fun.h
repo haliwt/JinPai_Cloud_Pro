@@ -1,6 +1,7 @@
 #ifndef __WIFI_FUN_
 #define __WIFI_FUN_
 #include "main.h"
+#include "cmd_link.h"
 
 
 #define WIFI_AUTO_SMART_CONFIG()       HAL_GPIO_WritePin(WIFI_CONFIG_GPIO_Port,WIFI_CONFIG_Pin,GPIO_PIN_RESET)
@@ -13,15 +14,35 @@ typedef enum{
 
 }wifi_mode_t;
 
+
 typedef enum{
 
-	wifi_model_state_order = 0x01,
+   WIFI_DONOT_PASS,
+   WIFI_PASS
+
+}wifi_pass_state;
+
+
+typedef enum {
+
+	wifi_model_device_report =0x01,
+	wifi_model_device_issue =0x02,
+    wifi_model_operation =0xFE,
+    wifi_model_frame_error =0xFF
+  
+}wifi_frame_type;
+
+typedef enum{
+
+	wifi_model_state_query = 0x01,
 	wifi_model_smartconfig_order = 0x3,
 	wifi_model_prodkey_order = 21
 }wifi_enum_order;
 
+
+
 typedef enum{
-	wifi_model_model = 0x01,
+	wifi_model_sta = 0x01,
 	wifi_model_hekr_config,
 	wifi_model_compatible = 0x04
 
@@ -33,34 +54,21 @@ typedef enum{
     wifi_model_linking = 0x03,
     wifi_model_password_error = 0x04,
 	wifi_model_no_lookfor_router = 0x05,
-    wifi_model_link_times_over = 0x06,
-    wifi_model_no_link_router = 0x07
+    wifi_model_link_times_overflow = 0x06,
+    wifi_model_no_link_router = 0x07,
+
+	wifi_model_exit
    
 
 }wifi_model_wifi_state_t;
 
 
-typedef enum _wifi_state_t{  
-	
-    wifi_start_link_net =0x01,
-	wifi_smartconfig_model,
-	wifi_receive_data_state,
-    wifi_has_been_connected ,
-	wifi_link_tencent_cloud, //2
-	wifi_tencent_publish_init_data, //3
-	wifi_tencent_subscription_data, //4
-	wifi_publish_update_tencent_cloud_data,//5
-	wifi_tencent_publish_dht11_data,
-	wifi_get_beijing_time,
-	wifi_disconnect
 
-
-}wifi_state_t;
 
 
 typedef struct _WIFI_FUN{
 	
-    uint8_t wifi_dispodr_data[USART_WIFI_NUMBERS];
+    uint8_t wifi_dispose_data[USART_WIFI_NUMBERS];
 	
     uint8_t usart_wifi_frame_type;
     uint8_t usart_wifi_sequence;
@@ -70,6 +78,11 @@ typedef struct _WIFI_FUN{
     uint8_t usart_wifi_cloud_state;
     uint8_t usart_wifi_signal_state;
     uint8_t usart_wifi_pass_state;
+	
+
+	uint8_t wifi_receive_data_state;
+	uint8_t wifi_link_cloud ;
+	
 
 
     uint8_t real_hours;
@@ -78,7 +91,7 @@ typedef struct _WIFI_FUN{
 	uint8_t restart_link_tencent_cloud ;
 
     uint8_t gTimer_1s;
-	uint8_t gTimer_5s
+	uint8_t gTimer_5s;
     uint8_t gTimer_get_beijing_time;
 	uint8_t gTimer_beijing_time;
 
@@ -94,9 +107,8 @@ extern void (*PowerOff)(void);
 extern void (*Ai_Fun)(uint8_t sig);
 extern void (*SetTimes)(void);
 extern void (*SetTemperature)(void);
+extern uint8_t (*wifi_run_state_func)(void);
 
-void PowerOn_Host(void (*poweronHandler)(void));
-void PowerOff_Host(void (*poweroffHandler)(void));
 
 
 
@@ -110,6 +122,7 @@ void wifiUpdate_SetTemperatureValue(uint8_t temp);
 void RunWifi_Command_Handler(uint8_t cmd);
 void GetNTP_Times(void);
 
-
+uint8_t Wifi_State_Special_Fun(void);
+void Wifi_Model_State_Handler(uint8_t (*wifi_state_fun)(void));
 #endif 
 

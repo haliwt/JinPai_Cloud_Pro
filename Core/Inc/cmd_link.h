@@ -2,8 +2,8 @@
 #define __CMD_LINK_H_
 #include "main.h"
 
-#define USART_CMD_NUMBERS   15
-#define USART_WIFI_NUMBERS  15
+#define USART_CMD_NUMBERS   25
+#define USART_WIFI_NUMBERS  25
 
 
 typedef enum {
@@ -27,7 +27,7 @@ typedef struct _usart_wifi_t {
 
     uint8_t usart_wifi_sum;
     uint8_t usart_wifi_counter;
-    uint8_t usart_receive_numbers
+    uint8_t usart_receive_numbers;
     uint8_t usart_wifi_receive_data_flag;
     uint8_t usart_wifi_data[1];
     

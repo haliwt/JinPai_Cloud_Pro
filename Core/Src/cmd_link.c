@@ -6,9 +6,10 @@
 #include "interrupt_manager.h"
 #include "wifi_fun.h"
 
-
-
 #define MAX_BUFFER_SIZE  30
+
+USART_WIFI_T usart_wifi_t;
+
 
 uint8_t  inputBuf[4];
 uint8_t  inputCmd[2];
@@ -74,20 +75,20 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 			}
 
-			if(usart_wifi_t.usart_wifi_counter  == 10){
+//			if(usart_wifi_t.usart_wifi_counter  == 10){
 
-                usart_wifi_t.usart_wifi_counter=0;
-                usart_wifi_t.usart_wifi_receive_data_flag = WIFI_FAIL;
-                state = 0;
-                return;
-			}
+//                usart_wifi_t.usart_wifi_counter=0;
+//                usart_wifi_t.usart_wifi_receive_data_flag = WIFI_FAIL;
+//                state = 0;
+//                return;
+//			}
 
 		 break;
 
-		HAL_UART_Receive_IT(&huart2,(uint8_t *)usart_wifi_t.wifi_data,1);
+		HAL_UART_Receive_IT(&huart2,(uint8_t *)usart_wifi_t.usart_wifi_data,1);
 	}
 
-	
+     }
 	if(huart->Instance==USART1)//if(huart==&huart1) // Motor Board receive data (filter)
 	{
         test_counter_usat1++;
@@ -128,7 +129,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     
   
  }
-    
+
 /********************************************
 	*
 	*Function Name:void Decode_Function(void)

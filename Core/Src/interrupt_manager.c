@@ -17,19 +17,17 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 
     static uint8_t tm0 ;
-    if(htim->Instance==TIM3){
+    if(htim->Instance==TIM14){
 		
 	   tm0 ++ ;
        run_t.gTimer_senddata_panel++;
 	 if(tm0 > 99){//100ms *10 = 1000ms =1s
         tm0 =0;
         run_t.gTimer_1s ++;
-       esp8266_t.gTimer_publish_dht11++;
-	   esp8266_t.gTimer_publish_timing++;
-	   esp8266_t.gTimer_subscription_timing++;
+     
 	   wifi_t.gTimer_get_beijing_time++;
 	   wifi_t.gTimer_beijing_time++;
-	   wifi_t.gTimer_publish_times;
+	
 	   run_t.gTimer_send_cloud_state++;
 	   run_t.gTimer_send_login_sucess++;
 	  

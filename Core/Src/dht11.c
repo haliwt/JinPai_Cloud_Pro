@@ -196,7 +196,7 @@ void Update_DHT11_Value(void)
 {
     
   
-  // Dht11_Read_TempHumidity_Handler(&DHT11);
+   Dht11_Read_TempHumidity_Handler(&DHT11);
 	
 
 	sendData_Real_TimeHum(run_t.gDht11_humidity ,run_t.gDht11_temperature);

@@ -85,6 +85,7 @@ typedef struct _RUN_T{
     uint8_t flash_write_data_error;
 	uint8_t flash_write_data_flag;
     uint8_t flash_read_data;
+	uint8_t runCommand_order_lable;
       
 
       uint8_t  gAi;
