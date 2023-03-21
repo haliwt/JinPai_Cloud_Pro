@@ -102,7 +102,7 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim3);//HAL_TIM_Base_Start(&htim3);
-     UART_Start_Receive_IT(&huart2,usart_wifi_t.data_wifi,1);
+     UART_Start_Receive_IT(&huart2,(uint8_t *)usart_wifi_t.wifi_data,1);
   /* USER CODE END 2 */
 
   /* Infinite loop */

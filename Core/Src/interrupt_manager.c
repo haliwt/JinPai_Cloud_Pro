@@ -24,9 +24,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	 if(tm0 > 99){//100ms *10 = 1000ms =1s
         tm0 =0;
         run_t.gTimer_1s ++;
-       esp8266data.gTimer_publish_dht11++;
-	   esp8266data.gTimer_publish_timing++;
-	   esp8266data.gTimer_subscription_timing++;
+       esp8266_t.gTimer_publish_dht11++;
+	   esp8266_t.gTimer_publish_timing++;
+	   esp8266_t.gTimer_subscription_timing++;
 	   wifi_t.gTimer_get_beijing_time++;
 	   wifi_t.gTimer_beijing_time++;
 	   wifi_t.gTimer_publish_times;

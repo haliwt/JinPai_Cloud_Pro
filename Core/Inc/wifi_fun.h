@@ -3,6 +3,8 @@
 #include "main.h"
 
 
+#define WIFI_AUTO_SMART_CONFIG()       HAL_GPIO_WritePin(WIFI_CONFIG_GPIO_Port,WIFI_CONFIG_Pin,GPIO_PIN_RESET)
+#define WIFI_AUTO_EXIT_SMART_CONFIG()	HAL_GPIO_WritePin(WIFI_CONFIG_GPIO_Port,WIFI_CONFIG_Pin,GPIO_PIN_SET)
 typedef enum{
   
    wifi_AI=0x08 ,wifi_notAI=0x18,wifi_kill=0x04,wifi_notkill=0x14,
@@ -11,9 +13,39 @@ typedef enum{
 
 }wifi_mode_t;
 
+typedef enum{
+
+	wifi_model_state_order = 0x01,
+	wifi_model_smartconfig_order = 0x3,
+	wifi_model_prodkey_order = 21
+}wifi_enum_order;
+
+typedef enum{
+	wifi_model_model = 0x01,
+	wifi_model_hekr_config,
+	wifi_model_compatible = 0x04
+
+}wifi_model_enum_t;
+
+typedef enum{
+	wifi_model_normal_link = 0x01,
+    wifi_model_link_fail = 0x02,
+    wifi_model_linking = 0x03,
+    wifi_model_password_error = 0x04,
+	wifi_model_no_lookfor_router = 0x05,
+    wifi_model_link_times_over = 0x06,
+    wifi_model_no_link_router = 0x07
+   
+
+}wifi_model_wifi_state_t;
+
+
 typedef enum _wifi_state_t{  
 	
-    wifi_has_been_connected =0x01,
+    wifi_start_link_net =0x01,
+	wifi_smartconfig_model,
+	wifi_receive_data_state,
+    wifi_has_been_connected ,
 	wifi_link_tencent_cloud, //2
 	wifi_tencent_publish_init_data, //3
 	wifi_tencent_subscription_data, //4
@@ -28,12 +60,16 @@ typedef enum _wifi_state_t{
 
 typedef struct _WIFI_FUN{
 	
-    uint8_t runCommand_order_lable;
-	uint8_t has_been_login_flag;
-    uint8_t soft_ap_config_flag;
-    uint8_t get_rx_beijing_time_flag;
-	uint8_t rx_beijing_decode_flag;
-	uint8_t gTimer_publish_times;
+    uint8_t wifi_dispodr_data[USART_WIFI_NUMBERS];
+	
+    uint8_t usart_wifi_frame_type;
+    uint8_t usart_wifi_sequence;
+    uint8_t usart_wifi_order;
+    uint8_t usart_wifi_model;
+    uint8_t usart_wifi_state;
+    uint8_t usart_wifi_cloud_state;
+    uint8_t usart_wifi_signal_state;
+    uint8_t usart_wifi_pass_state;
 
 
     uint8_t real_hours;
@@ -42,6 +78,7 @@ typedef struct _WIFI_FUN{
 	uint8_t restart_link_tencent_cloud ;
 
     uint8_t gTimer_1s;
+	uint8_t gTimer_5s
     uint8_t gTimer_get_beijing_time;
 	uint8_t gTimer_beijing_time;
 
@@ -70,7 +107,7 @@ void wifiDisplayTemperature_Humidity(void);
 void wifiUpdate_SetTimeValue(uint8_t tv);
 void wifiUpdate_SetTemperatureValue(uint8_t temp);
 
-void RunWifi_Command_Handler(void);
+void RunWifi_Command_Handler(uint8_t cmd);
 void GetNTP_Times(void);
 
 

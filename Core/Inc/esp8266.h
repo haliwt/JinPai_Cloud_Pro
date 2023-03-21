@@ -25,6 +25,7 @@
 typedef enum _esp8266_para{
 
 	wifi_set_restor=0x01,
+	wifi_smartconfig_model,
 	wifi_set_cwmode,
 	wifi_set_softap,
 	wifi_set_tcdevreg,
@@ -38,6 +39,7 @@ typedef enum _esp8266_para{
 typedef struct _esp8266_t_{
     uint8_t auto_link_wifi_flag;
 	uint8_t esp8266_login_cloud_success;
+	uint8_t esp8266_config_wifi_net_label;
 
 
 

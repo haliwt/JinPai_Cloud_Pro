@@ -2,13 +2,20 @@
 #define __CMD_LINK_H_
 #include "main.h"
 
-#define USART_CMD_NUMBERS   50
-#define USART_WIFI_NUMBERS  50
+#define USART_CMD_NUMBERS   15
+#define USART_WIFI_NUMBERS  15
 
+
+typedef enum {
+    
+     WIFI_SUCCESS ,
+     WIFI_FAIL 
+
+}wifi_enum_state_type;
 typedef struct _usart_cmd_t {
     uint8_t usart_cmd[USART_CMD_NUMBERS];
     uint8_t usart_cmd_len;
-    uint8_t *data_cmd;
+    uint8_t cmd_data[1];
 
 }USART_CMD_T;
 
@@ -16,8 +23,14 @@ extern USART_CMD_T usart_cmd_t;
 
 typedef struct _usart_wifi_t {
     uint8_t usart_wifi[USART_WIFI_NUMBERS];
-    uint8_t usart_wifi_len;
-    uint8_t *data_wifi;
+    uint8_t usart_wifi_frame_len[1];
+
+    uint8_t usart_wifi_sum;
+    uint8_t usart_wifi_counter;
+    uint8_t usart_receive_numbers
+    uint8_t usart_wifi_receive_data_flag;
+    uint8_t usart_wifi_data[1];
+    
 
 
 }USART_WIFI_T;

@@ -6,8 +6,7 @@
 #include "cmd_link.h"
 #include "buzzer.h"
 #include "esp8266.h"
-
-
+#include "wifi_fun.h"
 #include "flash.h"
 
 
@@ -45,17 +44,14 @@ void Decode_RunCmd(void)
 
 	  case 'W': //wifi-function
 	      if(run_t.gPower_flag==POWER_ON){
-	      if(cmdType_2==1){
+	      if(cmdType_2==1){//long press key that power key
               //fast blink led for link to tencent cloud
              // WIFI_IC_ENABLE();
-              esp8266data.esp8266_login_cloud_success=0;
-			  tencent_cloud_flag=0;
-			  // wifi_link_tencent_cloud:
 			  Buzzer_KeySound();	
 		     // InitWifiModule_Hardware();
-               esp8266data.esp8266_login_cloud_success=0;
-               run_t.wifi_config_net_lable=wifi_set_restor;
-              wifi_t.runCommand_order_lable= wifi_link_tencent_cloud;//2 
+               esp8266_t.esp8266_login_cloud_success=0;
+               esp8266_t.esp8266_config_wifi_net_label=wifi_start_link_net;
+	           wifi_t.gTimer_5s=0;
 		   }
 		   else if(cmdType_2==0){
                 
@@ -88,7 +84,7 @@ void Decode_RunCmd(void)
 	  	if(run_t.gPower_flag==POWER_ON){
               
              run_t.set_temperature_value = cmdType_2;
-			// if(esp8266data.esp8266_login_cloud_success==1)
+			// if(esp8266_t.esp8266_login_cloud_success==1)
 			      // MqttData_Publis_SetTemp(run_t.set_temperature_value);
 			   
          }
@@ -100,7 +96,7 @@ void Decode_RunCmd(void)
 		  if(run_t.gPower_flag==POWER_ON){
              #if 0 
              run_t.set_temperature_value = cmdType_2;
-			 if(esp8266data.esp8266_login_cloud_success==1)
+			 if(esp8266_t.esp8266_login_cloud_success==1)
 			 MqttData_Publis_SetTime(run_t.set_temperature_value);
 			#endif    
          }
@@ -143,7 +139,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
         run_t.gPower_On=POWER_OFF;
         run_t.gPower_flag = POWER_OFF;
         run_t.RunCommand_Label = POWER_OFF;
-         if(esp8266data.esp8266_login_cloud_success==1)  
+         if(esp8266_t.esp8266_login_cloud_success==1)  
       //   MqttData_Publish_SetOpen(0x0);
            
 
@@ -157,7 +153,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
          run_t.RunCommand_Label= POWER_ON;
 		 Update_DHT11_Value();
 		 HAL_Delay(200);
-		 if(esp8266data.esp8266_login_cloud_success==1){
+		 if(esp8266_t.esp8266_login_cloud_success==1){
 			// MqttData_Publish_SetOpen(0x01);
 	         HAL_Delay(200);
 	       //  Publish_Data_ToCloud_Handler();
@@ -195,7 +191,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
        case DRY_ON:
          run_t.gDry = 1;
 	      run_t.gFan_continueRun =0;
-		if(esp8266data.esp8266_login_cloud_success==1)
+		if(esp8266_t.esp8266_login_cloud_success==1)
 		// MqttData_Publish_SetPtc(0x01);
 		 if(run_t.noBuzzer_sound_dry_flag !=1){
 		     Buzzer_KeySound();
@@ -213,7 +209,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 			   run_t.gFan_continueRun =1;
 
 		     }
-			if(esp8266data.esp8266_login_cloud_success==1)
+			if(esp8266_t.esp8266_login_cloud_success==1)
 			///MqttData_Publish_SetPtc(0x0);
 			if( no_buzzer_sound_dry_off !=1)
 			    Buzzer_KeySound();
@@ -222,7 +218,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
        case PLASMA_ON:
        		run_t.gPlasma=1;
        		run_t.gUlransonic =1;
-	   if(esp8266data.esp8266_login_cloud_success==1){
+	   if(esp8266_t.esp8266_login_cloud_success==1){
 	      ///  MqttData_Publish_SetPlasma(1) ;//杀菌
 	        HAL_Delay(200);
 	      //  MqttData_Publish_SetUltrasonic(1); //超声波
@@ -233,7 +229,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
        case PLASMA_OFF:
            run_t.gPlasma=0;
            run_t.gUlransonic =0;
-	   if(esp8266data.esp8266_login_cloud_success==1){
+	   if(esp8266_t.esp8266_login_cloud_success==1){
 	     //  MqttData_Publish_SetPlasma(0) ;//杀菌
 	        HAL_Delay(200);
 	      //  MqttData_Publish_SetUltrasonic(0); //超声波
@@ -243,14 +239,14 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 
        case FAN_ON:
           run_t.set_wind_speed_value=100;
-		  if(esp8266data.esp8266_login_cloud_success==1)
+		  if(esp8266_t.esp8266_login_cloud_success==1)
 		//  MqttData_Publis_SetFan(100);
 		   Buzzer_KeySound();
        break;
 
        case FAN_OFF:
            run_t.set_wind_speed_value = 50;
-		   if(esp8266data.esp8266_login_cloud_success==1)
+		   if(esp8266_t.esp8266_login_cloud_success==1)
 		   //    MqttData_Publis_SetFan(50);
 		    Buzzer_KeySound();
        break;
@@ -324,14 +320,14 @@ void RunCommand_MainBoard_Fun(void)
 		Update_DHT11_Value();
 		HAL_Delay(10);
 
-		if(esp8266data.esp8266_login_cloud_success==1){
+		if(esp8266_t.esp8266_login_cloud_success==1){
 			tencent_cloud_flag =1;
 	 	    SendWifiData_To_Cmd(0x01) ;
 		}
 		
 		if(tencent_cloud_flag ==1){
 
-		   esp8266data.esp8266_login_cloud_success=1;
+		   esp8266_t.esp8266_login_cloud_success=1;
 		   SendWifiData_To_Cmd(0x01) ;
 
 		}
@@ -343,7 +339,7 @@ void RunCommand_MainBoard_Fun(void)
 	   	    run_t.gTimer_senddata_panel=0;
 	       // ActionEvent_Handler();
 	 }
-	 if(esp8266data.esp8266_login_cloud_success==1){
+	 if(esp8266_t.esp8266_login_cloud_success==1){
 	 	   if(run_t.gTimer_send_login_sucess > 11){
 	 	        SendWifiData_To_Cmd(0x01) ;
 	 	   	}
@@ -355,7 +351,7 @@ void RunCommand_MainBoard_Fun(void)
 
 	case POWER_OFF: //2
 		//SetPowerOff_ForDoing();
-		if(esp8266data.esp8266_login_cloud_success==1){
+		if(esp8266_t.esp8266_login_cloud_success==1){
 	 	     tencent_cloud_flag = 1;
 		}
 		if(run_t.gTheFirst_powerOn ==0)
@@ -416,7 +412,7 @@ void RunCommand_MainBoard_Fun(void)
 
 	 }
 
-	 if(esp8266data.esp8266_login_cloud_success==1 && run_t.dp_link_wifi_fail ==1){
+	 if(esp8266_t.esp8266_login_cloud_success==1 && run_t.dp_link_wifi_fail ==1){
 	 	     run_t.dp_link_wifi_fail=0;
 	 	    SendWifiData_To_Cmd(0x01) ;
 	 }
@@ -473,9 +469,9 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 		
         SmartPhone_TryToLink_TencentCloud();
  
-		if(esp8266data.esp8266_login_cloud_success==1){
+		if(esp8266_t.esp8266_login_cloud_success==1){
 			wifi_t.runCommand_order_lable = wifi_publish_update_tencent_cloud_data;
-			//esp8266data.gTimer_subscription_timing=0;
+			//esp8266_t.gTimer_subscription_timing=0;
 		}
         else wifi_t.runCommand_order_lable =0xff;
 
@@ -485,10 +481,10 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 	}
    }
     
-   if(esp8266data.esp8266_login_cloud_success==1 &&  self_power_on_flag==1){
+   if(esp8266_t.esp8266_login_cloud_success==1 &&  self_power_on_flag==1){
         self_power_on_flag++;
 			wifi_t.runCommand_order_lable = wifi_publish_update_tencent_cloud_data;
-			//esp8266data.gTimer_subscription_timing=0;
+			//esp8266_t.gTimer_subscription_timing=0;
 	}
 
 
