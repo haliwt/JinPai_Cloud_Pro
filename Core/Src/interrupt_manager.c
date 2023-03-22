@@ -24,7 +24,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	 if(tm0 > 99){//100ms *10 = 1000ms =1s
         tm0 =0;
         run_t.gTimer_1s ++;
-     
+	 run_t.gTimer_10s++;
+     wifi_t.gTimer_5s++;
 	   wifi_t.gTimer_get_beijing_time++;
 	   wifi_t.gTimer_beijing_time++;
 	

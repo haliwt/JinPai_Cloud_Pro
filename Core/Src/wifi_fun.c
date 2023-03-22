@@ -7,7 +7,7 @@
 #include "fan.h"
 #include "tim.h"
 #include "esp8266.h"
-
+#include "publish.h"
 #include "dht11.h"
 #include "usart.h"
 
@@ -15,6 +15,7 @@
 
 
 WIFI_FUN   wifi_t;
+uint8_t usart_len;
 
 uint8_t (*wifi_run_state_fun)(void);
 uint8_t wifi_receive_data_state_flag;
@@ -23,29 +24,47 @@ static void Wifi_ReceiveData_Handler(void);
 void RunWifi_Command_Handler(uint8_t command)
 {
     
-    
+    static uint8_t recoder_times;
     switch(command){
 
-        case wifi_start_link_net:
+        case wifi_start_link_net://0x02
 
              //wifi gpio 13 pull down 5s 
             WIFI_IC_ENABLE();
             WIFI_AUTO_SMART_CONFIG();
             if(wifi_t.gTimer_5s > 5){
                 wifi_t.gTimer_5s = 0;
-                command = wifi_smartconfig_model;
+                esp8266_t.esp8266_config_wifi_net_label = wifi_smartconfig_model;
                 WIFI_AUTO_EXIT_SMART_CONFIG();
-
-                
+                 wifi_t.gTimer_1s =0;
 
             }
-               
+           Wifi_ReceiveData_Handler();
         break;
 
-        case wifi_smartconfig_model:
+        case wifi_smartconfig_model: //0x03
 
             Wifi_ReceiveData_Handler();
+            if(run_t.gTimer_1s > 10){
+                wifi_t.gTimer_1s =0;
+                esp8266_t.esp8266_config_wifi_net_label = wifi_receive_data;
+              //  Publish_Data_ProdKey();
+            }
 
+        break;
+
+		case wifi_receive_data: //0x04
+			
+			 if(run_t.gTimer_1s > 8 && recoder_times< 1){
+                wifi_t.gTimer_1s =0;
+                recoder_times ++ ;
+                Publish_Data_ProdKey();
+            }
+
+		break;
+        
+        default:
+            
         break;
 
 		
@@ -68,11 +87,11 @@ void RunWifi_Command_Handler(uint8_t command)
 ******************************************************************************************/
 static void Wifi_ReceiveData_Handler(void)
 {
-    static uint8_t usart_len;
+    
     uint8_t i;
     usart_len = sizeof(usart_wifi_t.usart_wifi)/sizeof(usart_wifi_t.usart_wifi[0]);
     
-    memcpy(wifi_t.wifi_dispose_data,usart_wifi_t.usart_wifi,usart_len+1);
+    memcpy(wifi_t.wifi_dispose_data,usart_wifi_t.usart_wifi,usart_len);
 
      wifi_t.usart_wifi_frame_type =wifi_t.wifi_dispose_data[0];
 	 wifi_t.usart_wifi_sequence =wifi_t.wifi_dispose_data[1];

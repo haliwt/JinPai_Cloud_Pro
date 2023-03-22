@@ -85,7 +85,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 		 break;
 
-		HAL_UART_Receive_IT(&huart2,(uint8_t *)usart_wifi_t.usart_wifi_data,1);
+		HAL_UART_Receive_IT(&huart2,usart_wifi_t.usart_wifi_data,1);
 	}
 
      }

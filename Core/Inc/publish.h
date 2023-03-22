@@ -2,6 +2,7 @@
 #define __PUBLISH_H_
 #include "main.h"
 
+void Publish_Data_ProdKey(void);
 
 void Publish_Data_Power(uint8_t cmd);
 void Publish_Data_Plasma(uint8_t cmd);

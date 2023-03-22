@@ -301,7 +301,7 @@ void RunCommand_MainBoard_Fun(void)
 		SetPowerOn_ForDoing();
 	    run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
 		power_just_on=0;
-        run_t.gTimer_1s=0;
+        run_t.gTimer_10s=0;
 		run_t.gTheFirst_powerOn=1;
 		Update_DHT11_Value();
 		HAL_Delay(10);
@@ -350,9 +350,9 @@ void RunCommand_MainBoard_Fun(void)
 
     }
 	
-    if((run_t.gTimer_1s>30 && run_t.gPower_flag == POWER_ON)||power_just_on < 10){
+    if((run_t.gTimer_10s>30 && run_t.gPower_flag == POWER_ON)||power_just_on < 10){
     	power_just_on ++ ;
-		run_t.gTimer_1s=0;
+		run_t.gTimer_10s=0;
 		Update_DHT11_Value();
 
      }
@@ -410,10 +410,15 @@ void RunCommand_MainBoard_Fun(void)
 **********************************************************************/
 void MainBoard_Self_Inspection_PowerOn_Fun(void)
 {
-    #if 0
+   
 
 	static uint8_t self_power_on_flag=0;
+	if(self_power_on_flag==0){
+        self_power_on_flag ++ ;
+        Buzzer_KeySound();
+		}
     
+#if 0
 
 	if(self_power_on_flag==0){
         self_power_on_flag ++ ;

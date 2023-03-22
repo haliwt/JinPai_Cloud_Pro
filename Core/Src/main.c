@@ -103,7 +103,8 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim14);//HAL_TIM_Base_Start(&htim3);
-  UART_Start_Receive_IT(&huart2,(uint8_t *)usart_wifi_t.usart_wifi_data,1);
+  UART_Start_Receive_IT(&huart1,inputBuf,1);
+  UART_Start_Receive_IT(&huart2,usart_wifi_t.usart_wifi_data,1);
  
   Wifi_Model_State_Handler(Wifi_State_Special_Fun);
   /* USER CODE END 2 */

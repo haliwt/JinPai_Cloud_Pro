@@ -21,7 +21,7 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
-
+#include <stdio.h>
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart1;
@@ -84,7 +84,7 @@ void MX_USART2_UART_Init(void)
   /* USER CODE BEGIN USART2_Init 1 */
 
   /* USER CODE END USART2_Init 1 */
-  huart2.Instance = USART_WIFI;
+  huart2.Instance = USART_WIFI ; //WIFI USART
   huart2.Init.BaudRate = 9600;//115200;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
@@ -223,5 +223,29 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 }
 
 /* USER CODE BEGIN 1 */
+/**
+  * ��������: �ض���c�⺯��printf��DEBUG_USARTx
+  * �������: ��
+  * �� �� ֵ: ��
+  * ˵    ������
+  */
+int fputc(int ch, FILE *f)
+{
+  HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, 0xffff);
+  return ch;
+}
+
+/**
+  * ��������: �ض���c�⺯��getchar,scanf��DEBUG_USARTx
+  * �������: ��
+  * �� �� ֵ: ��
+  * ˵    ������
+  */
+int fgetc(FILE * f)
+{
+  uint8_t ch = 0;
+  HAL_UART_Receive(&huart2,&ch, 1, 0xffff);
+  return ch;
+}
 
 /* USER CODE END 1 */
