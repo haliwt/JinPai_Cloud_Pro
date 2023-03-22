@@ -11,10 +11,14 @@ static void SendHead(void);
 static void SendFrame_Len(uint8_t len);
 //"0x eb 32 76 b2   d2 62 3d b3   ab 10 c2 9d   f4 f7 c5 7d";
 
-uint32_t ProdKey_one = 0xf4f7c57d;//"0xeb3276b2d2623db3ab10c29df4f7c57d";
-uint32_t ProdKey_two = 0xab10c29d ;
-uint32_t ProdKey_three = 0xd2623db3;
-uint8_t  ProdKey_four = 0xeb3276b2;
+uint8_t  ProdKey_one = 0xeb3276b2;
+uint32_t ProdKey_two = 0xd2623db3;
+uint32_t ProdKey_three = 0xab10c29d ;
+
+uint32_t ProdKey_four = 0xf4f7c57d;//"0xeb3276b2d2623db3ab10c29df4f7c57d";
+
+
+
 
 uint8_t ProdKey_sum = 0xb0 ;//0xeb+0x32+0x76+0xb2+0xd2+0x62+0x3d+0xb3+0xab+0x10+0xc2+0x9d+0xf4+0xf7+0xc5+0x7d=0x9b0;
 
@@ -135,7 +139,7 @@ void Publish_Data_ProdKey(void)
 	SendFrame_Numbers(0x01);
 	SendFrame_Order(0x21);
     SendProdKey_One();
-      SendProdKey_Two();
+     SendProdKey_Two();
      SendProdKey_Three();
      SendProdKey_Four();
      
@@ -148,7 +152,12 @@ void Publish_Data_ProdKey(void)
 void Publish_Command_SmartCofnig(void)
 {
     SendHead();
-
+    SendFrame_Len(0x07);//frame length = 0x16
+	SendFrame_Type(0xFE);
+	SendFrame_Numbers(0x01);
+    SendFrame_Order(0x03);
+	SendFrame_Data(0);
+	SendFrame_Sum(0x51);
 
 }
 

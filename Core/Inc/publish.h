@@ -13,7 +13,7 @@ void Publish_Data_RealTemp(uint8_t temp);
 void Publish_Data_RealHumidity(uint8_t hum);
 
 
-
+void Publish_Command_SmartCofnig(void);
 
 
 #endif 

@@ -55,10 +55,12 @@ void RunWifi_Command_Handler(uint8_t command)
 
 		case wifi_receive_data: //0x04
 			
-			 if(run_t.gTimer_1s > 8 && recoder_times< 1){
+			 if(run_t.gTimer_1s > 20 && recoder_times< 1){
                 wifi_t.gTimer_1s =0;
                 recoder_times ++ ;
                 Publish_Data_ProdKey();
+              // Publish_Command_SmartCofnig();
+			 
             }
 
 		break;
