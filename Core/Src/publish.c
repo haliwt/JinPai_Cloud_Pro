@@ -30,14 +30,31 @@ static void MYUSART_SendData(uint8_t  data)
 }
 
 //send prodkey ID
-static void SendProdKey_One(void)
+static void SendProdKey_OneByte_One(void)
 {
 
-	MYUSART_SendData(ProdKey_one>>24);
-	MYUSART_SendData(ProdKey_one>>16);
-	MYUSART_SendData(ProdKey_one>>8);
-	MYUSART_SendData(ProdKey_one);
+	MYUSART_SendData(0xeb);
 }
+
+static void SendProdKey_OneByte_Two(void)
+{
+
+	MYUSART_SendData(0x32);
+}
+
+static void SendProdKey_OneByte_Three(void)
+{
+
+	MYUSART_SendData(0x76);
+}
+
+static void SendProdKey_OneByte_Four(void)
+{
+
+	MYUSART_SendData(0xb2);
+}
+
+
 
 static void SendProdKey_Two(void){
 
@@ -138,10 +155,14 @@ void Publish_Data_ProdKey(void)
 	SendFrame_Type(0xFE);
 	SendFrame_Numbers(0x01);
 	SendFrame_Order(0x21);
-    SendProdKey_One();
-     SendProdKey_Two();
-     SendProdKey_Three();
-     SendProdKey_Four();
+    SendProdKey_OneByte_One();
+	SendProdKey_OneByte_Two();
+	SendProdKey_OneByte_Three();
+	SendProdKey_OneByte_Four();
+	
+    SendProdKey_Two();
+    SendProdKey_Three();
+    SendProdKey_Four();
      
     product_sum = 0x2e; //0xb0+0x48+0x16+0xFE+0x01+0x21=0x22E;
 	SendFrame_Sum(product_sum);

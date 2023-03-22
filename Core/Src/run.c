@@ -51,6 +51,7 @@ void Decode_RunCmd(void)
                wifi_t.wifi_link_cloud =0;
                esp8266_t.esp8266_config_wifi_net_label=wifi_start_link_net;
 	           wifi_t.gTimer_5s=0;
+			   
 		   }
 		 
            

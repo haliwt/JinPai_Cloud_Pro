@@ -31,31 +31,32 @@ void RunWifi_Command_Handler(uint8_t command)
 
              //wifi gpio 13 pull down 5s 
             WIFI_IC_ENABLE();
-            WIFI_AUTO_SMART_CONFIG();
-            if(wifi_t.gTimer_5s > 5){
-                wifi_t.gTimer_5s = 0;
-                esp8266_t.esp8266_config_wifi_net_label = wifi_smartconfig_model;
-                WIFI_AUTO_EXIT_SMART_CONFIG();
-                 wifi_t.gTimer_1s =0;
+ //           WIFI_AUTO_SMART_CONFIG();
+//            if(wifi_t.gTimer_5s > 5){
+//                wifi_t.gTimer_5s = 0;
+//                esp8266_t.esp8266_config_wifi_net_label = wifi_smartconfig_model;
+//                WIFI_AUTO_EXIT_SMART_CONFIG();
+//                 wifi_t.gTimer_1s =0;
 
-            }
-           Wifi_ReceiveData_Handler();
+//            }
+        esp8266_t.esp8266_config_wifi_net_label = wifi_smartconfig_model;
+          // Wifi_ReceiveData_Handler();
         break;
 
         case wifi_smartconfig_model: //0x03
 
-            Wifi_ReceiveData_Handler();
-            if(run_t.gTimer_1s > 10){
-                wifi_t.gTimer_1s =0;
+          //  Wifi_ReceiveData_Handler();
+          if(wifi_t.gTimer_5s > 5){
+              wifi_t.gTimer_5s =0;
                 esp8266_t.esp8266_config_wifi_net_label = wifi_receive_data;
               //  Publish_Data_ProdKey();
-            }
+          }
 
         break;
 
 		case wifi_receive_data: //0x04
 			
-			 if(run_t.gTimer_1s > 20 && recoder_times< 1){
+			 if(run_t.gTimer_1s >  3 && recoder_times < 6 ){
                 wifi_t.gTimer_1s =0;
                 recoder_times ++ ;
                 Publish_Data_ProdKey();
@@ -91,9 +92,11 @@ static void Wifi_ReceiveData_Handler(void)
 {
     
     uint8_t i;
-    usart_len = sizeof(usart_wifi_t.usart_wifi)/sizeof(usart_wifi_t.usart_wifi[0]);
-    
-    memcpy(wifi_t.wifi_dispose_data,usart_wifi_t.usart_wifi,usart_len);
+   
+
+	if(usart_wifi_t.usart_receive_data_falg==1){
+    usart_wifi_t.usart_receive_data_falg=0;
+    memcpy(wifi_t.wifi_dispose_data,usart_wifi_t.usart_wifi,  usart_wifi_t.usart_receive_numbers);
 
      wifi_t.usart_wifi_frame_type =wifi_t.wifi_dispose_data[0];
 	 wifi_t.usart_wifi_sequence =wifi_t.wifi_dispose_data[1];
@@ -107,7 +110,7 @@ static void Wifi_ReceiveData_Handler(void)
 
 	 wifi_t.usart_wifi_pass_state =wifi_t.wifi_dispose_data[8];
 
-	
+		}
     //wifi model answering signal 
 
 	switch(wifi_t.usart_wifi_frame_type){
@@ -240,9 +243,9 @@ static void Wifi_ReceiveData_Handler(void)
         default:
             wifi_t.wifi_receive_data_state =0;
         break;
-    }
+  
 
-
+		}
 }
 
 

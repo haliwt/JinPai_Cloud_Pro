@@ -29,6 +29,7 @@ typedef struct _usart_wifi_t {
     uint8_t usart_wifi_counter;
     uint8_t usart_receive_numbers;
     uint8_t usart_wifi_receive_data_flag;
+	uint8_t usart_receive_data_falg;
     uint8_t usart_wifi_data[1];
     
 

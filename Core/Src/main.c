@@ -104,7 +104,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim14);//HAL_TIM_Base_Start(&htim3);
   UART_Start_Receive_IT(&huart1,inputBuf,1);
-  UART_Start_Receive_IT(&huart2,usart_wifi_t.usart_wifi_data,1);
+  UART_Start_Receive_IT(&huart2,usart_wifi_t.usart_wifi,sizeof(usart_wifi_t.usart_wifi)/sizeof(usart_wifi_t.usart_wifi[0]));
  
   Wifi_Model_State_Handler(Wifi_State_Special_Fun);
   /* USER CODE END 2 */
@@ -116,6 +116,8 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+   //   Publish_Data_ProdKey();
+   //   HAL_Delay(2000);
     MainBoard_Self_Inspection_PowerOn_Fun();
 	Decode_Function();
     RunCommand_MainBoard_Fun();
