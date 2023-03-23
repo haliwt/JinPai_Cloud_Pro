@@ -50,8 +50,16 @@ void RunWifi_Command_Handler(uint8_t command)
 
 		case wifi_receive_data: //0x04
 			
-          Wifi_ReceiveData_Handler();
-			 
+          //Wifi_ReceiveData_Handler();
+         //  USART2_WIFI_Receive_Data();
+
+          if(wifi_t.gTimer_5s > 5){
+            wifi_t.gTimer_5s=0;
+              usart_wifi_t.usart_wifi_counter=0;
+				usart_wifi_t.usart_wifi_start_receive_flag=0;
+              usart_wifi_t.usart_wifi_receive_success_flag=0;
+             Publish_Command_Query();
+          }
           
 
 		break;
@@ -64,7 +72,8 @@ void RunWifi_Command_Handler(uint8_t command)
 
       }
 
-       Wifi_ReceiveData_Handler();
+      // Wifi_ReceiveData_Handler();
+      USART2_WIFI_Receive_Data();
 
 
 }
@@ -86,7 +95,7 @@ static void Wifi_ReceiveData_Handler(void)
 	if(usart_wifi_t.usart_wifi_receive_success_flag==1){
        usart_wifi_t.usart_wifi_start_receive_flag=0;
        usart_wifi_t.usart_wifi_receive_success_flag=0;
-    memcpy(wifi_t.wifi_dispose_data,usart_wifi_t.usart_wifi,  usart_wifi_t.usart_receive_numbers);
+   // memcpy(wifi_t.wifi_dispose_data,usart_wifi_t.usart_wifi,  usart_wifi_t.usart_receive_numbers);
 	
      wifi_t.usart_wifi_frame_type =wifi_t.wifi_dispose_data[0];
 	 wifi_t.usart_wifi_sequence =wifi_t.wifi_dispose_data[1];

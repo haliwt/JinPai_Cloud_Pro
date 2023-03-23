@@ -179,7 +179,18 @@ void Publish_Command_SmartCofnig(void)
 }
 
 
+void Publish_Command_Query(void)
+{
+  SendHead();
+  SendFrame_Len(0x07);
+  SendFrame_Type(0xFE);
+  SendFrame_Numbers(0x01);
+  SendFrame_Order(0x01);
+  SendFrame_Data(0);
+  SendFrame_Sum(0x4F);
 
+
+}
 
 
 

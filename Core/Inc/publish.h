@@ -14,7 +14,7 @@ void Publish_Data_RealHumidity(uint8_t hum);
 
 
 void Publish_Command_SmartCofnig(void);
-
+void Publish_Command_Query(void);
 
 #endif 
 

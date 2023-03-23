@@ -93,12 +93,12 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 
 			}
-		    else if(usart_wifi_t.usart_wifi_counter == (usart_wifi_t.usart_wifi[1]-1)){
+		    else if(usart_wifi_t.usart_wifi_counter == (usart_wifi_t.usart_wifi[1])){
 
-					//usart_wifi_t.usart_wifi[usart_wifi_t.usart_wifi_counter] = usart_wifi_t.usart_wifi_data[0];
+					usart_wifi_t.usart_wifi[usart_wifi_t.usart_wifi_counter] = usart_wifi_t.usart_wifi_data[0];
 					usart_wifi_t.usart_wifi_receive_success_flag=1;
 			
-			        //USART2_WIFI_Receive_Data();
+			        USART2_WIFI_Receive_Data();
 			      //  memcpy(wifi_t.wifi_dispose_data,usart_wifi_t.usart_wifi,  usart_wifi_t.usart_wifi_counter);
 	
           
