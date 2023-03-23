@@ -119,7 +119,7 @@ int main(void)
    //   Publish_Data_ProdKey();
    //   HAL_Delay(2000);
     MainBoard_Self_Inspection_PowerOn_Fun();
-	Decode_Function();
+	  Decode_Function();
     RunCommand_MainBoard_Fun();
     RunWifi_Command_Handler(esp8266_t.esp8266_config_wifi_net_label);
   }

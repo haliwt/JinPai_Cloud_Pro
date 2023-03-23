@@ -22,15 +22,17 @@ typedef struct _usart_cmd_t {
 extern USART_CMD_T usart_cmd_t;
 
 typedef struct _usart_wifi_t {
-    uint8_t usart_wifi[USART_WIFI_NUMBERS];
+    
     uint8_t usart_wifi_frame_len[1];
 
     uint8_t usart_wifi_sum;
     uint8_t usart_wifi_counter;
     uint8_t usart_receive_numbers;
     uint8_t usart_wifi_receive_data_flag;
-	uint8_t usart_receive_data_falg;
+
+	uint8_t usart_wifi_start_receive_flag;
     uint8_t usart_wifi_data[1];
+	uint8_t usart_wifi[USART_WIFI_NUMBERS];
     
 
 

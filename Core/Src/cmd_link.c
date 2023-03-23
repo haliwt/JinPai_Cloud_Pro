@@ -43,18 +43,30 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     if(huart->Instance==USART2)
     {
 
-	    usart_wifi_t.usart_wifi[usart_wifi_t.usart_wifi_counter];
-	    usart_wifi_t.usart_wifi_counter ++;
+      if(usart_wifi_t.usart_wifi_start_receive_flag ==0){
+        if(usart_wifi_t.usart_wifi[0]== 0x48){
+           usart_wifi_t.usart_wifi_start_receive_flag =1;
+	       usart_wifi_t.usart_wifi_counter=0;
 
-		if( usart_wifi_t.usart_wifi_counter == usart_wifi_t.usart_wifi[1]-1){
+      }
+    
+      }
 
-		     usart_wifi_t.usart_receive_numbers= usart_wifi_t.usart_wifi_counter;
+	   if( usart_wifi_t.usart_wifi_start_receive_flag ==1){
 
-		     usart_wifi_t.usart_wifi_counter =0;
-			 usart_wifi_t.usart_receive_data_falg = 1;
+			usart_wifi_t.usart_wifi[usart_wifi_t.usart_wifi_counter];
+		    usart_wifi_t.usart_wifi_counter ++;
+
+			if( usart_wifi_t.usart_wifi_counter == usart_wifi_t.usart_wifi[0]-1){
+
+			     usart_wifi_t.usart_receive_numbers= usart_wifi_t.usart_wifi_counter;
+
+			     usart_wifi_t.usart_wifi_counter =0;
+				
 
 
-		}
+			}
+	   	}
 //       switch(state){
 //		 case 0:
 //              if(usart_wifi_t.usart_wifi_data[0]==0x48){

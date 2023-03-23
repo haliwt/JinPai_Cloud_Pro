@@ -30,17 +30,11 @@ void RunWifi_Command_Handler(uint8_t command)
         case wifi_start_link_net://0x02
 
              //wifi gpio 13 pull down 5s 
-            WIFI_IC_ENABLE();
- //           WIFI_AUTO_SMART_CONFIG();
-//            if(wifi_t.gTimer_5s > 5){
-//                wifi_t.gTimer_5s = 0;
-//                esp8266_t.esp8266_config_wifi_net_label = wifi_smartconfig_model;
-//                WIFI_AUTO_EXIT_SMART_CONFIG();
-//                 wifi_t.gTimer_1s =0;
-
-//            }
-        esp8266_t.esp8266_config_wifi_net_label = wifi_smartconfig_model;
-          // Wifi_ReceiveData_Handler();
+             Publish_Command_SmartCofnig();
+              esp8266_t.esp8266_config_wifi_net_label = wifi_smartconfig_model;
+              usart_wifi_t.usart_wifi_start_receive_flag=0; //start receive wifif usart data
+          
+      
         break;
 
         case wifi_smartconfig_model: //0x03
@@ -48,21 +42,18 @@ void RunWifi_Command_Handler(uint8_t command)
           //  Wifi_ReceiveData_Handler();
           if(wifi_t.gTimer_5s > 5){
               wifi_t.gTimer_5s =0;
-                esp8266_t.esp8266_config_wifi_net_label = wifi_receive_data;
-              //  Publish_Data_ProdKey();
+               
+                Publish_Data_ProdKey();
+                 esp8266_t.esp8266_config_wifi_net_label = wifi_receive_data;
           }
 
         break;
 
 		case wifi_receive_data: //0x04
 			
-			 if(run_t.gTimer_1s >  3 && recoder_times < 6 ){
-                wifi_t.gTimer_1s =0;
-                recoder_times ++ ;
-                Publish_Data_ProdKey();
-              // Publish_Command_SmartCofnig();
+          Wifi_ReceiveData_Handler();
 			 
-            }
+          
 
 		break;
         
@@ -92,12 +83,11 @@ static void Wifi_ReceiveData_Handler(void)
 {
     
     uint8_t i;
-   
 
-	if(usart_wifi_t.usart_receive_data_falg==1){
-    usart_wifi_t.usart_receive_data_falg=0;
+	if(usart_wifi_t.usart_wifi_start_receive_flag==1){
+       usart_wifi_t.usart_wifi_start_receive_flag=0;
     memcpy(wifi_t.wifi_dispose_data,usart_wifi_t.usart_wifi,  usart_wifi_t.usart_receive_numbers);
-
+	
      wifi_t.usart_wifi_frame_type =wifi_t.wifi_dispose_data[0];
 	 wifi_t.usart_wifi_sequence =wifi_t.wifi_dispose_data[1];
 	 wifi_t.usart_wifi_order =wifi_t.wifi_dispose_data[2];

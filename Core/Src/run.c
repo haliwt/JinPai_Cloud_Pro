@@ -49,7 +49,7 @@ void Decode_RunCmd(void)
               WIFI_IC_ENABLE();
 			  Buzzer_KeySound();	
                wifi_t.wifi_link_cloud =0;
-               esp8266_t.esp8266_config_wifi_net_label=wifi_start_link_net;
+		       esp8266_t.esp8266_config_wifi_net_label=wifi_start_link_net;
 	           wifi_t.gTimer_5s=0;
 			   
 		   }
@@ -417,6 +417,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 	if(self_power_on_flag==0){
         self_power_on_flag ++ ;
         Buzzer_KeySound();
+      
 		}
     
 #if 0

@@ -119,23 +119,19 @@ static void SendFrame_Data(uint8_t dat)
 }
 
 
-void Publish_Data_Special(uint8_t cmd)
+void Publish_Data_Special(uint8_t cmd,uint8_t d_type,uint8_t valid_d)
 {
     uint8_t temp;
     uint8_t  ensure;
 	uint8_t  *data;
 	SendHead();
-	SendFrame_Len(0x06);//ÃüÁî°ü±êÊ¶
-	SendFrame_Vaild_Data(0x01);
-	SendFrame_Data(0x01);
-    temp = 0x01+0x03+0x01;
-	SendFrame_Data(temp);//SendCheck(temp);
-	//data=JudgeStr(2000);
-	//	if(data)
-	//		ensure=data[9];
-	//	else
-	//		ensure=0xff;
-	//	return ensure; 
+	SendFrame_Len(cmd);//ÃüÁî°ü±êÊ¶
+	SendFrame_Type(d_type);
+	SendFrame_Numbers(0x00);
+	SendFrame_Vaild_Data(valid_d);
+    temp =0x48+d_type+cmd+valid_d;
+	SendFrame_Sum(temp);
+
 
 
 }
@@ -181,6 +177,8 @@ void Publish_Command_SmartCofnig(void)
 	SendFrame_Sum(0x51);
 
 }
+
+
 
 
 
