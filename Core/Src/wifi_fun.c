@@ -16,6 +16,7 @@
 
 WIFI_FUN   wifi_t;
 uint8_t usart_len;
+uint8_t sum_codes;
 
 uint8_t (*wifi_run_state_fun)(void);
 uint8_t wifi_receive_data_state_flag;
@@ -250,7 +251,10 @@ static void Wifi_ReceiveData_Handler(void)
 void USART2_WIFI_Receive_Data(void)
 {
 
-     uint8_t sum_codes, i;
+     uint8_t i;
+   if(usart_wifi_t.usart_wifi_receive_success_flag==1){
+       usart_wifi_t.usart_wifi_start_receive_flag=0;
+       usart_wifi_t.usart_wifi_receive_success_flag=0;
    	wifi_t.usart_wifi_frame_len =usart_wifi_t.usart_wifi[1];
    	wifi_t.usart_wifi_frame_type = usart_wifi_t.usart_wifi[2];
 	 wifi_t.usart_wifi_sequence =usart_wifi_t.usart_wifi[3];
@@ -272,7 +276,7 @@ void USART2_WIFI_Receive_Data(void)
 
 	 }
 
-	
+    }
 
    switch (wifi_t.usart_wifi_frame_len)
    {
