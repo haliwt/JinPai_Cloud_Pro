@@ -1,7 +1,7 @@
 #include "wifi_fun.h"
 //#include <stdio.h>
 //#include <stdlib.h>
-//#include <string.h>
+#include <string.h>
 #include "cmd_link.h"
 #include "run.h"
 #include "fan.h"
@@ -30,9 +30,9 @@ void RunWifi_Command_Handler(uint8_t command)
         case wifi_start_link_net://0x02
 
              //wifi gpio 13 pull down 5s 
-             Publish_Command_SmartCofnig();
-              esp8266_t.esp8266_config_wifi_net_label = wifi_smartconfig_model;
-              usart_wifi_t.usart_wifi_start_receive_flag=0; //start receive wifif usart data
+            Publish_Command_SmartCofnig();
+            esp8266_t.esp8266_config_wifi_net_label = wifi_smartconfig_model;
+            usart_wifi_t.usart_wifi_start_receive_flag=0; //start receive wifif usart data
           
       
         break;
@@ -42,9 +42,8 @@ void RunWifi_Command_Handler(uint8_t command)
           //  Wifi_ReceiveData_Handler();
           if(wifi_t.gTimer_5s > 5){
               wifi_t.gTimer_5s =0;
-               
-                Publish_Data_ProdKey();
-                 esp8266_t.esp8266_config_wifi_net_label = wifi_receive_data;
+              Publish_Data_ProdKey();
+              esp8266_t.esp8266_config_wifi_net_label = wifi_receive_data;
           }
 
         break;
@@ -65,7 +64,7 @@ void RunWifi_Command_Handler(uint8_t command)
 
       }
 
-
+       Wifi_ReceiveData_Handler();
 
 
 }
@@ -84,8 +83,9 @@ static void Wifi_ReceiveData_Handler(void)
     
     uint8_t i;
 
-	if(usart_wifi_t.usart_wifi_start_receive_flag==1){
+	if(usart_wifi_t.usart_wifi_receive_success_flag==1){
        usart_wifi_t.usart_wifi_start_receive_flag=0;
+       usart_wifi_t.usart_wifi_receive_success_flag=0;
     memcpy(wifi_t.wifi_dispose_data,usart_wifi_t.usart_wifi,  usart_wifi_t.usart_receive_numbers);
 	
      wifi_t.usart_wifi_frame_type =wifi_t.wifi_dispose_data[0];
@@ -238,6 +238,118 @@ static void Wifi_ReceiveData_Handler(void)
 		}
 }
 
+void USART2_WIFI_Receive_Data(void)
+{
+
+     uint8_t sum_codes, i;
+   	wifi_t.usart_wifi_frame_len =usart_wifi_t.usart_wifi[1];
+   	wifi_t.usart_wifi_frame_type = usart_wifi_t.usart_wifi[2];
+	 wifi_t.usart_wifi_sequence =usart_wifi_t.usart_wifi[3];
+	 wifi_t.usart_wifi_order =usart_wifi_t.usart_wifi[4];
+	 wifi_t.usart_wifi_model =usart_wifi_t.usart_wifi[5];
+	 wifi_t.usart_wifi_state =usart_wifi_t.usart_wifi[6];
+
+	 wifi_t.usart_wifi_cloud_state =usart_wifi_t.usart_wifi[7];
+
+	 wifi_t.usart_wifi_signal_state =usart_wifi_t.usart_wifi[8];
+
+	 wifi_t.usart_wifi_pass_state =usart_wifi_t.usart_wifi[9];
+
+	 wifi_t.usart_wifi_sum_codes = usart_wifi_t.usart_wifi[wifi_t.usart_wifi_frame_len-1];
+
+	 for(i=0;i<wifi_t.usart_wifi_frame_len;i++){
+
+          sum_codes += usart_wifi_t.usart_wifi[i];
+
+	 }
+
+	
+
+   switch (wifi_t.usart_wifi_frame_len)
+   {
+   case 0x0B:/* constant-expression */
+         if(wifi_t.usart_wifi_frame_type==0xFE){
+             if(wifi_t.usart_wifi_model==1){
+              if(wifi_t.usart_wifi_state==1)
+              {
+                if(wifi_t.usart_wifi_cloud_state==1){
+                    wifi_t.wifi_link_clud_flag = WIFI_CLOUD_SUCCESS;
+                    wifi_t.usart_wifi_frame_len = 0xff;
+                }
+                else{
+						if(sum_codes == wifi_t.usart_wifi_sum_codes){
+						wifi_t.wifi_receive_data_codes_sum_flag= 1;
+						 wifi_t.usart_wifi_frame_len = 0xff;
+
+				         }
+						 else{
+		                    wifi_t.wifi_link_clud_flag = WIFI_CLOUD_FAIL;
+							wifi_t.wifi_receive_data_codes_sum_flag= 0;
+		                    wifi_t.usart_wifi_frame_len = 0xff;
+						 }
+                }
+
+              }
+              else{
+			  	if(sum_codes == wifi_t.usart_wifi_sum_codes){
+					wifi_t.wifi_receive_data_codes_sum_flag= 1;
+					 wifi_t.usart_wifi_frame_len = 0xff;
+
+				}
+				else{
+	               wifi_t.wifi_link_clud_flag = WIFI_CLOUD_FAIL;
+				   wifi_t.wifi_receive_data_codes_sum_flag= 0;
+	               wifi_t.usart_wifi_frame_len = 0xff;
+					}
+              }
+
+
+             }
+             else{
+			 	if(sum_codes == wifi_t.usart_wifi_sum_codes){
+					wifi_t.wifi_receive_data_codes_sum_flag= 1;
+					 wifi_t.usart_wifi_frame_len = 0xff;
+
+				}
+				else{
+		               wifi_t.wifi_link_clud_flag = WIFI_CLOUD_FAIL;
+					   wifi_t.wifi_receive_data_codes_sum_flag= 0;
+		               wifi_t.usart_wifi_frame_len = 0xff;
+					}
+             }
+             
+            
+         }
+         else{
+          usart_wifi_t.usart_wifi_start_receive_flag=0;
+          usart_wifi_t.usart_wifi_receive_success_flag=0;
+          usart_wifi_t.usart_wifi_receive_success_flag = 0;
+		  wifi_t.wifi_receive_data_codes_sum_flag= 0;
+
+         }
+    break;
+
+    case 0x0D:
+        if(wifi_t.usart_wifi_order==0x40){
+             wifi_t.BJ_time_hours = usart_wifi_t.usart_wifi[8];
+             wifi_t.BJ_time_minutes = usart_wifi_t.usart_wifi[9];
+             wifi_t.BJ_time_seconds = usart_wifi_t.usart_wifi[10];
+
+
+        }
+        wifi_t.usart_wifi_frame_len = 0xff;
+    break;
+
+    case 0xFF:
+          usart_wifi_t.usart_wifi_start_receive_flag=0;
+          usart_wifi_t.usart_wifi_receive_success_flag=0;
+    break;
+   
+   default:
+    break;
+   }
+
+}
 
 /**************************************************************
  * 

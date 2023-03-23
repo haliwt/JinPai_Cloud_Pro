@@ -70,6 +70,7 @@ typedef struct _WIFI_FUN{
 	
     uint8_t wifi_dispose_data[USART_WIFI_NUMBERS];
 	
+    uint8_t usart_wifi_frame_len;
     uint8_t usart_wifi_frame_type;
     uint8_t usart_wifi_sequence;
     uint8_t usart_wifi_order;
@@ -77,12 +78,17 @@ typedef struct _WIFI_FUN{
     uint8_t usart_wifi_state;
     uint8_t usart_wifi_cloud_state;
     uint8_t usart_wifi_signal_state;
+	uint8_t usart_wifi_sum_codes;
     uint8_t usart_wifi_pass_state;
+	uint8_t wifi_receive_data_codes_sum_flag;
 	
 
 	uint8_t wifi_receive_data_state;
 	uint8_t wifi_link_cloud ;
-	
+    uint8_t BJ_time_hours;
+	uint8_t BJ_time_minutes;
+    uint8_t BJ_time_seconds;
+    uint8_t  wifi_link_clud_flag;
 
 
     uint8_t real_hours;
@@ -124,5 +130,7 @@ void GetNTP_Times(void);
 
 uint8_t Wifi_State_Special_Fun(void);
 void Wifi_Model_State_Handler(uint8_t (*wifi_state_fun)(void));
+void USART2_WIFI_Receive_Data(void);
+
 #endif 
 

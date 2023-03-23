@@ -12,6 +12,12 @@ typedef enum {
      WIFI_FAIL 
 
 }wifi_enum_state_type;
+
+typedef enum {
+    WIFI_CLOUD_FAIL,
+    WIFI_CLOUD_SUCCESS
+
+}wifi_enum_link_cloud_state;
 typedef struct _usart_cmd_t {
     uint8_t usart_cmd[USART_CMD_NUMBERS];
     uint8_t usart_cmd_len;
@@ -28,9 +34,9 @@ typedef struct _usart_wifi_t {
     uint8_t usart_wifi_sum;
     uint8_t usart_wifi_counter;
     uint8_t usart_receive_numbers;
-    uint8_t usart_wifi_receive_data_flag;
-
+    uint8_t usart_wifi_receive_success_flag;
 	uint8_t usart_wifi_start_receive_flag;
+   
     uint8_t usart_wifi_data[1];
 	uint8_t usart_wifi[USART_WIFI_NUMBERS];
     
