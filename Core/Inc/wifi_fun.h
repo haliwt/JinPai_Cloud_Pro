@@ -88,7 +88,9 @@ typedef struct _WIFI_FUN{
     uint8_t BJ_time_hours;
 	uint8_t BJ_time_minutes;
     uint8_t BJ_time_seconds;
-    uint8_t  wifi_link_clud_flag;
+ 
+	uint8_t wifi_link_JPai_cloud;
+	uint8_t usart_wifi_seconds_value;
 
 
     uint8_t real_hours;
@@ -131,6 +133,7 @@ void GetNTP_Times(void);
 uint8_t Wifi_State_Special_Fun(void);
 void Wifi_Model_State_Handler(uint8_t (*wifi_state_fun)(void));
 void USART2_WIFI_Receive_Data(void);
+void Receive_Wifi_Data(uint8_t cmd);
 
 #endif 
 

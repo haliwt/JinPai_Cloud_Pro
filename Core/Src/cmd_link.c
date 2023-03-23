@@ -44,38 +44,31 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     if(huart->Instance==USART2)
     {
 	  #if 0
-      if(usart_wifi_t.usart_wifi_start_receive_flag ==0){
-        if(usart_wifi_t.usart_wifi[0]== 0x48){
-           usart_wifi_t.usart_wifi_start_receive_flag =1;
-	       usart_wifi_t.usart_wifi_counter=0;
+  
+	 
+//	  
+//	   if( usart_wifi_t.usart_wifi_start_receive_flag ==0){
+//
+//			usart_wifi_t.usart_wifi[usart_wifi_t.usart_wifi_counter];
+//		    usart_wifi_t.usart_wifi_counter ++;
+//
+//			if( usart_wifi_t.usart_wifi_counter == usart_wifi_t.usart_wifi[0]-1){
+//
+//			     usart_wifi_t.usart_receive_numbers= usart_wifi_t.usart_wifi_counter;
+//                 usart_wifi_t.usart_wifi_receive_success_flag=1;
+//			     usart_wifi_t.usart_wifi_counter =0;
+//				
+//
+//
+//			}
+//		 UART_Start_Receive_IT(&huart2,usart_wifi_t.usart_wifi,sizeof(usart_wifi_t.usart_wifi)/sizeof(usart_wifi_t.usart_wifi[0]));
 
-      }
-	  else{
-          for(i=25;i>=0;i--){
-           usart_wifi_t.usart_wifi[i]=0;
-
-	  	}
-    
-      }
-	  }
-	   if( usart_wifi_t.usart_wifi_start_receive_flag ==1){
-
-			usart_wifi_t.usart_wifi[usart_wifi_t.usart_wifi_counter];
-		    usart_wifi_t.usart_wifi_counter ++;
-
-			if( usart_wifi_t.usart_wifi_counter == usart_wifi_t.usart_wifi[0]-1){
-
-			     usart_wifi_t.usart_receive_numbers= usart_wifi_t.usart_wifi_counter;
-
-			     usart_wifi_t.usart_wifi_counter =0;
-				
-
-
-			}
-	   	}
+//	   	}
 		#endif 
 
-		    if(usart_wifi_t.usart_wifi_start_receive_flag==0){
+		#if 1
+
+		   if(usart_wifi_t.usart_wifi_start_receive_flag==0){
              if(usart_wifi_t.usart_wifi_data[0]==0x48){
 				usart_wifi_t.usart_wifi_counter=0;
 				usart_wifi_t.usart_wifi_start_receive_flag=1;
@@ -93,7 +86,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 
 			}
-		    else if(usart_wifi_t.usart_wifi_counter == (usart_wifi_t.usart_wifi[1])){
+		    else if(usart_wifi_t.usart_wifi_counter == (usart_wifi_t.usart_wifi[1] -1)){
 
 				//	usart_wifi_t.usart_wifi[usart_wifi_t.usart_wifi_counter] = usart_wifi_t.usart_wifi_data[0];
 					usart_wifi_t.usart_wifi_receive_success_flag=1;
@@ -108,8 +101,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		}
 
 		HAL_UART_Receive_IT(&huart2,usart_wifi_t.usart_wifi_data,1);
-		// UART_Start_Receive_IT(&huart2,usart_wifi_t.usart_wifi,sizeof(usart_wifi_t.usart_wifi)/sizeof(usart_wifi_t.usart_wifi[0]));
-	}
+		#endif 
+		
+      }
 
 	if(huart->Instance==USART1)//if(huart==&huart1) // Motor Board receive data (filter)
 	{

@@ -28,9 +28,7 @@ typedef enum _esp8266_para{
 	wifi_start_link_net,
 	wifi_smartconfig_model,
 	wifi_receive_data,
-	wifi_set_tcdevreg,
-	wifi_set_tcsap,
-	wifi_login_tencent
+    wifi_null
 
 
 }esp8266_enum_t;
