@@ -40,28 +40,26 @@ void RunWifi_Command_Handler(uint8_t command)
              //wifi gpio 13 pull down 5s 
             Publish_Command_SmartCofnig();
             esp8266_t.esp8266_config_wifi_net_label = wifi_smartconfig_model;
-            usart_wifi_t.usart_wifi_start_receive_flag=0; //start receive wifif usart data
+           
           
       
         break;
 
         case wifi_smartconfig_model: //0x03
 
-          //  Wifi_ReceiveData_Handler();
           if(wifi_t.gTimer_5s > 5 && repeat_times ==0){
               wifi_t.gTimer_5s =0;
               repeat_times++;
               Publish_Data_ProdKey();
              
           }
-          if(wifi_t.wifi_receive_data_error==0){
+          if(wifi_t.wifi_receive_data_error==1){ //is error 
 
              if(repeat_send_times >4){//exit smart config 
                 repeat_send_times=0;
                 esp8266_t.esp8266_config_wifi_net_label= wifi_null;
              }
-             else
-                esp8266_t.esp8266_config_wifi_net_label= wifi_smartconfig_model;
+           
 		  
           }
           else{
@@ -90,52 +88,59 @@ void RunWifi_Command_Handler(uint8_t command)
           if(wifi_t.wifi_link_JPai_cloud==1){
 
 			    esp8266_t.esp8266_config_wifi_net_label= wifi_publish_init_ref;
+		        wifi_t.gTimer_5s=0;
 
 		   }
 
 		break;
 
-		case wifi_publish_init_ref:
-      if(publish_init_flag ==0){
-        publish_init_flag++;
-        Init_Publisher_Data_Ref();
-        Publish_Data_AllRef();
-        wifi_t.gTimer_5s=0;
-      }
-      if(wifi_t.wifi_receive_data_error==0){
-       if(pub_times >2){ //exit this publish sed data over.
-            pub_times=0;
-            esp8266_t.esp8266_config_wifi_net_label= wifi_null;
-         
-        }
-        else
-          esp8266_t.esp8266_config_wifi_net_label= wifi_publish_init_ref;
+		case wifi_publish_init_ref://5
+		      if(publish_init_flag ==0){
+		        publish_init_flag++;
+		        Init_Publisher_Data_Ref();
+		        wifi_t.gTimer_5s=0;
+		      }
+			  if(wifi_t.gTimer_5s > 10 &&   pub_times < 3){
+			  	  wifi_t.gTimer_5s=0;
+			     Publish_Data_AllRef();
+			     pub_times ++;
 
-      }
-      else{
-        esp8266_t.esp8266_config_wifi_net_label= wifi_subscribe_data;
-        pub_times=0;
-         publish_init_flag=0;
-      }
+    	       }
 
+			   if( pub_times > 2){
+			   if(wifi_t.wifi_receive_data_error==1){ //is error 
+			       if(pub_times >2){ //exit this publish sed data over.
+			            pub_times=0;
+			            esp8266_t.esp8266_config_wifi_net_label= wifi_null;
+			         
+			       	}
 
-      if(wifi_t.gTimer_5s > 5  && pub_times < 3){
-        wifi_t.gTimer_5s=0;
-        pub_times ++;
-        Publish_Data_AllRef();
-      }
+			      }
+				  
+			      if(wifi_t.wifi_receive_data_error==0){
+			        esp8266_t.esp8266_config_wifi_net_label= wifi_subscribe_data;
+			        pub_times=0;
+			         publish_init_flag=0;
+			      }
 
-		
+				}
 		break;
 
-    case wifi_subscribe_data:
+    case wifi_subscribe_data://6
 
 	
 
     break;
 
-		case wifi_null:
-
+		case wifi_null://7
+		     if(wifi_t.gTimer_5s > 30){
+			 	wifi_t.gTimer_5s =0;
+			 	Publish_Data_AllRef();
+			}
+		   if(wifi_t.gTimer_5s > 20){
+          		Publish_Command_Query();
+			 
+            }
 		break;
         
         default:
