@@ -81,6 +81,7 @@ typedef struct _WIFI_FUN{
 	uint8_t usart_wifi_sum_codes;
     uint8_t usart_wifi_pass_state;
 	uint8_t wifi_receive_data_codes_sum_flag;
+    uint8_t wifi_receive_data_error;
 	
 
 	uint8_t wifi_receive_data_state;

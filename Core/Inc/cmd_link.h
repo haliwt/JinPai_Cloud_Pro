@@ -36,6 +36,7 @@ typedef struct _usart_wifi_t {
     uint8_t usart_receive_numbers;
     uint8_t usart_wifi_receive_success_flag;
 	uint8_t usart_wifi_start_receive_flag;
+    uint8_t usart_wifi_receive_read_data_flag;
    
     uint8_t usart_wifi_data[1];
 	uint8_t usart_wifi[USART_WIFI_NUMBERS];
@@ -70,6 +71,7 @@ void SendData_Real_GMT(uint8_t hdata,uint8_t mdata,uint8_t sdata);
 void Eesp8266_TxData_ToSmartPhone(void);
 
 void SendWifiData_To_WifiSetTemp(uint8_t dat1);
+void USART2_WIFI_Receive_Interrupt_Data(void);
 
 
 

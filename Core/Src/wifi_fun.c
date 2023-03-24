@@ -55,7 +55,7 @@ void RunWifi_Command_Handler(uint8_t command)
           if(wifi_t.gTimer_5s > 10){
             wifi_t.gTimer_5s=0;
               usart_wifi_t.usart_wifi_counter=0;
-				usart_wifi_t.usart_wifi_start_receive_flag=0;
+				      usart_wifi_t.usart_wifi_start_receive_flag=0;
               usart_wifi_t.usart_wifi_receive_success_flag=0;
              Publish_Command_Query();
 			 
@@ -76,8 +76,11 @@ void RunWifi_Command_Handler(uint8_t command)
 
       }
 
+    if(usart_wifi_t.usart_wifi_receive_read_data_flag==1){
+      usart_wifi_t.usart_wifi_receive_read_data_flag=0;
+	    Receive_Wifi_Data(wifi_t.usart_wifi_frame_len);
 
-	  Receive_Wifi_Data(wifi_t.usart_wifi_frame_len);
+    }
 
 
 }
@@ -98,6 +101,7 @@ void USART2_WIFI_Receive_Data(void)
    if(usart_wifi_t.usart_wifi_receive_success_flag==1){
        usart_wifi_t.usart_wifi_start_receive_flag=0;
        usart_wifi_t.usart_wifi_receive_success_flag=0;
+       usart_wifi_t.usart_wifi_receive_read_data_flag = 1;
    	wifi_t.usart_wifi_frame_len =usart_wifi_t.usart_wifi[1];
    	wifi_t.usart_wifi_frame_type = usart_wifi_t.usart_wifi[2];
 	 wifi_t.usart_wifi_sequence =usart_wifi_t.usart_wifi[3];
@@ -105,7 +109,7 @@ void USART2_WIFI_Receive_Data(void)
 	 //judge wifi if link cloud net
 	 wifi_t.usart_wifi_model =usart_wifi_t.usart_wifi[5];
 	 wifi_t.usart_wifi_state =usart_wifi_t.usart_wifi[6];
-     wifi_t.usart_wifi_cloud_state =usart_wifi_t.usart_wifi[7];
+    wifi_t.usart_wifi_cloud_state =usart_wifi_t.usart_wifi[7];
 
 	 wifi_t.usart_wifi_signal_state =usart_wifi_t.usart_wifi[8];
 
@@ -113,7 +117,7 @@ void USART2_WIFI_Receive_Data(void)
 
 	 wifi_t.usart_wifi_seconds_value = usart_wifi_t.usart_wifi[10];
 
-	/// wifi_t.usart_wifi_sum_codes = usart_wifi_t.usart_wifi[wifi_t.usart_wifi_frame_len-1];
+
 
 	
     }
@@ -122,26 +126,33 @@ void USART2_WIFI_Receive_Data(void)
 void Receive_Wifi_Data(uint8_t cmd)
 {
 
-  
-   
+  switch(wifi_t.usart_wifi_frame_len){
 
-   if(cmd != 0x0D){
-			   if( wifi_t.usart_wifi_model==1 && wifi_t.usart_wifi_state==1 &&  wifi_t.usart_wifi_cloud_state==1){
+    case 0xFE:
+      if(cmd != 0x0D){
+            if( wifi_t.usart_wifi_model==1 && wifi_t.usart_wifi_state==1 &&  wifi_t.usart_wifi_cloud_state==1){
 
-					 wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
+              wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
 
-			   }
-	   }
-   
+            }
+        }
+      if(cmd == 0x0D){
 
-   if(cmd == 0x0D){
-
-		wifi_t.BJ_time_hours = wifi_t.usart_wifi_signal_state;
-		wifi_t.BJ_time_minutes =   wifi_t.usart_wifi_pass_state;
+        wifi_t.BJ_time_hours = wifi_t.usart_wifi_signal_state;
+        wifi_t.BJ_time_minutes =   wifi_t.usart_wifi_pass_state;
         wifi_t.BJ_time_seconds  =  wifi_t.usart_wifi_seconds_value;
 
 
-   }
+      }
+      wifi_t.wifi_receive_data_error = 0;
+   break;
+
+   case 0xFF:
+      wifi_t.wifi_receive_data_error = 1;
+
+   break;
+  }
+
 
 }
 

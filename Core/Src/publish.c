@@ -7,6 +7,7 @@
 #include "run.h"
 
 
+
 //static void MYUSART_SendData(uint8_t  data);
 static void SendHead(void);
 static void SendFrame_Len(uint8_t len);
@@ -292,3 +293,19 @@ void Publish_Data_AllRef(void)
 
 }
 
+void Init_Publisher_Data_Ref(void)
+{
+   run_t.gPower_On = 1;
+   run_t.gDry = 1;
+   run_t.gPlasma = 1;
+   run_t.gUltrasonic = 1;
+   run_t.set_temperature_value = 20;
+   run_t.gTimer = 0;
+   run_t.gFanSpeed = 1; //fan speed high 
+   run_t.gTemperature = run_t.gDht11_temperature; //read dht11 sensor 
+   run_t.gHumidity = run_t.gDht11_humidity; //read dht11 sensor
+   run_t.time_remaining = 0;
+   run_t.time_working = 0;
+   run_t.alarm_call = 0;
+
+}

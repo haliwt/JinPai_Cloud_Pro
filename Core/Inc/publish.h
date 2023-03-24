@@ -2,7 +2,7 @@
 #define __PUBLISH_H_
 #include "main.h"
 
-
+void Init_Publisher_Data_Ref(void);
 //send one byte 
 void MYUSART_SendData(uint8_t  data);
 

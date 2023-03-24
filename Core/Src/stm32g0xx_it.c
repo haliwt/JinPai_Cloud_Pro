@@ -185,38 +185,9 @@ void USART2_IRQHandler(void)
       if(USART2->ISR & UART_FLAG_RXFNE){
 
 			usart_wifi_t.usart_wifi_data[0] = USART2 ->RDR;
-		   if(usart_wifi_t.usart_wifi_start_receive_flag==0){
-             if(usart_wifi_t.usart_wifi_data[0]==0x48){
-				usart_wifi_t.usart_wifi_counter=0;
-				usart_wifi_t.usart_wifi_start_receive_flag=1;
-				 
-             }
-			}
-		
-		if(usart_wifi_t.usart_wifi_start_receive_flag==1 && usart_wifi_t.usart_wifi_receive_success_flag==0){
-		
-			usart_wifi_t.usart_wifi[usart_wifi_t.usart_wifi_counter] = usart_wifi_t.usart_wifi_data[0];
-			usart_wifi_t.usart_wifi_counter++;
-
-			if(usart_wifi_t.usart_wifi[1] > 23){
-			    usart_wifi_t.usart_wifi_start_receive_flag=0;
-
-
-			}
-		    else if(usart_wifi_t.usart_wifi_counter == (usart_wifi_t.usart_wifi[1] -1)){
-
-				usart_wifi_t.usart_wifi[usart_wifi_t.usart_wifi_counter] = usart_wifi_t.usart_wifi_data[0];
-					usart_wifi_t.usart_wifi_receive_success_flag=1;
-			
-			        USART2_WIFI_Receive_Data();
-			      //  memcpy(wifi_t.wifi_dispose_data,usart_wifi_t.usart_wifi,  usart_wifi_t.usart_wifi_counter);
-	
-          
-			}
-			
-
-		}
-		   }
+      USART2_WIFI_Receive_Interrupt_Data();
+		  
+	}
   /* USER CODE END USART2_IRQn 1 */
 }
 
