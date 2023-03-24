@@ -78,7 +78,7 @@ void RunWifi_Command_Handler(uint8_t command)
 
     if(usart_wifi_t.usart_wifi_receive_read_data_flag==1){
       usart_wifi_t.usart_wifi_receive_read_data_flag=0;
-	    Receive_Wifi_Data(wifi_t.usart_wifi_frame_len);
+	    Receive_Wifi_Data(  wifi_t.usart_wifi_frame_type,wifi_t.usart_wifi_frame_len);
 
     }
 
@@ -123,10 +123,10 @@ void USART2_WIFI_Receive_Data(void)
     }
 }
 
-void Receive_Wifi_Data(uint8_t cmd)
+void Receive_Wifi_Data(uint8_t sel,uint8_t cmd)
 {
 
-  switch(wifi_t.usart_wifi_frame_len){
+  switch(sel){
 
     case 0xFE:
       if(cmd != 0x0D){
