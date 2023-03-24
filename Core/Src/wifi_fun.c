@@ -22,10 +22,17 @@ uint8_t (*wifi_run_state_fun)(void);
 uint8_t wifi_receive_data_state_flag;
 
 static void Wifi_ReceiveData_Handler(void);
+/*********************************************************
+ * 
+  * @brief 
+  * @param 
+  * @return 
+  * @note 
+  *********************************************************/
 void RunWifi_Command_Handler(uint8_t command)
 {
     
-    static uint8_t recoder_times,publish_init_flag;
+    static uint8_t recoder_times,publish_init_flag,repeat_times,repeat_send_times,pub_times ;
     switch(command){
 
         case wifi_start_link_net://0x02
@@ -41,47 +48,84 @@ void RunWifi_Command_Handler(uint8_t command)
         case wifi_smartconfig_model: //0x03
 
           //  Wifi_ReceiveData_Handler();
-          if(wifi_t.gTimer_5s > 5){
+          if(wifi_t.gTimer_5s > 5 && repeat_times ==0){
               wifi_t.gTimer_5s =0;
+              repeat_times++;
               Publish_Data_ProdKey();
-              esp8266_t.esp8266_config_wifi_net_label = wifi_receive_data;
+             
           }
+          if(wifi_t.wifi_receive_data_error==0){
+
+             if(repeat_send_times >4){//exit smart config 
+                repeat_send_times=0;
+                esp8266_t.esp8266_config_wifi_net_label= wifi_null;
+             }
+             else
+                esp8266_t.esp8266_config_wifi_net_label= wifi_smartconfig_model;
+		  
+          }
+          else{
+                 esp8266_t.esp8266_config_wifi_net_label = wifi_receive_data;
+                  wifi_t.gTimer_5s =0;
+                 repeat_times=0;
+                 repeat_send_times=0;
+          }
+
+          if(wifi_t.gTimer_5s > 10 && repeat_send_times < 5){
+             wifi_t.gTimer_5s =0;
+             repeat_send_times++;
+             Publish_Data_ProdKey();
+            
+          }
+          
 
         break;
 
 		case wifi_receive_data: //0x04
-  
-
-          if(wifi_t.gTimer_5s > 10){
+          if(wifi_t.gTimer_5s > 20){
             wifi_t.gTimer_5s=0;
-             Publish_Command_Query();
+            Publish_Command_Query();
 			 
           }
           if(wifi_t.wifi_link_JPai_cloud==1){
 
-			esp8266_t.esp8266_config_wifi_net_label= wifi_publish_init_ref;
+			    esp8266_t.esp8266_config_wifi_net_label= wifi_publish_init_ref;
 
-		  }
+		   }
 
 		break;
 
 		case wifi_publish_init_ref:
-             if(publish_init_flag ==0){
-                  publish_init_flag++;
-                  Init_Publisher_Data_Ref();
-              }
-              Publish_Data_AllRef();
-        if(wifi_t.wifi_receive_data_error==0){
-          esp8266_t.esp8266_config_wifi_net_label= wifi_publish_init_ref;
-		  wifi_t.gTimer_5s=0;
+      if(publish_init_flag ==0){
+        publish_init_flag++;
+        Init_Publisher_Data_Ref();
+        Publish_Data_AllRef();
+        wifi_t.gTimer_5s=0;
+      }
+      if(wifi_t.wifi_receive_data_error==0){
+       if(pub_times >2){ //exit this publish sed data over.
+            pub_times=0;
+            esp8266_t.esp8266_config_wifi_net_label= wifi_null;
+         
         }
-		else{
-		 if(wifi_t.gTimer_5s > 3){
-		 	wifi_t.gTimer_5s=0;
-            esp8266_t.esp8266_config_wifi_net_label= wifi_publish_init_ref;
-		 }
+        else
+          esp8266_t.esp8266_config_wifi_net_label= wifi_publish_init_ref;
 
-		}
+      }
+      else{
+        esp8266_t.esp8266_config_wifi_net_label= wifi_subscribe_data;
+        pub_times=0;
+         publish_init_flag=0;
+      }
+
+
+      if(wifi_t.gTimer_5s > 5  && pub_times < 3){
+        wifi_t.gTimer_5s=0;
+        pub_times ++;
+        Publish_Data_AllRef();
+      }
+
+		
 		break;
 
     case wifi_subscribe_data:
@@ -104,7 +148,7 @@ void RunWifi_Command_Handler(uint8_t command)
 
     if(usart_wifi_t.usart_wifi_receive_read_data_flag==1){
        usart_wifi_t.usart_wifi_receive_read_data_flag=0;
-	   Read_USART2_Wifi_Data(  wifi_t.usart_wifi_frame_type,wifi_t.usart_wifi_frame_len);
+	    Read_USART2_Wifi_Data(  wifi_t.usart_wifi_frame_type,wifi_t.usart_wifi_frame_len);
 
     }
 
@@ -167,6 +211,8 @@ void Read_USART2_Wifi_Data(uint8_t sel,uint8_t cmd)
         wifi_t.BJ_time_hours = wifi_t.usart_wifi_signal_state;
         wifi_t.BJ_time_minutes =   wifi_t.usart_wifi_pass_state;
         wifi_t.BJ_time_seconds  =  wifi_t.usart_wifi_seconds_value;
+		SendData_Real_GMT(wifi_t.BJ_time_hours,wifi_t.BJ_time_minutes, wifi_t.BJ_time_seconds );
+		
 
 
       }

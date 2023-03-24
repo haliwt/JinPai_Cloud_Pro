@@ -48,7 +48,8 @@ void Decode_RunCmd(void)
               //fast blink led for link to tencent cloud
               WIFI_IC_ENABLE();
 			  Buzzer_KeySound();	
-               wifi_t.wifi_link_cloud =0;
+              // wifi_t.wifi_link_cloud =0;
+			   wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_FAIL;
 		       esp8266_t.esp8266_config_wifi_net_label=wifi_start_link_net;
 	           wifi_t.gTimer_5s=0;
 			   
@@ -126,7 +127,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
         run_t.gPower_On=POWER_OFF;
         run_t.gPower_flag = POWER_OFF;
         run_t.RunCommand_Label = POWER_OFF;
-         if(wifi_t.wifi_link_cloud ==1)  
+       //  if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS)  
       //   MqttData_Publish_SetOpen(0x0);
            
 
@@ -140,7 +141,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
          run_t.RunCommand_Label= POWER_ON;
 		 Update_DHT11_Value();
 		 HAL_Delay(200);
-		 if(wifi_t.wifi_link_cloud ==1){
+		 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 			// MqttData_Publish_SetOpen(0x01);
 	         HAL_Delay(200);
 	       //  Publish_Data_ToCloud_Handler();
@@ -178,7 +179,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
        case DRY_ON:
          run_t.gDry = 1;
 	      run_t.gFan_continueRun =0;
-		if(wifi_t.wifi_link_cloud ==1)
+		//if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS)
 		// MqttData_Publish_SetPtc(0x01);
 		 if(run_t.noBuzzer_sound_dry_flag !=1){
 		     Buzzer_KeySound();
@@ -196,7 +197,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 			   run_t.gFan_continueRun =1;
 
 		     }
-			if(wifi_t.wifi_link_cloud ==1)
+			//if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS)
 			///MqttData_Publish_SetPtc(0x0);
 			if( no_buzzer_sound_dry_off !=1)
 			    Buzzer_KeySound();
@@ -205,7 +206,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
        case PLASMA_ON:
        		run_t.gPlasma=1;
        		run_t.gUltrasonic =1;
-	   if(wifi_t.wifi_link_cloud ==1){
+	   if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 	      ///  MqttData_Publish_SetPlasma(1) ;//杀菌
 	        HAL_Delay(200);
 	      //  MqttData_Publish_SetUltrasonic(1); //超声波
@@ -216,7 +217,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
        case PLASMA_OFF:
            run_t.gPlasma=0;
            run_t.gUltrasonic =0;
-	   if(wifi_t.wifi_link_cloud ==1){
+	   if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 	     //  MqttData_Publish_SetPlasma(0) ;//杀菌
 	        HAL_Delay(200);
 	      //  MqttData_Publish_SetUltrasonic(0); //超声波
@@ -226,14 +227,14 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 
        case FAN_ON:
           run_t.set_wind_speed_value=100;
-		  if(wifi_t.wifi_link_cloud ==1)
+		  if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS)
 		//  MqttData_Publis_SetFan(100);
 		   Buzzer_KeySound();
        break;
 
        case FAN_OFF:
            run_t.set_wind_speed_value = 50;
-		   if(wifi_t.wifi_link_cloud ==1)
+		  // if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS)
 		   //    MqttData_Publis_SetFan(50);
 		    Buzzer_KeySound();
        break;
@@ -332,7 +333,7 @@ void RunCommand_MainBoard_Fun(void)
 
 	case POWER_OFF: //2
 		SetPowerOff_ForDoing();
-		if(wifi_t.wifi_link_cloud ==1){
+		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 	 	     tencent_cloud_flag = 1;
 		}
 		if(run_t.gTheFirst_powerOn ==0)
@@ -393,7 +394,7 @@ void RunCommand_MainBoard_Fun(void)
 
 	 }
 
-	 if(wifi_t.wifi_link_cloud ==WIFI_SUCCESS &&  run_t.dp_link_wifi_fail == 1){
+	 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS  &&  run_t.dp_link_wifi_fail == 1){
 	 	     run_t.dp_link_wifi_fail =0;
 	 	    SendWifiData_To_Cmd(0x01) ;
 	 }

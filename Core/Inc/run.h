@@ -97,8 +97,7 @@ typedef struct _RUN_T{
       uint8_t  gTemperature ;
 	  uint8_t  gFanSpeed;
 	  uint8_t  gHumidity;
-	  uint8_t  time_remaining;
-	  uint8_t  time_working;
+	 
 	  uint8_t  alarm_call;
 	  uint8_t  gFan_counter;
 	 
@@ -120,7 +119,9 @@ typedef struct _RUN_T{
 	uint8_t gTimer_10s;
 	uint8_t gTimer_send_cloud_state;
 	uint8_t gTimer_senddata_panel;
-	uint32_t randomName[1];
+
+	uint16_t  time_remaining;
+	uint16_t  time_working;
 	
 
 	

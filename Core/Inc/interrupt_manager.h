@@ -2,6 +2,7 @@
 #define __INTERRUPT_MANAGER_H_
 #include "main.h"
 
+void USART2_WIFI_Receive_Interrupt_Data(void);
 
 
 

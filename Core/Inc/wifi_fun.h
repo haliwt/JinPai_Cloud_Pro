@@ -85,7 +85,6 @@ typedef struct _WIFI_FUN{
 	
 
 	uint8_t wifi_receive_data_state;
-	uint8_t wifi_link_cloud ;
     uint8_t BJ_time_hours;
 	uint8_t BJ_time_minutes;
     uint8_t BJ_time_seconds;

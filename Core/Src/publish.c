@@ -165,15 +165,33 @@ static void SendFrame_Read_HumidityValue(uint8_t humvalue)
     MYUSART_SendData(humvalue);
 }
 
-static void SendFrame_Time_Remaining(uint8_t rtiming)
+static void SendFrame_Time_Remaining_One(uint16_t rtiming)
 {
+    uint8_t one_timing;
+	one_timing = rtiming >>8;
     MYUSART_SendData(rtiming);
 }
-
-static void SendFrame_Time_Working(uint8_t wtiming)
+static void SendFrame_Time_Remaining_Two(uint16_t rtiming)
 {
+   uint8_t two_timing;
+   two_timing = rtiming & 0xff;
+   MYUSART_SendData(rtiming);
+}
+
+static void SendFrame_Time_Working_One(uint16_t wtiming)
+{
+    uint8_t one_wtiming;
+	one_wtiming = wtiming >>8;
+	MYUSART_SendData(wtiming);
+}
+
+static void SendFrame_Time_Working_Two(uint16_t wtiming)
+{
+    uint8_t two_wtiming;
+    two_wtiming = wtiming & 0xff;
     MYUSART_SendData(wtiming);
 }
+
 
 static void SendFrame_Alarm_Infor(uint8_t inf)
 {
@@ -270,19 +288,21 @@ void Publish_Data_AllRef(void)
   SendHead();
   SendFrame_Len(0x14);
   SendFrame_Type(0x01);
-  SendFrame_Numbers(0x01);
+  SendFrame_Numbers(0x01); //4
   SendFrame_Order(0x01);
   SendFrame_Power(run_t.gPower_On);
   SendFrame_Dry(run_t.gDry);
-  SendFrame_Ster(run_t.gPlasma);
+  SendFrame_Ster(run_t.gPlasma);//8
   SendFrame_Mouse(run_t.gUltrasonic);
-  SendFrame_SetTemperature(run_t.set_temperature_value);
+  SendFrame_SetTemperature(run_t.set_temperature_value);//10
   SendFrame_SetTimer(run_t.gTimer);
   SendFrame_SetFanSpeed(run_t.gFanSpeed);
   SendFrame_Read_TemperatureValue(run_t.gTemperature);
   SendFrame_Read_HumidityValue(run_t.gHumidity);
-  SendFrame_Time_Remaining(run_t.time_remaining);
-  SendFrame_Time_Working(run_t.time_working);
+  SendFrame_Time_Remaining_One(run_t.time_remaining); //15
+   SendFrame_Time_Remaining_Two(run_t.time_remaining);
+  SendFrame_Time_Working_One(run_t.time_working);
+   SendFrame_Time_Working_Two(run_t.time_working);
   SendFrame_Alarm_Infor(run_t.alarm_call);
   temp_value = 0x48+0x14+0x01+0x01+run_t.gPower_On+run_t.gDry+run_t.gPlasma\
              +run_t.gUltrasonic+run_t.set_temperature_value+run_t.gTimer\

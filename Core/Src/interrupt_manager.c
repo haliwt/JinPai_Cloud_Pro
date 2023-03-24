@@ -6,6 +6,44 @@
 #include "usart.h"
 
 
+void USART2_WIFI_Receive_Interrupt_Data(void)
+{
+	 if(usart_wifi_t.usart_wifi_start_receive_flag==0){
+             if(usart_wifi_t.usart_wifi_data[0]==0x48){
+				usart_wifi_t.usart_wifi_counter=0;
+				usart_wifi_t.usart_wifi_start_receive_flag=1;
+				 
+             }
+			}
+		
+		if(usart_wifi_t.usart_wifi_start_receive_flag==1 && usart_wifi_t.usart_wifi_receive_success_flag==0){
+		
+			
+
+			if(usart_wifi_t.usart_wifi[1] > 23){
+			    usart_wifi_t.usart_wifi_start_receive_flag=0;
+
+
+			}
+		  else if(usart_wifi_t.usart_wifi_counter == (usart_wifi_t.usart_wifi[1] -1)){
+
+				usart_wifi_t.usart_wifi[usart_wifi_t.usart_wifi_counter] = usart_wifi_t.usart_wifi_data[0];
+					usart_wifi_t.usart_wifi_receive_success_flag=1;
+			
+			        USART2_WIFI_Receive_Data();
+	
+      }
+      else{
+
+        usart_wifi_t.usart_wifi[usart_wifi_t.usart_wifi_counter] = usart_wifi_t.usart_wifi_data[0];
+			  usart_wifi_t.usart_wifi_counter++;
+      }
+			
+
+	}
+
+}
+
 
 /**
   * Function Name: void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
