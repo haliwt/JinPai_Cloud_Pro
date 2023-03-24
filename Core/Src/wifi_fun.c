@@ -105,14 +105,14 @@ void RunWifi_Command_Handler(uint8_t command)
 			     Publish_Data_AllRef();
 			     pub_times ++;
 
-    	       }
+    	    }
 
 			   if( pub_times > 2){
 			   if(wifi_t.wifi_receive_data_error==1){ //is error 
 			       if(pub_times >2){ //exit this publish sed data over.
 			            pub_times=0;
 			            esp8266_t.esp8266_config_wifi_net_label= wifi_null;
-			         
+			            wifi_t.gTimer_5s=0;
 			       	}
 
 			      }
@@ -121,6 +121,7 @@ void RunWifi_Command_Handler(uint8_t command)
 			        esp8266_t.esp8266_config_wifi_net_label= wifi_subscribe_data;
 			        pub_times=0;
 			         publish_init_flag=0;
+                wifi_t.gTimer_5s=0;
 			      }
 
 				}
@@ -137,7 +138,7 @@ void RunWifi_Command_Handler(uint8_t command)
 			//  	wifi_t.gTimer_5s =0;
 			//  	Publish_Data_AllRef();
 			// }
-		   if(wifi_t.gTimer_5s > 30){
+		   if(wifi_t.gTimer_5s > 60){
             wifi_t.gTimer_5s =0;
           	Publish_Command_Query();
 			 }
@@ -153,6 +154,8 @@ void RunWifi_Command_Handler(uint8_t command)
 
     if(usart_wifi_t.usart_wifi_receive_read_data_flag==1){
        usart_wifi_t.usart_wifi_receive_read_data_flag=0;
+       	usart_wifi_t.usart_wifi_start_receive_flag=0;
+		  usart_wifi_t.usart_wifi_receive_success_flag=0;
 	    Read_USART2_Wifi_Data(wifi_t.usart_wifi_frame_type,wifi_t.usart_wifi_frame_len,wifi_t.usart_wifi_order);
 
     }

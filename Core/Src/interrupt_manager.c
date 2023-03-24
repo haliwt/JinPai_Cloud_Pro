@@ -57,8 +57,8 @@ void USART2_WIFI_Receive_Data(void)
 
   
    if(usart_wifi_t.usart_wifi_receive_success_flag==1){
-		usart_wifi_t.usart_wifi_start_receive_flag=0;
-		usart_wifi_t.usart_wifi_receive_success_flag=0;
+	//	usart_wifi_t.usart_wifi_start_receive_flag=0;
+	//	usart_wifi_t.usart_wifi_receive_success_flag=0;
 		usart_wifi_t.usart_wifi_receive_read_data_flag = 1;
 		wifi_t.usart_wifi_frame_len =usart_wifi_t.usart_wifi[1];
 		wifi_t.usart_wifi_frame_type = usart_wifi_t.usart_wifi[2];
