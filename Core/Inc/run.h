@@ -24,8 +24,9 @@ typedef enum
 
 typedef enum{
 
-   POWER_ON =0x01,
    POWER_OFF,
+   POWER_ON =0x01,
+   
    POWER_CONNECTOR_WIFI,
    UPDATE_TO_PANEL_DATA,
    WIFI_RESTART_INIT
@@ -112,6 +113,7 @@ typedef struct _RUN_T{
 	  uint8_t  wind_speed_unit;
       uint8_t wifi_config_net_lable;
 	  uint8_t gTimer_send_login_sucess;
+	  uint8_t wifi_link_JPai_cloud;
 	  
 
 	

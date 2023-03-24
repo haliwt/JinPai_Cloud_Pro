@@ -133,14 +133,14 @@ void RunWifi_Command_Handler(uint8_t command)
     break;
 
 		case wifi_null://7
-		     if(wifi_t.gTimer_5s > 30){
-			 	wifi_t.gTimer_5s =0;
-			 	Publish_Data_AllRef();
-			}
-		   if(wifi_t.gTimer_5s > 20){
-          		Publish_Command_Query();
-			 
-            }
+		  //    if(wifi_t.gTimer_5s > 30){
+			//  	wifi_t.gTimer_5s =0;
+			//  	Publish_Data_AllRef();
+			// }
+		   if(wifi_t.gTimer_5s > 30){
+            wifi_t.gTimer_5s =0;
+          	Publish_Command_Query();
+			 }
 		break;
         
         default:
@@ -172,6 +172,8 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
             if( wifi_t.usart_wifi_model==1 && wifi_t.usart_wifi_state==1 &&  wifi_t.usart_wifi_cloud_state==1){
 
               wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
+			  run_t.wifi_link_JPai_cloud = 1;
+			   SendWifiData_To_Cmd(0x01) ;
 
             }
         }

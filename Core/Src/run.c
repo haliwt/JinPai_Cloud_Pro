@@ -9,6 +9,7 @@
 #include "wifi_fun.h"
 #include "flash.h"
 #include "execute.h"
+#include "publish.h"
 
 
 RUN_T run_t; 
@@ -48,7 +49,6 @@ void Decode_RunCmd(void)
               //fast blink led for link to tencent cloud
               WIFI_IC_ENABLE();
 			  Buzzer_KeySound();	
-              // wifi_t.wifi_link_cloud =0;
 			   wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_FAIL;
 		       esp8266_t.esp8266_config_wifi_net_label=wifi_start_link_net;
 	           wifi_t.gTimer_5s=0;
@@ -73,8 +73,12 @@ void Decode_RunCmd(void)
 	  	if(run_t.gPower_flag==POWER_ON){
               
              run_t.set_temperature_value = cmdType_2;
-			 //if(wifi_t.wifi_link_cloud ==1)
-			      // MqttData_Publis_SetTemp(run_t.set_temperature_value);
+			 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
+
+				Publish_Data_AllRef();
+				HAL_Delay(30);
+			 }
+			    
 			   
          }
 	  
@@ -85,7 +89,12 @@ void Decode_RunCmd(void)
 		  if(run_t.gPower_flag==POWER_ON){
              run_t.set_temperature_value = cmdType_2;
 			// if(wifi_t.wifi_link_cloud ==1)
-			// MqttData_Publis_SetTime(run_t.set_temperature_value);
+			 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
+				Publish_Data_AllRef();
+				HAL_Delay(30);
+
+			 }
+			
 			   
          }
 	  
@@ -127,9 +136,10 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
         run_t.gPower_On=POWER_OFF;
         run_t.gPower_flag = POWER_OFF;
         run_t.RunCommand_Label = POWER_OFF;
-       //  if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS)  
-      //   MqttData_Publish_SetOpen(0x0);
-           
+      if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){ 
+          Publish_Data_AllRef();//MqttData_Publish_SetOpen(0x0);
+		  HAL_Delay(30);
+	  }    
 
     cmd = 0xff;
     break;
@@ -142,12 +152,11 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 		 Update_DHT11_Value();
 		 HAL_Delay(200);
 		 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-			// MqttData_Publish_SetOpen(0x01);
-	         HAL_Delay(200);
-	       //  Publish_Data_ToCloud_Handler();
+			Publish_Data_AllRef();
+		  	HAL_Delay(30);
 		 }
 		 
-	// cmd=0xff;  
+	 cmd=0xff;  
      break;
 
     
@@ -409,8 +418,8 @@ void RunCommand_MainBoard_Fun(void)
 
 	 }
 
-	 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS  &&  run_t.dp_link_wifi_fail == 1){
-	 	     run_t.dp_link_wifi_fail =0;
+	 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS  &&  run_t.wifi_link_JPai_cloud==1){
+	 	    run_t.wifi_link_JPai_cloud=0;
 	 	    SendWifiData_To_Cmd(0x01) ;
 	 }
 	 

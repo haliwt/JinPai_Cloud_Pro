@@ -13,7 +13,7 @@ static void SendHead(void);
 static void SendFrame_Len(uint8_t len);
 //"0x eb 32 76 b2   d2 62 3d b3   ab 10 c2 9d   f4 f7 c5 7d";
 
-uint8_t  ProdKey_one = 0xeb3276b2;
+uint32_t  ProdKey_one = 0xeb3276b2;
 uint32_t ProdKey_two = 0xd2623db3;
 uint32_t ProdKey_three = 0xab10c29d ;
 
