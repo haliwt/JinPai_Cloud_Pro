@@ -4,7 +4,7 @@
 
 void USART2_WIFI_Receive_Interrupt_Data(void);
 
-
+void USART2_WIFI_Receive_Data(void);
 
 
 #endif 

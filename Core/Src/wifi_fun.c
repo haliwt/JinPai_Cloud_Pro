@@ -10,7 +10,7 @@
 #include "publish.h"
 #include "dht11.h"
 #include "usart.h"
-
+#include "subscribe.h"
 #include "flash.h"
 
 
@@ -153,75 +153,120 @@ void RunWifi_Command_Handler(uint8_t command)
 
     if(usart_wifi_t.usart_wifi_receive_read_data_flag==1){
        usart_wifi_t.usart_wifi_receive_read_data_flag=0;
-	    Read_USART2_Wifi_Data(  wifi_t.usart_wifi_frame_type,wifi_t.usart_wifi_frame_len);
+	    Read_USART2_Wifi_Data(wifi_t.usart_wifi_frame_type,wifi_t.usart_wifi_frame_len,wifi_t.usart_wifi_order);
 
     }
 
 
 }
 
-/*****************************************************************************************
-	*
-	*Function Name:static void Wifi_ReceiveData_Handler(void)
-	*Function :receive from wifi usart of data 
-	*Input Ref: NO
-	*Return Ref:NO
-	*
-*
-******************************************************************************************/
-void USART2_WIFI_Receive_Data(void)
+
+
+void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 {
 
-  
-   if(usart_wifi_t.usart_wifi_receive_success_flag==1){
-       usart_wifi_t.usart_wifi_start_receive_flag=0;
-       usart_wifi_t.usart_wifi_receive_success_flag=0;
-       usart_wifi_t.usart_wifi_receive_read_data_flag = 1;
-   	wifi_t.usart_wifi_frame_len =usart_wifi_t.usart_wifi[1];
-   	wifi_t.usart_wifi_frame_type = usart_wifi_t.usart_wifi[2];
-	 wifi_t.usart_wifi_sequence =usart_wifi_t.usart_wifi[3];
-	 wifi_t.usart_wifi_order =usart_wifi_t.usart_wifi[4];
-	 //judge wifi if link cloud net
-	 wifi_t.usart_wifi_model =usart_wifi_t.usart_wifi[5];
-	 wifi_t.usart_wifi_state =usart_wifi_t.usart_wifi[6];
-    wifi_t.usart_wifi_cloud_state =usart_wifi_t.usart_wifi[7];
+  switch(type){
 
-	 wifi_t.usart_wifi_signal_state =usart_wifi_t.usart_wifi[8];
-
-	 wifi_t.usart_wifi_pass_state =usart_wifi_t.usart_wifi[9];
-
-	 wifi_t.usart_wifi_seconds_value = usart_wifi_t.usart_wifi[10];
-
-
-
-	
-    }
-}
-
-void Read_USART2_Wifi_Data(uint8_t sel,uint8_t cmd)
-{
-
-  switch(sel){
-
-    case 0xFE:
-      if(cmd != 0x0D){
+    case 0xFE: //frame type
+      if(len != 0x0D){
             if( wifi_t.usart_wifi_model==1 && wifi_t.usart_wifi_state==1 &&  wifi_t.usart_wifi_cloud_state==1){
 
               wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
 
             }
         }
-      if(cmd == 0x0D){
+      if(len == 0x0D){
 
         wifi_t.BJ_time_hours = wifi_t.usart_wifi_signal_state;
         wifi_t.BJ_time_minutes =   wifi_t.usart_wifi_pass_state;
         wifi_t.BJ_time_seconds  =  wifi_t.usart_wifi_seconds_value;
-		SendData_Real_GMT(wifi_t.BJ_time_hours,wifi_t.BJ_time_minutes, wifi_t.BJ_time_seconds );
-		
-
-
-      }
+		    SendData_Real_GMT(wifi_t.BJ_time_hours,wifi_t.BJ_time_minutes, wifi_t.BJ_time_seconds );
+		  }
       wifi_t.wifi_receive_data_error = 0;
+   break;
+   
+   case 0x02: //device answering from wifi model from command 
+         switch(len){
+
+            case 0x06:
+               Subscribe_Data_QueryDev();
+            break;
+
+            case 0x07:
+                switch(order){ //order command from
+                    case 0x02: //set Power on or off
+
+                         if(wifi_t.usart_wifi_model ==0){
+                            Subscribe_Data_PowerOff();
+                         }
+                         else{
+                            Subscribe_Data_PowerOn();
+
+                         }
+
+                    break;
+
+                    case 0x05://dry on or off
+                         if(wifi_t.usart_wifi_model ==0){
+                            Subscribe_Data_PtcOff();
+                         }
+                         else{
+                            Subscribe_Data_PtcOn();
+                         }
+                    break;
+
+                    case 0x07: //sterilization on or off
+                         if(wifi_t.usart_wifi_model ==0){
+                            Subscribe_Data_SterilizationOff();
+                         }
+                         else{
+                            Subscribe_Data_SterilizationOn();
+                         }
+                    break;
+
+                    case 0x09: //ultrasonic on or off 
+                        if(wifi_t.usart_wifi_model ==0){
+                            Subscribe_Data_UltrasonicOff();
+                         }
+                         else{
+                          Subscribe_Data_UltrasonicOn();
+                         }
+
+                    break;
+
+                    case 0x0b : //fan speed hihg or low
+                         if(wifi_t.usart_wifi_model ==0){
+                            Subscribe_Data_FanSpeedHigh();
+                         }
+                         else{
+                            Subscribe_Data_FanSpeedLow();
+                         }
+                        
+                    break;
+
+                    case 0x0e: //set up temperature value
+                         
+                        Subscribe_Data_SetTemperatureValue(wifi_t.usart_wifi_model);
+                         
+                    break;
+
+                    case 0x0f: //set timer timing
+                        Subscribe_Data_SetTimerValue(wifi_t.usart_wifi_model);
+                    break;
+
+
+
+              }
+              
+            break;
+
+            case 0x0b: // set order status from
+               Subscribe_Data_AppointmentTime(wifi_t.usart_wifi_model, wifi_t.usart_wifi_state, wifi_t.usart_wifi_cloud_state, wifi_t.usart_wifi_signal_state,wifi_t.usart_wifi_pass_state);
+            break;
+
+         
+
+         }
    break;
 
    case 0xFF:
@@ -232,65 +277,6 @@ void Read_USART2_Wifi_Data(uint8_t sel,uint8_t cmd)
 
 
 }
-
-/**************************************************************
- * 
- * 
- * 
- * 
-**************************************************************/
-uint8_t Wifi_State_Special_Fun(void)
-{
-     switch(wifi_t.usart_wifi_state){
-
-        case wifi_model_normal_link:
-          // wifi_receive_data_state_flag=1;
-            return 1;
-        break;
-
-        case wifi_model_link_fail:
-           // wifi_receive_data_state_flag=2;
-            return  2;
-        break;
-
-        case wifi_model_linking:
-           // wifi_receive_data_state_flag=3;
-            return  3;
-        break;
-
-        case wifi_model_password_error:
-          //  wifi_receive_data_state_flag=4;
-            return 4;
-        break;
-
-        case wifi_model_no_lookfor_router:
-          //  wifi_receive_data_state_flag=5;
-            return 5;
-        break;
-
-        case wifi_model_link_times_overflow:
-          //  wifi_receive_data_state_flag=6;
-            return 6;
-        break;
-
-        case wifi_model_no_link_router:
-          //  wifi_receive_data_state_flag=7;
-            return 7;
-        break;
-
-
-
-    }
-                            
-
-}
-
-
-
-
-
-
-
 
 
 

@@ -130,10 +130,10 @@ void wifiUpdate_SetTemperatureValue(uint8_t temp);
 void RunWifi_Command_Handler(uint8_t cmd);
 void GetNTP_Times(void);
 
-uint8_t Wifi_State_Special_Fun(void);
+
 void Wifi_Model_State_Handler(uint8_t (*wifi_state_fun)(void));
-void USART2_WIFI_Receive_Data(void);
-void Read_USART2_Wifi_Data(uint8_t sel,uint8_t cmd);
+
+void Read_USART2_Wifi_Data(uint8_t sel,uint8_t len,uint8_t cmd);
 
 
 #endif 

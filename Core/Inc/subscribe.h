@@ -2,6 +2,9 @@
 #define __SUBSCRIBE_H_
 #include "main.h"
 
+
+void Subscribe_Data_QueryDev(void);
+
 void Subscribe_Data_PowerOn(void);
 void Subscribe_Data_PowerOff(void);
 
@@ -17,7 +20,7 @@ void Subscribe_Data_UltrasonicOff(void);
 void Subscribe_Data_FanSpeedHigh(void);
 void Subscribe_Data_FanSpeedLow(void);
 
-void Subscribe_Data_AppointmentTime(uint8_t sw, uint8_t ul, uint8_t ster, uint8_t dry );
+void Subscribe_Data_AppointmentTime(uint8_t sw, uint8_t ul, uint8_t ster, uint8_t dry,uint8_t time );
 
 void Subscribe_Data_SetTemperatureValue(uint8_t temp);
 

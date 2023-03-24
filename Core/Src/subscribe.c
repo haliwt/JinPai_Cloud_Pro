@@ -32,12 +32,12 @@ static void subscribe_data_frame_bool(uint8_t onoff)
     MYUSART_SendData(onoff);
 }
 
-static void subscribe_data_frame_sum(float value)
+static void subscribe_data_frame_sum(uint8_t value)
 {
     MYUSART_SendData(value);
 
 }
-static void subscribe_data_frame_value(float value)
+static void subscribe_data_frame_value(uint8_t value)
 {
     MYUSART_SendData(value);
 
@@ -60,6 +60,28 @@ void subscribe_data_dry(uint8_t dry)
       MYUSART_SendData(dry);
 }
 
+void subscribe_data_time(uint8_t tm)
+{
+
+      MYUSART_SendData(tm);
+}
+
+
+/***********************************************************
+ *
+  * @brief  Subscribe data power on off 
+  * @param  data_frame: data frame
+  * @retval None
+  ***********************************************************/
+void Subscribe_Data_QueryDev(void)
+{
+    subscribe_data_frame_head();
+    subscribe_data_frame_len(0x06);
+    subscribe_data_frame_type(0x02);
+    subscribe_data_frame_numbers(0x01);
+    subscribe_data_frame_oreder(0);
+    subscribe_data_frame_sum(0x51);
+}
 /***********************************************************
  *
   * @brief  Subscribe data power on off 
@@ -88,7 +110,7 @@ void Subscribe_Data_PowerOff(void)
     subscribe_data_frame_oreder(0x02);
     subscribe_data_frame_bool(0x01);
     subscribe_data_frame_sum(0x54);
-
+    
 
 }
 
@@ -177,7 +199,7 @@ void Subscribe_Data_FanSpeedLow(void)
     subscribe_data_frame_sum(0x5D);
 }
 
-void Subscribe_Data_AppointmentTime(uint8_t sw, uint8_t mouse, uint8_t ster, uint8_t dry)
+void Subscribe_Data_AppointmentTime(uint8_t sw, uint8_t mouse, uint8_t ster, uint8_t dry,uint8_t time)
 {
     uint8_t temp;
     subscribe_data_frame_head();
@@ -189,7 +211,8 @@ void Subscribe_Data_AppointmentTime(uint8_t sw, uint8_t mouse, uint8_t ster, uin
     subscribe_data_driver_mouse(mouse);
     subscribe_data_sterilization(ster);
     subscribe_data_dry(dry);
-    temp= 0x48+0x0A+0x02+0x01+0x0d+sw+mouse+ster+dry;
+     subscribe_data_time(time);
+    temp= 0x48+0x0A+0x02+0x01+0x0d+sw+mouse+ster+dry+time;
     subscribe_data_frame_sum(temp);
 }
 void Subscribe_Data_SetTemperatureValue(uint8_t temp)
@@ -216,7 +239,6 @@ void Subscribe_Data_SetTimerValue(uint8_t timing)
     subscribe_data_frame_numbers(0x01);
     subscribe_data_frame_oreder(0x0f);
     subscribe_data_frame_value(timing);
-  
     temp_value= 0x48+0x07+0x02+0x01+timing;
     subscribe_data_frame_sum(temp_value);
 
