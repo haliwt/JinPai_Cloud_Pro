@@ -179,11 +179,13 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
        case DRY_ON:
          run_t.gDry = 1;
 	      run_t.gFan_continueRun =0;
-		//if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS)
-		// MqttData_Publish_SetPtc(0x01);
-		 if(run_t.noBuzzer_sound_dry_flag !=1){
-		     Buzzer_KeySound();
-		 }
+		    Buzzer_KeySound();
+		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
+		  Publish_Data_AllRef();
+		   HAL_Delay(30);
+	      }
+		   
+		 
        break;
 
 	   case DRY_OFF_NO_BUZZER :
@@ -192,51 +194,64 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 
 	  case DRY_OFF:
  			run_t.gDry = 0;
+			 Buzzer_KeySound();
 			 if(run_t.gPlasma ==0){ //plasma turn off flag
 			  run_t.gFan_counter =0;
 			   run_t.gFan_continueRun =1;
 
 		     }
-			//if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS)
-			///MqttData_Publish_SetPtc(0x0);
-			if( no_buzzer_sound_dry_off !=1)
-			    Buzzer_KeySound();
+			if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
+		        Publish_Data_AllRef();
+				 HAL_Delay(30);
+			}
+			   
        break;
 
        case PLASMA_ON:
        		run_t.gPlasma=1;
        		run_t.gUltrasonic =1;
+			Buzzer_KeySound();
 	   if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-	      ///  MqttData_Publish_SetPlasma(1) ;//杀菌
-	        HAL_Delay(200);
-	      //  MqttData_Publish_SetUltrasonic(1); //超声波
+	        Publish_Data_AllRef();
+	        HAL_Delay(30);
+	     
 	   	}
-	    Buzzer_KeySound();
+	    
        break;
 
        case PLASMA_OFF:
            run_t.gPlasma=0;
            run_t.gUltrasonic =0;
+		   Buzzer_KeySound();
 	   if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-	     //  MqttData_Publish_SetPlasma(0) ;//杀菌
-	        HAL_Delay(200);
-	      //  MqttData_Publish_SetUltrasonic(0); //超声波
+	         Publish_Data_AllRef();
+            HAL_Delay(30);
+	       
+	      
 	   	}
-	    Buzzer_KeySound();
+	   
        break;
 
        case FAN_ON:
           run_t.set_wind_speed_value=100;
-		  if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS)
-		//  MqttData_Publis_SetFan(100);
-		   Buzzer_KeySound();
+		  Buzzer_KeySound();
+		  if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
+			Publish_Data_AllRef();
+			 HAL_Delay(30);
+		  }
+		
+		   
        break;
 
        case FAN_OFF:
+	        Buzzer_KeySound();
            run_t.set_wind_speed_value = 50;
-		  // if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS)
-		   //    MqttData_Publis_SetFan(50);
-		    Buzzer_KeySound();
+		   if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
+			Publish_Data_AllRef();
+			 HAL_Delay(30);
+		   }
+		 
+		  
        break;
 
 	   case WIFI_CONNECT_FAIL:
