@@ -4,9 +4,10 @@
 #include "wifi_fun.h"
 #include "dht11.h"
 #include "usart.h"
+#include "run.h"
 
 
-static void MYUSART_SendData(uint8_t  data);
+//static void MYUSART_SendData(uint8_t  data);
 static void SendHead(void);
 static void SendFrame_Len(uint8_t len);
 //"0x eb 32 76 b2   d2 62 3d b3   ab 10 c2 9d   f4 f7 c5 7d";
@@ -23,7 +24,7 @@ uint32_t ProdKey_four = 0xf4f7c57d;//"0xeb3276b2d2623db3ab10c29df4f7c57d";
 uint8_t ProdKey_sum = 0xb0 ;//0xeb+0x32+0x76+0xb2+0xd2+0x62+0x3d+0xb3+0xab+0x10+0xc2+0x9d+0xf4+0xf7+0xc5+0x7d=0x9b0;
 
 //send one byte 
-static void MYUSART_SendData(uint8_t  data)
+void MYUSART_SendData(uint8_t  data)
 {
 	while((USART2->ISR&0X40)==0); 
 	USART2->TDR = data;
@@ -118,7 +119,74 @@ static void SendFrame_Data(uint8_t dat)
 	MYUSART_SendData(dat);
 }
 
+static void SendFrame_Power(uint8_t dat)
+{
+	MYUSART_SendData(dat);
+}
 
+static void SendFrame_Dry(uint8_t dry)
+{
+	MYUSART_SendData(dry);
+}
+
+static void SendFrame_Ster(uint8_t ster)
+{
+	MYUSART_SendData(ster);
+}
+
+static void SendFrame_Mouse(uint8_t mouse)
+{
+	MYUSART_SendData(mouse);
+}
+
+static void SendFrame_SetTemperature(uint8_t temp)
+{
+	MYUSART_SendData(temp);
+}
+
+static void SendFrame_SetTimer(uint8_t timing)
+{
+	MYUSART_SendData(timing);
+}
+
+static void SendFrame_SetFanSpeed(uint8_t speed)
+{
+    MYUSART_SendData(speed);
+}
+
+static void SendFrame_Read_TemperatureValue(uint8_t rtemp)
+{
+    MYUSART_SendData(rtemp);
+}
+
+static void SendFrame_Read_HumidityValue(uint8_t humvalue)
+{
+    MYUSART_SendData(humvalue);
+}
+
+static void SendFrame_Time_Remaining(uint8_t rtiming)
+{
+    MYUSART_SendData(rtiming);
+}
+
+static void SendFrame_Time_Working(uint8_t wtiming)
+{
+    MYUSART_SendData(wtiming);
+}
+
+static void SendFrame_Alarm_Infor(uint8_t inf)
+{
+    MYUSART_SendData(inf);
+}
+
+/*****************************************************************
+*
+*Function Name:void Publish_Data_Special(uint8_t cmd,uint8_t d_type,uint8_t valid_d)
+*Function:
+*Input Ref:
+*Return Ref: None
+*
+********************************************************************/
 void Publish_Data_Special(uint8_t cmd,uint8_t d_type,uint8_t valid_d)
 {
     uint8_t temp;
@@ -194,5 +262,33 @@ void Publish_Command_Query(void)
 
 
 
+void Publish_Data_AllRef(void)
+{
+  uint8_t temp_value;
+  
+  SendHead();
+  SendFrame_Len(0x14);
+  SendFrame_Type(0x01);
+  SendFrame_Numbers(0x01);
+  SendFrame_Order(0x01);
+  SendFrame_Power(run_t.gPower_On);
+  SendFrame_Dry(run_t.gDry);
+  SendFrame_Ster(run_t.gPlasma);
+  SendFrame_Mouse(run_t.gUltrasonic);
+  SendFrame_SetTemperature(run_t.set_temperature_value);
+  SendFrame_SetTimer(run_t.gTimer);
+  SendFrame_SetFanSpeed(run_t.gFanSpeed);
+  SendFrame_Read_TemperatureValue(run_t.gTemperature);
+  SendFrame_Read_HumidityValue(run_t.gHumidity);
+  SendFrame_Time_Remaining(run_t.time_remaining);
+  SendFrame_Time_Working(run_t.time_working);
+  SendFrame_Alarm_Infor(run_t.alarm_call);
+  temp_value = 0x48+0x14+0x01+0x01+run_t.gPower_On+run_t.gDry+run_t.gPlasma\
+             +run_t.gUltrasonic+run_t.set_temperature_value+run_t.gTimer\
+			 +run_t.gFanSpeed+run_t.gTemperature+run_t.gHumidity+run_t.time_remaining+run_t.time_working+run_t.alarm_call;
 
+  SendFrame_Sum(temp_value);
+
+
+}
 

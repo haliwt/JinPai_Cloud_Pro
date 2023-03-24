@@ -64,7 +64,7 @@ typedef struct _RUN_T{
 	uint8_t gPower_flag;
 	uint8_t gTheFirst_powerOn ;
 	uint8_t gDht11_flag;
-	uint8_t gTemperature;
+	
 
 	uint8_t gDht11_humidity ;
 	uint8_t gDht11_temperature;
@@ -92,10 +92,16 @@ typedef struct _RUN_T{
       uint8_t  gPlasma;
       uint8_t  gDry;
 	  uint8_t  gFan;
-	  uint8_t  gUlransonic;
-	  uint8_t  gModel;
-      uint8_t Single_cmd ;
-	  uint8_t gFan_counter;
+	  uint8_t  gUltrasonic;
+	  uint8_t  gTimer;
+      uint8_t  gTemperature ;
+	  uint8_t  gFanSpeed;
+	  uint8_t  gHumidity;
+	  uint8_t  time_remaining;
+	  uint8_t  time_working;
+	  uint8_t  alarm_call;
+	  uint8_t  gFan_counter;
+	 
 	  uint8_t noBuzzer_sound_dry_flag;
 	  
 	  uint8_t  set_temperature_value;
@@ -107,6 +113,7 @@ typedef struct _RUN_T{
 	  uint8_t  wind_speed_unit;
       uint8_t wifi_config_net_lable;
 	  uint8_t gTimer_send_login_sucess;
+	  
 
 	
 	uint8_t gTimer_1s;

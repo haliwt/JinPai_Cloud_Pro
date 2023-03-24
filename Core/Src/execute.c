@@ -21,8 +21,8 @@ void SetPowerOn_ForDoing(void)
     run_t.gFan = 1;
 	run_t.gDry = 1;
 	run_t.gPlasma =1;       //"杀菌"
-	run_t.gUlransonic = 1; // "驱虫"
-	run_t.gModel =1;
+	run_t.gUltrasonic = 1; // "驱虫"
+	
     run_t.gFan_counter=0;
 	
     FAN_CCW_RUN();
@@ -43,8 +43,8 @@ void SetPowerOff_ForDoing(void)
     run_t.gFan = 0;
     run_t.gDry = 0;
 	run_t.gPlasma =0;       //"杀菌"
-	run_t.gUlransonic = 0; // "驱虫"
-	run_t.gModel =0;
+	run_t.gUltrasonic = 0; // "驱虫"
+	
 	
     
 	PLASMA_SetLow(); //
@@ -87,7 +87,7 @@ void ActionEvent_Handler(void)
 		PLASMA_SetLow();
 	}
 	//driver bug
-	if(run_t.gUlransonic ==1){
+	if(run_t.gUltrasonic ==1){
 		 if(run_t.set_wind_speed_value < 67){
             Fan_Slowly_Speed();
 		 }

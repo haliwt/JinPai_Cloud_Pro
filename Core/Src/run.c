@@ -204,7 +204,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 
        case PLASMA_ON:
        		run_t.gPlasma=1;
-       		run_t.gUlransonic =1;
+       		run_t.gUltrasonic =1;
 	   if(wifi_t.wifi_link_cloud ==1){
 	      ///  MqttData_Publish_SetPlasma(1) ;//杀菌
 	        HAL_Delay(200);
@@ -215,7 +215,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 
        case PLASMA_OFF:
            run_t.gPlasma=0;
-           run_t.gUlransonic =0;
+           run_t.gUltrasonic =0;
 	   if(wifi_t.wifi_link_cloud ==1){
 	     //  MqttData_Publish_SetPlasma(0) ;//杀菌
 	        HAL_Delay(200);

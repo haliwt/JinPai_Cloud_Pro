@@ -67,7 +67,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		#endif 
 
 		#if 1
+           if(USART_WIFI->ISR & UART_FLAG_RXFNE){
 
+			usart_wifi_t.usart_wifi_data[0] = USART_WIFI ->RDR;
 		   if(usart_wifi_t.usart_wifi_start_receive_flag==0){
              if(usart_wifi_t.usart_wifi_data[0]==0x48){
 				usart_wifi_t.usart_wifi_counter=0;
@@ -99,8 +101,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			
 
 		}
-
-		HAL_UART_Receive_IT(&huart2,usart_wifi_t.usart_wifi_data,1);
+		   }
+		//HAL_UART_Receive_IT(&huart2,usart_wifi_t.usart_wifi_data,1);
 		#endif 
 		
       }
