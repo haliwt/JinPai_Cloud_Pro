@@ -164,13 +164,17 @@ void RunWifi_Command_Handler(uint8_t command)
 
 	  
 		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
+			
             Publish_Return_Repeat_Data();
 			wifi_t.publish_send_state_data=1;
              
          }
-		else{
 
-		    Read_USART2_Wifi_Data(wifi_t.usart_wifi_frame_type,wifi_t.usart_wifi_frame_len,wifi_t.usart_wifi_order);
+		
+	    if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_FAIL ||  wifi_t.publish_send_state_data==1){
+			  wifi_t.publish_send_state_data=0;
+			
+             Read_USART2_Wifi_Data(wifi_t.usart_wifi_frame_type,wifi_t.usart_wifi_frame_len,wifi_t.usart_wifi_order);
             receive_usart_wifi_data = 1;
 		}
 
@@ -187,13 +191,13 @@ void RunWifi_Command_Handler(uint8_t command)
 //
 //	   }
 
-    if(wifi_t.publish_send_state_data ==1){
-		 wifi_t.publish_send_state_data=0;
-	
-         HAL_Delay(200);
-		 Example_Publish_State();
-
-	}
+//    if(wifi_t.publish_send_state_data ==1){
+//		 wifi_t.publish_send_state_data=0;
+//	
+//         HAL_Delay(200);
+//		 Example_Publish_State();
+//
+//	}
 	
 
    }
@@ -230,7 +234,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
          switch(len){
 
             case 0x06:
-               Subscribe_Data_QueryDev();
+               //Subscribe_Data_QueryDev();
             break;
 
             case 0x07:
@@ -242,7 +246,8 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                          }
                          else{
                             Subscribe_Data_PowerOn();
-
+							Example_Publish_State();
+							
                          }
 
                     break;
