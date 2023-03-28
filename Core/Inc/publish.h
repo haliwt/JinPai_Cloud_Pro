@@ -11,6 +11,7 @@ void Publish_Data_AllRef(void);
 void Publish_Data_ProdKey(void);
 void Publish_Command_SmartCofnig(void);
 void Publish_Command_Query(void);
+void Publish_Return_Repeat_Data(void);
 
 #endif 
 

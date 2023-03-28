@@ -19,6 +19,7 @@ uint32_t ProdKey_three = 0xab10c29d ;
 
 uint32_t ProdKey_four = 0xf4f7c57d;//"0xeb3276b2d2623db3ab10c29df4f7c57d";
 
+uint8_t send_data_numbers;
 
 
 
@@ -329,3 +330,25 @@ void Init_Publisher_Data_Ref(void)
    run_t.alarm_call = 0;
 
 }
+
+
+void Publish_Return_Repeat_Data(void)
+{
+  
+   static uint8_t numbers,data;
+   numbers = usart_wifi_t.usart_wifi_counter;
+   
+   for(send_data_numbers =0; send_data_numbers <usart_wifi_t.usart_wifi_counter;send_data_numbers++ ){
+
+       data =usart_wifi_t.usart_wifi[send_data_numbers];
+      
+	  SendFrame_Data(data);
+	  
+
+
+   }
+    
+
+
+}
+

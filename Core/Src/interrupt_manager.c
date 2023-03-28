@@ -24,11 +24,14 @@ void USART2_WIFI_Receive_Interrupt_Data(void)
 			if(usart_wifi_t.usart_wifi[1] > 30){
 			    usart_wifi_t.usart_wifi_start_receive_flag=0;
                 usart_wifi_t.usart_wifi_receive_success_flag=0;
+			    usart_wifi_t.usart_wifi[1]=0;
 
 			}
-		  else if(usart_wifi_t.usart_wifi_counter == (usart_wifi_t.usart_wifi[1])){
 
-				usart_wifi_t.usart_wifi[usart_wifi_t.usart_wifi_counter] = usart_wifi_t.usart_wifi_data[0];
+			
+		  if(usart_wifi_t.usart_wifi_counter == (usart_wifi_t.usart_wifi[1])){
+
+				//usart_wifi_t.usart_wifi[usart_wifi_t.usart_wifi_counter] = usart_wifi_t.usart_wifi_data[0];
 					usart_wifi_t.usart_wifi_receive_success_flag=1;
 			
 			        USART2_WIFI_Receive_Data();
@@ -71,6 +74,7 @@ void USART2_WIFI_Receive_Data(void)
 		wifi_t.usart_wifi_pass_state =usart_wifi_t.usart_wifi[9];
 
 		wifi_t.usart_wifi_seconds_value = usart_wifi_t.usart_wifi[10];
+        wifi_t.usart_wifi_sum_codes = usart_wifi_t.usart_wifi[usart_wifi_t.usart_wifi_counter];
 
    }
 }
@@ -95,6 +99,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         run_t.gTimer_1s ++;
 	 run_t.gTimer_10s++;
      wifi_t.gTimer_5s++;
+	 run_t.gTimer_send_prodky++;
 	
 	   wifi_t.gTimer_get_beijing_time++;
 	   wifi_t.gTimer_beijing_time++;
@@ -106,12 +111,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
            run_t.gFan_counter++;
 		 
 	   }
-	   if(tm1 > 99){
-	   	 tm1=0;
-		  run_t.gTimer_send_prodky++;
+	 
+		  
 
 
-	   }
+	   
       
 
 	 }
