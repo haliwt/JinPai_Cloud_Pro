@@ -13,6 +13,9 @@ void Publish_Command_SmartCofnig(void);
 void Publish_Command_Query(void);
 void Publish_Return_Repeat_Data(void);
 
+void Example_Publish_State(void);
+
+
 #endif 
 
 

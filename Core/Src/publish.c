@@ -352,3 +352,34 @@ void Publish_Return_Repeat_Data(void)
 
 }
 
+void Example_Publish_State(void)
+{
+
+  uint8_t temp;
+
+  SendHead();
+  SendFrame_Len(0x14);
+  SendFrame_Type(0x01);
+  SendFrame_Numbers(0x01); //4
+  SendFrame_Order(0x01);
+  SendFrame_Power(0x01);
+  SendFrame_Dry(0x01);
+  SendFrame_Ster(0x01);//8
+  SendFrame_Mouse(0x01);
+  SendFrame_SetTemperature(0x24);//10
+  SendFrame_SetTimer(0x01);
+  SendFrame_SetFanSpeed(0x01);
+  SendFrame_Read_TemperatureValue(0x1a);
+  SendFrame_Read_HumidityValue(0x26);
+  SendFrame_Time_Remaining_One(0); //15
+  SendFrame_Time_Remaining_Two(0);
+  SendFrame_Time_Working_One(0);
+  SendFrame_Time_Working_Two(0x14);
+  SendFrame_Alarm_Infor(00);
+  temp = 0x048+0x14+0x01+0x01+0x01+0x01+0x01+0x01+0x01+0x24+0x01+0x01+0x1A+0x26+0x14;
+
+  SendFrame_Sum(temp);
+
+
+}
+
