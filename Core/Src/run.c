@@ -439,11 +439,12 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
    
 
 	static uint8_t self_power_on_flag=0;
-	if(self_power_on_flag==0){
-        self_power_on_flag ++ ;
+	if(run_t.first_power_on_flag==0){
+        run_t.first_power_on_flag++ ;
         Buzzer_KeySound();
-      
-		}
+	    run_t.gTimer_send_prodky=0;
+	 
+     }
     
 #if 0
 

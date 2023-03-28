@@ -20,7 +20,7 @@ uint8_t sum_codes;
 
 uint8_t (*wifi_run_state_fun)(void);
 uint8_t wifi_receive_data_state_flag;
-
+uint8_t receive_usart_wifi_data;
 static void Wifi_ReceiveData_Handler(void);
 /*********************************************************
  * 
@@ -156,9 +156,24 @@ void RunWifi_Command_Handler(uint8_t command)
        usart_wifi_t.usart_wifi_receive_read_data_flag=0;
        	usart_wifi_t.usart_wifi_start_receive_flag=0;
 		  usart_wifi_t.usart_wifi_receive_success_flag=0;
+		  receive_usart_wifi_data = 1;
+
 	    Read_USART2_Wifi_Data(wifi_t.usart_wifi_frame_type,wifi_t.usart_wifi_frame_len,wifi_t.usart_wifi_order);
+		
 
     }
+	if(run_t.first_power_on_flag ==1 && receive_usart_wifi_data == 1){
+	   
+
+	    if(run_t.gTimer_send_prodky> 0){
+			 run_t.first_power_on_flag ++;
+           Publish_Data_ProdKey();
+
+	    }
+	
+
+	 }
+	
 
 
 }
