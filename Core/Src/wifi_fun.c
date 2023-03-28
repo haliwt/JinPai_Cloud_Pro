@@ -161,7 +161,9 @@ void RunWifi_Command_Handler(uint8_t command)
 
     if(usart_wifi_t.usart_wifi_receive_read_data_flag==1){
       
-
+		usart_wifi_t.usart_wifi_receive_read_data_flag=0;
+       	usart_wifi_t.usart_wifi_start_receive_flag=0;
+		usart_wifi_t.usart_wifi_receive_success_flag=0;
 	  
 		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 			
@@ -178,9 +180,7 @@ void RunWifi_Command_Handler(uint8_t command)
             receive_usart_wifi_data = 1;
 		}
 
-		usart_wifi_t.usart_wifi_receive_read_data_flag=0;
-       	usart_wifi_t.usart_wifi_start_receive_flag=0;
-		usart_wifi_t.usart_wifi_receive_success_flag=0;
+		
 		
 
     }
@@ -242,12 +242,12 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                     case 0x02: //set Power on or off
 
                          if(wifi_t.usart_wifi_model ==0){
-                           // Subscribe_Data_PowerOff();
+                            Publish_Power_OFF_State();
                          }
-                         else{
+                         else{ //Power on 
                             //Subscribe_Data_PowerOn();
 							//Update_DHT11_Value();
-							Example_Publish_State();
+							Publish_Power_ON_State();
 							
                          }
 

@@ -352,7 +352,7 @@ void Publish_Return_Repeat_Data(void)
 
 }
 
-void Example_Publish_State(void)
+void Publish_Power_ON_State(void)
 {
 
   
@@ -382,6 +382,38 @@ void Example_Publish_State(void)
 
 
 }
+
+void Publish_Power_OFF_State(void)
+{
+
+  
+
+  SendHead();
+  SendFrame_Len(0x14);
+  SendFrame_Type(0x01);
+  SendFrame_Numbers(0x01); //4
+  SendFrame_Order(0x01);
+  SendFrame_Power(0);
+  SendFrame_Dry(0x01);
+  SendFrame_Ster(0x01);//8
+  SendFrame_Mouse(0x01);
+  SendFrame_SetTemperature(0x24);//10
+  SendFrame_SetTimer(0x01);
+  SendFrame_SetFanSpeed(0x01);
+  SendFrame_Read_TemperatureValue(run_t.gDht11_temperature);
+  SendFrame_Read_HumidityValue(run_t.gDht11_humidity );
+  SendFrame_Time_Remaining_One(0); //15
+  SendFrame_Time_Remaining_Two(0);
+  SendFrame_Time_Working_One(0);
+  SendFrame_Time_Working_Two(0x14);
+  SendFrame_Alarm_Infor(00);
+  temp_code = 0x048+0x14+0x01+0x01+0x0+0x01+0x01+0x01+0x01+0x24+0x01+0x01+run_t.gDht11_temperature+run_t.gDht11_humidity +0x14;
+
+  SendFrame_Sum(temp_code);
+
+
+}
+
 
 void Example_Publish_PTC_OFF_State(void)
 {

@@ -14,9 +14,10 @@ void Publish_Command_Query(void);
 void Publish_Return_Repeat_Data(void);
 
 void Example_Publish_State(void);
+void Publish_Power_ON_State(void);
 
-void Example_Publish_PTC_ON_State(void);
-void Example_Publish_PTC_ON_State(void);
+void Publish_Power_OFF_State(void);
+
 
 
 #endif 
