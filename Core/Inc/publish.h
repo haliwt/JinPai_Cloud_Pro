@@ -15,6 +15,9 @@ void Publish_Return_Repeat_Data(void);
 
 void Example_Publish_State(void);
 
+void Example_Publish_PTC_ON_State(void);
+void Example_Publish_PTC_ON_State(void);
+
 
 #endif 
 

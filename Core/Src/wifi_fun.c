@@ -145,10 +145,10 @@ void RunWifi_Command_Handler(uint8_t command)
 			//  	wifi_t.gTimer_5s =0;
 			//  	Publish_Data_AllRef();
 			// }
-		   if(wifi_t.gTimer_5s > 60){
-            wifi_t.gTimer_5s =0;
-          	Publish_Command_Query();
-			 }
+//		   if(wifi_t.gTimer_5s > 62){
+//            wifi_t.gTimer_5s =0;
+//          	Publish_Command_Query();
+//			}
 		break;
         
         default:
@@ -242,10 +242,11 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                     case 0x02: //set Power on or off
 
                          if(wifi_t.usart_wifi_model ==0){
-                            Subscribe_Data_PowerOff();
+                           // Subscribe_Data_PowerOff();
                          }
                          else{
-                            Subscribe_Data_PowerOn();
+                            //Subscribe_Data_PowerOn();
+							//Update_DHT11_Value();
 							Example_Publish_State();
 							
                          }
@@ -254,50 +255,52 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 
                     case 0x05://dry on or off
                          if(wifi_t.usart_wifi_model ==0){
-                            Subscribe_Data_PtcOff();
+                           // Subscribe_Data_PtcOff();
+							Example_Publish_PTC_OFF_State();
                          }
                          else{
-                            Subscribe_Data_PtcOn();
+                            //Subscribe_Data_PtcOn();
+							Example_Publish_PTC_ON_State();
                          }
                     break;
 
                     case 0x07: //sterilization on or off
                          if(wifi_t.usart_wifi_model ==0){
-                            Subscribe_Data_SterilizationOff();
+                           // Subscribe_Data_SterilizationOff();
                          }
                          else{
-                            Subscribe_Data_SterilizationOn();
+                           // Subscribe_Data_SterilizationOn();
                          }
                     break;
 
                     case 0x09: //ultrasonic on or off 
                         if(wifi_t.usart_wifi_model ==0){
-                            Subscribe_Data_UltrasonicOff();
+                            //Subscribe_Data_UltrasonicOff();
                          }
                          else{
-                          Subscribe_Data_UltrasonicOn();
+                         // Subscribe_Data_UltrasonicOn();
                          }
 
                     break;
 
                     case 0x0b : //fan speed hihg or low
                          if(wifi_t.usart_wifi_model ==0){
-                            Subscribe_Data_FanSpeedHigh();
+                           // Subscribe_Data_FanSpeedHigh();
                          }
                          else{
-                            Subscribe_Data_FanSpeedLow();
+                           // Subscribe_Data_FanSpeedLow();
                          }
                         
                     break;
 
                     case 0x0e: //set up temperature value
                          
-                        Subscribe_Data_SetTemperatureValue(wifi_t.usart_wifi_model);
+                       // Subscribe_Data_SetTemperatureValue(wifi_t.usart_wifi_model);
                          
                     break;
 
                     case 0x0f: //set timer timing
-                        Subscribe_Data_SetTimerValue(wifi_t.usart_wifi_model);
+                       // Subscribe_Data_SetTimerValue(wifi_t.usart_wifi_model);
                     break;
 
 
