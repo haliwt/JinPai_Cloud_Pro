@@ -136,9 +136,10 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
         run_t.gPower_On=POWER_OFF;
         run_t.gPower_flag = POWER_OFF;
         run_t.RunCommand_Label = POWER_OFF;
+		esp8266_t.esp8266_config_wifi_net_label=0;
       if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){ 
-          Publish_Data_AllRef();//MqttData_Publish_SetOpen(0x0);
-		  HAL_Delay(30);
+         // Publish_Data_AllRef();//MqttData_Publish_SetOpen(0x0);
+		 // HAL_Delay(30);
 	  }    
 
     cmd = 0xff;
@@ -149,10 +150,11 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
          run_t.gPower_flag = POWER_ON;
 		 run_t.gPower_On = POWER_ON;
          run_t.RunCommand_Label= POWER_ON;
+		 esp8266_t.esp8266_config_wifi_net_label=0;
 		 Update_DHT11_Value();
 		 HAL_Delay(200);
 		 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-			Publish_Data_AllRef();
+			//Publish_Data_AllRef();
 		  	HAL_Delay(30);
 		 }
 		 

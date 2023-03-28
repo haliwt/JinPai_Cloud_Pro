@@ -31,8 +31,10 @@ static void Wifi_ReceiveData_Handler(void);
   *********************************************************/
 void RunWifi_Command_Handler(uint8_t command)
 {
-    static uint8_t times,publish_send_state_data;
+    static uint8_t times;
     static uint8_t recoder_times,publish_init_flag,repeat_times,repeat_send_times,pub_times ;
+
+	if(run_t.gPower_On == POWER_ON ){
     switch(command){
 
         case wifi_start_link_net://0x02
@@ -91,6 +93,11 @@ void RunWifi_Command_Handler(uint8_t command)
 		        wifi_t.gTimer_5s=0;
 
 		   }
+		  if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
+		  	
+		      esp8266_t.esp8266_config_wifi_net_label=  wifi_null;
+
+		  }
 
 		break;
 
@@ -164,16 +171,16 @@ void RunWifi_Command_Handler(uint8_t command)
 		else{
 
 		    Read_USART2_Wifi_Data(wifi_t.usart_wifi_frame_type,wifi_t.usart_wifi_frame_len,wifi_t.usart_wifi_order);
-
+            receive_usart_wifi_data = 1;
 		}
 
 		usart_wifi_t.usart_wifi_receive_read_data_flag=0;
        	usart_wifi_t.usart_wifi_start_receive_flag=0;
 		usart_wifi_t.usart_wifi_receive_success_flag=0;
-		receive_usart_wifi_data = 1;
+		
 
     }
-//	if(run_t.first_power_on_flag ==1 && receive_usart_wifi_data == 1){
+//	if(run_t.first_power_on_flag ==1 && receive_usart_wifi_data ==1){
 //	       
 //           receive_usart_wifi_data ++;
 //           Publish_Data_ProdKey();
@@ -182,14 +189,14 @@ void RunWifi_Command_Handler(uint8_t command)
 
     if(wifi_t.publish_send_state_data ==1){
 		 wifi_t.publish_send_state_data=0;
-
-
+	
+         HAL_Delay(200);
 		 Example_Publish_State();
 
 	}
 	
 
-
+   }
 }
 
 
