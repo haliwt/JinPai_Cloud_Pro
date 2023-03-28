@@ -243,12 +243,13 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 
                          if(wifi_t.usart_wifi_model ==0){
                             Publish_Power_OFF_State();
-							 Subscribe_Data_SterilizationOff();
+							 Publish_Data_AllRef();
                          }
                          else{ //Power on 
                            
 							Publish_Power_ON_State();
-							 Subscribe_Data_SterilizationOff();
+							Publish_Data_AllRef();
+							 
 							}
 
                     break;
@@ -257,11 +258,11 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                          if(wifi_t.usart_wifi_model ==0){
                           
 							Example_Publish_PTC_OFF_State();
-							 Subscribe_Data_SterilizationOff();
+							Publish_Data_AllRef();
                          }
                          else{
 							Example_Publish_PTC_ON_State();
-							 Subscribe_Data_SterilizationOff();
+							 Publish_Data_AllRef();
                          }
                     break;
 
@@ -269,13 +270,13 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                          if(wifi_t.usart_wifi_model ==0){
 						 	run_t.gPlasma=0;
                             Publish_Sterilization_OFF_State();
-						    Subscribe_Data_SterilizationOff();
+						   Publish_Data_AllRef();
 								
                          }
                          else{
 						 	run_t.gPlasma=1;
                           Publish_Sterilization_ON_State();
-						  Subscribe_Data_SterilizationOn();
+						  Publish_Data_AllRef();
                          }
                     break;
 
