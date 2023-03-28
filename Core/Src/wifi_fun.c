@@ -243,33 +243,39 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 
                          if(wifi_t.usart_wifi_model ==0){
                             Publish_Power_OFF_State();
+							 Subscribe_Data_SterilizationOff();
                          }
                          else{ //Power on 
-                            //Subscribe_Data_PowerOn();
-							//Update_DHT11_Value();
+                           
 							Publish_Power_ON_State();
-							
-                         }
+							 Subscribe_Data_SterilizationOff();
+							}
 
                     break;
 
                     case 0x05://dry on or off
                          if(wifi_t.usart_wifi_model ==0){
-                           // Subscribe_Data_PtcOff();
+                          
 							Example_Publish_PTC_OFF_State();
+							 Subscribe_Data_SterilizationOff();
                          }
                          else{
-                            //Subscribe_Data_PtcOn();
 							Example_Publish_PTC_ON_State();
+							 Subscribe_Data_SterilizationOff();
                          }
                     break;
 
                     case 0x07: //sterilization on or off
                          if(wifi_t.usart_wifi_model ==0){
-                           // Subscribe_Data_SterilizationOff();
+						 	run_t.gPlasma=0;
+                            Publish_Sterilization_OFF_State();
+						    Subscribe_Data_SterilizationOff();
+								
                          }
                          else{
-                           // Subscribe_Data_SterilizationOn();
+						 	run_t.gPlasma=1;
+                          Publish_Sterilization_ON_State();
+						  Subscribe_Data_SterilizationOn();
                          }
                     break;
 

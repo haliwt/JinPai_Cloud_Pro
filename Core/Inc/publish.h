@@ -18,6 +18,12 @@ void Publish_Power_ON_State(void);
 
 void Publish_Power_OFF_State(void);
 
+void Publish_Sterilization_ON_State(void);
+
+void Publish_Sterilization_OFF_State(void);
+
+
+
 
 
 #endif 

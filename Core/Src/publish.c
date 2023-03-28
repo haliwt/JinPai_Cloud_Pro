@@ -295,19 +295,19 @@ void Publish_Data_AllRef(void)
   SendFrame_Dry(run_t.gDry);
   SendFrame_Ster(run_t.gPlasma);//8
   SendFrame_Mouse(run_t.gUltrasonic);
-  SendFrame_SetTemperature(run_t.set_temperature_value);//10
+  SendFrame_SetTemperature(0x1A);//10
   SendFrame_SetTimer(run_t.gTimer);
   SendFrame_SetFanSpeed(run_t.gFanSpeed);
-  SendFrame_Read_TemperatureValue(run_t.gTemperature);
-  SendFrame_Read_HumidityValue(run_t.gHumidity);
-  SendFrame_Time_Remaining_One(run_t.time_remaining); //15
+  SendFrame_Read_TemperatureValue(0x20);
+  SendFrame_Read_HumidityValue(0x34);
+  SendFrame_Time_Remaining_One(0x0); //15
    SendFrame_Time_Remaining_Two(run_t.time_remaining);
-  SendFrame_Time_Working_One(run_t.time_working);
+  SendFrame_Time_Working_One(0x0);
    SendFrame_Time_Working_Two(run_t.time_working);
   SendFrame_Alarm_Infor(run_t.alarm_call);
   temp_value = 0x48+0x14+0x01+0x01+run_t.gPower_On+run_t.gDry+run_t.gPlasma\
-             +run_t.gUltrasonic+run_t.set_temperature_value+run_t.gTimer\
-			 +run_t.gFanSpeed+run_t.gTemperature+run_t.gHumidity+run_t.time_remaining+run_t.time_working+run_t.alarm_call;
+             +run_t.gUltrasonic+0x1A+run_t.gTimer\
+			 +run_t.gFanSpeed+0x20+0x34+run_t.time_remaining+run_t.time_working+run_t.alarm_call;
 
   SendFrame_Sum(temp_value);
 
@@ -472,6 +472,68 @@ void Example_Publish_PTC_ON_State(void)
   SendFrame_Time_Working_Two(0x14);
   SendFrame_Alarm_Infor(00);
   temp_code = 0x048+0x14+0x01+0x01+0x01+0x01+0x01+0x01+0x01+0x24+0x01+0x01+0x1A+0x38+0x14;
+
+  SendFrame_Sum(temp_code);
+
+
+}
+
+
+void Publish_Sterilization_ON_State(void)
+{
+
+  
+  SendHead();
+  SendFrame_Len(0x14);
+  SendFrame_Type(0x01);
+  SendFrame_Numbers(0x01); //4
+  SendFrame_Order(0x01);
+  SendFrame_Power(0x01);
+  SendFrame_Dry(0x01);
+  SendFrame_Ster(0x01);//8
+  SendFrame_Mouse(0x01);
+  SendFrame_SetTemperature(0x24);//10
+  SendFrame_SetTimer(0x01);
+  SendFrame_SetFanSpeed(0x01);
+  SendFrame_Read_TemperatureValue(0x1A);
+  SendFrame_Read_HumidityValue(0x38 );
+  SendFrame_Time_Remaining_One(0); //15
+  SendFrame_Time_Remaining_Two(0);
+  SendFrame_Time_Working_One(0);
+  SendFrame_Time_Working_Two(0x14);
+  SendFrame_Alarm_Infor(00);
+  temp_code = 0x048+0x14+0x01+0x01+0x01+0x01+0x01+0x01+0x01+0x24+0x01+0x01+0x1A+0x38+0x14;
+
+  SendFrame_Sum(temp_code);
+
+
+}
+
+
+void Publish_Sterilization_OFF_State(void)
+{
+
+  
+  SendHead();
+  SendFrame_Len(0x14);
+  SendFrame_Type(0x01);
+  SendFrame_Numbers(0x01); //4
+  SendFrame_Order(0x01);
+  SendFrame_Power(0x01);
+  SendFrame_Dry(0x01);
+  SendFrame_Ster(0);//8
+  SendFrame_Mouse(0x01);
+  SendFrame_SetTemperature(0x24);//10
+  SendFrame_SetTimer(0x01);
+  SendFrame_SetFanSpeed(0x01);
+  SendFrame_Read_TemperatureValue(0x1A);
+  SendFrame_Read_HumidityValue(0x38 );
+  SendFrame_Time_Remaining_One(0); //15
+  SendFrame_Time_Remaining_Two(0);
+  SendFrame_Time_Working_One(0);
+  SendFrame_Time_Working_Two(0x14);
+  SendFrame_Alarm_Infor(00);
+  temp_code = 0x048+0x14+0x01+0x01+0x01+0x01+0x0+0x01+0x01+0x24+0x01+0x01+0x1A+0x38+0x14;
 
   SendFrame_Sum(temp_code);
 
