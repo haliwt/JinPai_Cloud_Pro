@@ -342,14 +342,15 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                     case 0x0e : // set up temperature sensor value
 							Buzzer_KeySound();
                         run_t.set_temperature_value = wifi_t.usart_wifi_model;
-					   SendWifiData_To_WifiSetTemp(run_t.set_temperature_value);
+					
+					   SendWifiData_To_PanelTemp(run_t.set_temperature_value);
                         
                     break;
 
 					case 0x0F : // set up timer timing value
                       	Buzzer_KeySound();
                         run_t.set_timing_value = wifi_t.usart_wifi_model;
-					    SendWifiData_To_PanelWindSpeed(run_t.set_timing_value);
+						SendWifiData_To_PanelTime(run_t.set_timing_value);
                     break;
 
 					
