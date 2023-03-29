@@ -37,7 +37,7 @@ void RunWifi_Command_Handler(uint8_t command)
     static uint8_t recoder_times,publish_init_flag,repeat_times,repeat_send_times,pub_times ;
 
 	if(run_t.gPower_On == POWER_ON ){
-    switch(command){
+    	switch(command){
 
         case wifi_start_link_net://0x02
 
@@ -136,21 +136,21 @@ void RunWifi_Command_Handler(uint8_t command)
 				}
 		break;
 
-    case wifi_subscribe_data://6
+    	case wifi_subscribe_data://6
 
 	
 
-    break;
+    	break;
 
 		case wifi_null://7
 		  //    if(wifi_t.gTimer_5s > 30){
 			//  	wifi_t.gTimer_5s =0;
 			//  	Publish_Data_AllRef();
 			// }
-//		   if(wifi_t.gTimer_5s > 62){
-//            wifi_t.gTimer_5s =0;
-//          	Publish_Command_Query();
-//			}
+		//		   if(wifi_t.gTimer_5s > 62){
+		//            wifi_t.gTimer_5s =0;
+		//          	Publish_Command_Query();
+		//			}
 		break;
         
         default:
@@ -161,7 +161,7 @@ void RunWifi_Command_Handler(uint8_t command)
 
       }
 
-    if(usart_wifi_t.usart_wifi_receive_read_data_flag==1){
+    	if(usart_wifi_t.usart_wifi_receive_read_data_flag==1){
       
 		usart_wifi_t.usart_wifi_receive_read_data_flag=0;
        	usart_wifi_t.usart_wifi_start_receive_flag=0;
@@ -194,14 +194,14 @@ void RunWifi_Command_Handler(uint8_t command)
 		
 		
 
-    }
+    	}
     
-    //	if(run_t.first_power_on_flag ==1 && receive_usart_wifi_data ==1){
-    //	       
-    //           receive_usart_wifi_data ++;
-    //           Publish_Data_ProdKey();
-    //
-    //	   }
+		//	if(run_t.first_power_on_flag ==1 && receive_usart_wifi_data ==1){
+		//	       
+		//           receive_usart_wifi_data ++;
+		//           Publish_Data_ProdKey();
+		//
+		//	   }
     }
     
 }

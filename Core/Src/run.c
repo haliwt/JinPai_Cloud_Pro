@@ -139,8 +139,8 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 		esp8266_t.esp8266_config_wifi_net_label=0;
       if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){ 
         Publish_Power_OFF_State();
-		Publish_Data_AllRef();
-		HAL_Delay(50);
+		//Publish_Data_AllRef();
+		HAL_Delay(30);
 	  }    
 
     cmd = 0xff;
@@ -158,8 +158,8 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 		 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 			
 			Publish_Power_ON_State();
-			Publish_Data_AllRef();
-		    HAL_Delay(50);
+			//Publish_Data_AllRef();
+		    HAL_Delay(30);
 		 }
 		 
 	 cmd=0xff;  
@@ -354,7 +354,6 @@ void RunCommand_MainBoard_Fun(void)
 
 	case POWER_OFF: //2
 		SetPowerOff_ForDoing();
-		run_t.first_power_on_flag=0;
 	    if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 			  run_t.recoder_wifi_link_cloud_flag = 1; //recoder has been linked cloud flag
 		}
