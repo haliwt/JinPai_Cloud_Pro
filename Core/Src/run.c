@@ -447,67 +447,21 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 	    run_t.gTimer_send_prodky=0;
 	 
      }
-    
-#if 0
+     if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_FAIL){
+			  wifi_t.publish_send_state_data=0;
+			
+            Read_USART2_Wifi_Data(wifi_t.usart_wifi_frame_type,wifi_t.usart_wifi_frame_len,wifi_t.usart_wifi_order);
+       
+	 }
 
-	if(self_power_on_flag==0){
-        self_power_on_flag ++ ;
-        Buzzer_KeySound();
-		run_t.flash_read_data =Flash_Read_Data();
-		switch(run_t.flash_read_data){
-
-	     case error: //wifi don't link to tencent cloud ,need manual operation
-		      wifi_t.runCommand_order_lable = 0xff;
-		      run_t.flash_write_data_flag = 0;
-		 break;
-
-		 case success: //wifi has been linked to tencent cloud,need auto link to tencent cloud
-		 	//wifi_t.runCommand_order_lable = wifi_link_tencent_cloud;
-			run_t.flash_write_data_flag = 1;
-		  
-         break;
-
-
-
-		}
-	
-
-	switch(run_t.flash_write_data_flag){
-
-      case 0:
-
-      break;
-
-      case 1:
-        WIFI_IC_ENABLE();
-      	InitWifiModule();
-		//Wifi_SoftAP_Config_Handler();
-		PowerOn_Self_Auto_Link_Tencent_Cloud();
-		
-        SmartPhone_TryToLink_TencentCloud();
- 
-		if(wifi_t.wifi_link_cloud ==1){
-			wifi_t.runCommand_order_lable = wifi_publish_update_tencent_cloud_data;
-			//esp8266_t.gTimer_subscription_timing=0;
-		}
-        else wifi_t.runCommand_order_lable =0xff;
-
-      break;
-
-
-	}
-   }
-    
-   if(wifi_t.wifi_link_cloud ==1 &&  self_power_on_flag==1){
-        self_power_on_flag++;
-			wifi_t.runCommand_order_lable = wifi_publish_update_tencent_cloud_data;
-			//esp8266_t.gTimer_subscription_timing=0;
-	}
-
- #endif 
+	if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
+            if(run_t.gPower_On == POWER_ON  && run_t.first_power_on_flag < 6){
+				run_t.wifi_link_JPai_cloud = 1;
+				 run_t.first_power_on_flag++ ;
+				SendWifiData_To_Cmd(0x01) ;
+			}
+     }
 
 }
-
-
 
     

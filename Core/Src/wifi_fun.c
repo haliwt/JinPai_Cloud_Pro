@@ -168,6 +168,7 @@ void RunWifi_Command_Handler(uint8_t command)
 		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 			
             Publish_Return_Repeat_Data();
+			Buzzer_KeySound();
 			wifi_t.publish_send_state_data=1;
              
          }

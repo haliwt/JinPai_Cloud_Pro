@@ -513,7 +513,6 @@ void Publish_Sterilization_ON_State(void)
 void Publish_Sterilization_OFF_State(void)
 {
 
-  
   SendHead();
   SendFrame_Len(0x14);
   SendFrame_Type(0x01);
@@ -541,4 +540,62 @@ void Publish_Sterilization_OFF_State(void)
 }
 
 
+void Publish_Ultrasonic_ON_State(void)
+{
+
+  SendHead();
+  SendFrame_Len(0x14);
+  SendFrame_Type(0x01);
+  SendFrame_Numbers(0x01); //4
+  SendFrame_Order(0x01);
+  SendFrame_Power(0x01);
+  SendFrame_Dry(0x01);
+  SendFrame_Ster(0);//8
+  SendFrame_Mouse(0x01);
+  SendFrame_SetTemperature(0x24);//10
+  SendFrame_SetTimer(0x01);
+  SendFrame_SetFanSpeed(0x01);
+  SendFrame_Read_TemperatureValue(0x1A);
+  SendFrame_Read_HumidityValue(0x38 );
+  SendFrame_Time_Remaining_One(0); //15
+  SendFrame_Time_Remaining_Two(0);
+  SendFrame_Time_Working_One(0);
+  SendFrame_Time_Working_Two(0x14);
+  SendFrame_Alarm_Infor(00);
+  temp_code = 0x048+0x14+0x01+0x01+0x01+0x01+0x0+0x01+0x01+0x24+0x01+0x01+0x1A+0x38+0x14;
+
+  SendFrame_Sum(temp_code);
+
+
+}
+
+
+void Publish_Ultrasonic_OFF_State(void)
+{
+
+  SendHead();
+  SendFrame_Len(0x14);
+  SendFrame_Type(0x01);
+  SendFrame_Numbers(0x01); //4
+  SendFrame_Order(0x01);
+  SendFrame_Power(0x01);
+  SendFrame_Dry(0x01);
+  SendFrame_Ster(0);//8
+  SendFrame_Mouse(0x01);
+  SendFrame_SetTemperature(0x24);//10
+  SendFrame_SetTimer(0x01);
+  SendFrame_SetFanSpeed(0x01);
+  SendFrame_Read_TemperatureValue(0x1A);
+  SendFrame_Read_HumidityValue(0x38 );
+  SendFrame_Time_Remaining_One(0); //15
+  SendFrame_Time_Remaining_Two(0);
+  SendFrame_Time_Working_One(0);
+  SendFrame_Time_Working_Two(0x14);
+  SendFrame_Alarm_Infor(00);
+  temp_code = 0x048+0x14+0x01+0x01+0x01+0x01+0x0+0x01+0x00+0x24+0x01+0x01+0x1A+0x38+0x14;
+
+  SendFrame_Sum(temp_code);
+
+
+}
 

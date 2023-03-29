@@ -22,8 +22,9 @@ void Publish_Sterilization_ON_State(void);
 
 void Publish_Sterilization_OFF_State(void);
 
+void Publish_Ultrasonic_ON_State(void);
 
-
+void Publish_Ultrasonic_OFF_State(void);
 
 
 #endif 
