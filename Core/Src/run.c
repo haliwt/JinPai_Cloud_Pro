@@ -75,8 +75,8 @@ void Decode_RunCmd(void)
               
              run_t.set_temperature_value = cmdType_2;
 			 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-
-				//Publish_Data_AllRef();
+				Publish_PTC_State();
+				
 				HAL_Delay(30);
 			 }
 			    
