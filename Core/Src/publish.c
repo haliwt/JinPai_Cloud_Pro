@@ -351,7 +351,14 @@ void Publish_Return_Repeat_Data(void)
 
 
 }
-
+/*****************************************************************************************************
+ * 
+ * Function Name: void Publish_Ultrasonic_OFF_State(void)
+ * Function Description::send to cloud data that ultrasonic
+ * Input Parameters:NO
+ * Return Parameter:NO
+ * 
+ ****************************************************************************************************/
 void Publish_Power_ON_State(void)
 {
 
@@ -413,7 +420,14 @@ void Publish_Power_OFF_State(void)
 
 }
 
-
+/*****************************************************************************************************
+ * 
+ * Function Name: void Publish_Ultrasonic_OFF_State(void)
+ * Function Description::send to cloud data that ultrasonic
+ * Input Parameters:NO
+ * Return Parameter:NO
+ * 
+ ****************************************************************************************************/
 void Example_Publish_PTC_OFF_State(void)
 {
 
@@ -477,7 +491,14 @@ void Example_Publish_PTC_ON_State(void)
 
 }
 
-
+/*****************************************************************************************************
+ * 
+ * Function Name: void Publish_Ultrasonic_OFF_State(void)
+ * Function Description::send to cloud data that ultrasonic
+ * Input Parameters:NO
+ * Return Parameter:NO
+ * 
+ ****************************************************************************************************/
 void Publish_Sterilization_ON_State(void)
 {
 	uint8_t temp_code;
@@ -537,8 +558,14 @@ void Publish_Sterilization_OFF_State(void)
 
 
 }
-
-
+/*****************************************************************************************************
+ * 
+ * Function Name: void Publish_Ultrasonic_OFF_State(void)
+ * Function Description::send to cloud data that ultrasonic
+ * Input Parameters:NO
+ * Return Parameter:NO
+ * 
+ ****************************************************************************************************/
 void Publish_Ultrasonic_ON_State(void)
 {
 
