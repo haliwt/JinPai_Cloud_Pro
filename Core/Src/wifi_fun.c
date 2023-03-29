@@ -25,10 +25,11 @@ uint8_t receive_usart_wifi_data;
 static void Wifi_ReceiveData_Handler(void);
 /*********************************************************
  * 
-  * @brief 
+  * @brief :void RunWifi_Command_Handler(uint8_t command)
   * @param 
   * @return 
   * @note 
+  * 
   *********************************************************/
 void RunWifi_Command_Handler(uint8_t command)
 {
@@ -173,7 +174,7 @@ void RunWifi_Command_Handler(uint8_t command)
 					wifi_t.publish_send_state_data=0;
 				}
 				else   wifi_t.publish_send_state_data=1;
-				Publish_Return_Repeat_Data();
+						Publish_Return_Repeat_Data();
 				
 		    } 
 			else{
@@ -194,24 +195,18 @@ void RunWifi_Command_Handler(uint8_t command)
 		
 
     }
-//	if(run_t.first_power_on_flag ==1 && receive_usart_wifi_data ==1){
-//	       
-//           receive_usart_wifi_data ++;
-//           Publish_Data_ProdKey();
-//
-//	   }
-
-//    if(wifi_t.publish_send_state_data ==1){
-//		 wifi_t.publish_send_state_data=0;
-//	
-//         HAL_Delay(200);
-//		 Example_Publish_State();
-//
-//	}
-	
-
-   }
+    
+    //	if(run_t.first_power_on_flag ==1 && receive_usart_wifi_data ==1){
+    //	       
+    //           receive_usart_wifi_data ++;
+    //           Publish_Data_ProdKey();
+    //
+    //	   }
+    }
+    
 }
+
+
 
 
 /********************************************************************************
@@ -261,7 +256,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                          if(wifi_t.usart_wifi_model ==0){
 						 	Buzzer_KeySound();
                             Publish_Power_OFF_State();
-							 Publish_Data_AllRef();
+							Publish_Data_AllRef();
 						 
 						     
                          }
@@ -277,12 +272,12 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                     case 0x05://dry on or off
                          if(wifi_t.usart_wifi_model ==0){
                             Buzzer_KeySound();
-							Example_Publish_PTC_OFF_State();
+							Publish_PTC_OFF_State();
 							Publish_Data_AllRef();
                          }
                          else{
 						 	Buzzer_KeySound();
-							Example_Publish_PTC_ON_State();
+							Publish_PTC_ON_State();
 							 Publish_Data_AllRef();
                          }
                     break;
@@ -292,7 +287,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 						 	run_t.gPlasma=0;
 							Buzzer_KeySound();
                             Publish_Sterilization_OFF_State();
-						   Publish_Data_AllRef();
+						     Publish_Data_AllRef();
 								
                          }
                          else{
@@ -311,31 +306,35 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                          }
                          else{
 						 	Buzzer_KeySound();
-                           Publish_Ultrasonic_ON_State();
-						    Publish_Data_AllRef();
+                           	Publish_Ultrasonic_ON_State();
+						   Publish_Data_AllRef();
                          }
 
                     break;
 
-                    case 0x0b : //fan speed hihg or low
-                         if(wifi_t.usart_wifi_model ==0){
-                           // Subscribe_Data_FanSpeedHigh();
+					case 0x0B: //wind  speed control
+                        if(wifi_t.usart_wifi_model ==0){
+						
                          }
                          else{
-                           // Subscribe_Data_FanSpeedLow();
+						 
                          }
+
+                    break;
+
+
+
+                    case 0x0e : // set up temperature sensor value
+                         run_t.set_temperature_value = wifi_t.usart_wifi_model;
                         
                     break;
 
-                    case 0x0e: //set up temperature value
-                         
-                        run_t.set_temperature_value = wifi_t.usart_wifi_model;
-                         
+					case 0x0F : // set up timer timing value
+                      
+                        run_t.set_timing_value = wifi_t.usart_wifi_model;
                     break;
 
-                    case 0x0f: //set timer timing
-                       
-                    break;
+					
 
 
 
@@ -344,6 +343,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
             break;
 
             case 0x0b: // set order status from
+				  
               
             break;
 

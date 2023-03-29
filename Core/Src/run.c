@@ -139,7 +139,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 		esp8266_t.esp8266_config_wifi_net_label=0;
       if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){ 
         Publish_Power_OFF_State();
-		//Publish_Data_AllRef();
+		Publish_Data_AllRef();
 		HAL_Delay(50);
 	  }    
 
@@ -159,7 +159,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 			
 			Publish_Power_ON_State();
 			Publish_Data_AllRef();
-		    
+		    HAL_Delay(50);
 		 }
 		 
 	 cmd=0xff;  
@@ -196,8 +196,8 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 	      run_t.gFan_continueRun =0;
 		    Buzzer_KeySound();
 		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-		  
-            HAL_Delay(20);
+		    Publish_PTC_ON_State();
+            HAL_Delay(30);
 	      }
 		   
 		 
@@ -216,8 +216,8 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 
 		     }
 			if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-		   
-			    HAL_Delay(20);
+				Publish_PTC_OFF_State();
+			    HAL_Delay(30);
 			}
 			   
        break;
@@ -227,7 +227,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
        		run_t.gUltrasonic =1;
 			Buzzer_KeySound();
 	   if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-	      
+	        Publish_Sterilization_ON_State();
 	        HAL_Delay(30);
 	     
 	   	}
@@ -239,7 +239,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
            run_t.gUltrasonic =0;
 		   Buzzer_KeySound();
 	   if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-	       
+	       Publish_Sterilization_OFF_State();
             HAL_Delay(30);
 	       
 	      
@@ -251,7 +251,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
           run_t.set_wind_speed_value=100;
 		  Buzzer_KeySound();
 		  if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-			
+			 Publish_Ultrasonic_ON_State();
 			 HAL_Delay(30);
 		  }
 		
@@ -262,7 +262,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 	        Buzzer_KeySound();
            run_t.set_wind_speed_value = 50;
 		   if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-			
+			 Publish_Ultrasonic_OFF_State();
 			 HAL_Delay(30);
 		   }
 		 
