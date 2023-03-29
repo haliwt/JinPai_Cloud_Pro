@@ -12,6 +12,7 @@
 #include "usart.h"
 #include "subscribe.h"
 #include "flash.h"
+#include "buzzer.h"
 
 
 WIFI_FUN   wifi_t;
@@ -168,7 +169,6 @@ void RunWifi_Command_Handler(uint8_t command)
 		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 			
             Publish_Return_Repeat_Data();
-			Buzzer_KeySound();
 			wifi_t.publish_send_state_data=1;
              
          }
@@ -243,11 +243,14 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                     case 0x02: //set Power on or off
 
                          if(wifi_t.usart_wifi_model ==0){
+						 	Buzzer_KeySound();
                             Publish_Power_OFF_State();
 							 Publish_Data_AllRef();
+						 
+						     
                          }
                          else{ //Power on 
-                           
+                            Buzzer_KeySound();
 							Publish_Power_ON_State();
 							Publish_Data_AllRef();
 							 
@@ -257,11 +260,12 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 
                     case 0x05://dry on or off
                          if(wifi_t.usart_wifi_model ==0){
-                          
+                            Buzzer_KeySound();
 							Example_Publish_PTC_OFF_State();
 							Publish_Data_AllRef();
                          }
                          else{
+						 	Buzzer_KeySound();
 							Example_Publish_PTC_ON_State();
 							 Publish_Data_AllRef();
                          }
@@ -270,12 +274,14 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                     case 0x07: //sterilization on or off
                          if(wifi_t.usart_wifi_model ==0){
 						 	run_t.gPlasma=0;
+							Buzzer_KeySound();
                             Publish_Sterilization_OFF_State();
 						   Publish_Data_AllRef();
 								
                          }
                          else{
-						 	run_t.gPlasma=1;
+						 run_t.gPlasma=1;
+						Buzzer_KeySound();
                           Publish_Sterilization_ON_State();
 						  Publish_Data_AllRef();
                          }
@@ -283,10 +289,14 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 
                     case 0x09: //ultrasonic on or off 
                         if(wifi_t.usart_wifi_model ==0){
-                            //Subscribe_Data_UltrasonicOff();
+							Buzzer_KeySound();
+                           Publish_Ultrasonic_OFF_State();
+						    Publish_Data_AllRef();
                          }
                          else{
-                         // Subscribe_Data_UltrasonicOn();
+						 	Buzzer_KeySound();
+                           Publish_Ultrasonic_ON_State();
+						    Publish_Data_AllRef();
                          }
 
                     break;
