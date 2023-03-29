@@ -256,7 +256,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                          if(wifi_t.usart_wifi_model ==0){
 						 	Buzzer_KeySound();
                             Publish_Power_OFF_State();
-							Publish_Data_AllRef();
+							HAL_Delay(30);
 							SendWifiCmd_To_Order(WIFI_POWER_OFF);
 						 
 						     
@@ -264,7 +264,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                          else{ //Power on 
                             Buzzer_KeySound();
 							Publish_Power_ON_State();
-							Publish_Data_AllRef();
+							HAL_Delay(30);
 							SendWifiCmd_To_Order(WIFI_POWER_ON);
 							 
 							}
@@ -276,14 +276,14 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 							run_t.gDry = 0;
                             Buzzer_KeySound();
 							  Publish_Reference_Update_State();
-							Publish_Data_AllRef();
+							HAL_Delay(30);
 							SendWifiCmd_To_Order(WIFI_PTC_OFF);
                          }
                          else{
 							run_t.gDry=1;
 						 	Buzzer_KeySound();
 							  Publish_Reference_Update_State();
-							 Publish_Data_AllRef();
+							HAL_Delay(30);
 							 SendWifiCmd_To_Order(WIFI_PTC_ON);
                          }
                     break;
@@ -293,7 +293,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 						 	run_t.gPlasma=0;
 							Buzzer_KeySound();
                             Publish_Reference_Update_State();
-						    Publish_Data_AllRef();
+						    HAL_Delay(30);
 							SendWifiCmd_To_Order(WIFI_KILL_OFF);
 								
                          }
@@ -301,7 +301,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 						  run_t.gPlasma=1;
 						  Buzzer_KeySound();
                           Publish_Reference_Update_State();
-						  Publish_Data_AllRef();
+						  HAL_Delay(30);
 						  SendWifiCmd_To_Order(WIFI_KILL_ON);
                          }
                     break;
@@ -311,14 +311,14 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 							run_t.gUltrasonic =0;
 							Buzzer_KeySound();
                            Publish_Reference_Update_State();
-						    Publish_Data_AllRef();
+						   HAL_Delay(30);
 							SendWifiCmd_To_Order(WIFI_ULTRASONIC_OFF);
                          }
                          else{
 						 	run_t.gUltrasonic =1;
 						 	Buzzer_KeySound();
                              Publish_Reference_Update_State();
-						   Publish_Data_AllRef();
+						   HAL_Delay(30);
 						   SendWifiCmd_To_Order(WIFI_ULTRASONIC_ON);
                          }
 
