@@ -314,9 +314,11 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 
 					case 0x0B: //wind  speed control
                         if(wifi_t.usart_wifi_model ==0){
+							Buzzer_KeySound();
 						
                          }
                          else{
+							Buzzer_KeySound();
 						 
                          }
 
@@ -325,12 +327,13 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 
 
                     case 0x0e : // set up temperature sensor value
+							Buzzer_KeySound();
                          run_t.set_temperature_value = wifi_t.usart_wifi_model;
                         
                     break;
 
 					case 0x0F : // set up timer timing value
-                      
+                      	Buzzer_KeySound();
                         run_t.set_timing_value = wifi_t.usart_wifi_model;
                     break;
 
