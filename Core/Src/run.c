@@ -447,19 +447,19 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 	    run_t.gTimer_send_prodky=0;
 	 
      }
-     if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_FAIL){
+     if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_FAIL && run_t.first_power_on_flag < 2 ){
 			  wifi_t.publish_send_state_data=0;
 			
             Read_USART2_Wifi_Data(wifi_t.usart_wifi_frame_type,wifi_t.usart_wifi_frame_len,wifi_t.usart_wifi_order);
        
 	 }
 
-	if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-            if(run_t.gPower_On == POWER_ON  && run_t.first_power_on_flag < 6){
+	if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS && run_t.first_power_on_flag == 1 && run_t.gPower_On == POWER_ON ){
+                run_t.first_power_on_flag++ ;
 				run_t.wifi_link_JPai_cloud = 1;
-				 run_t.first_power_on_flag++ ;
+				
 				SendWifiData_To_Cmd(0x01) ;
-			}
+			
      }
 
 }
