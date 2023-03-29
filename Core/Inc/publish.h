@@ -21,15 +21,9 @@ void Publish_Power_OFF_State(void);
 void Publish_PTC_State(void);
 
 
-void Publish_Sterilization_ON_State(void);
 
-void Publish_Sterilization_OFF_State(void);
+void Publish_Reference_Update_State(void);
 
-void Publish_Ultrasonic_ON_State(void);
-
-void Publish_Ultrasonic_OFF_State(void);
-
-void Publish_SetTemperature_Value(void);
 #endif 
 
 

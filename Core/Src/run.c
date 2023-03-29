@@ -211,7 +211,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 			Buzzer_KeySound();
 			
 			if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-				Publish_PTC_State();
+				Publish_Reference_Update_State();
 			    HAL_Delay(30);
 			}
 			   
@@ -222,7 +222,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
        	
 			Buzzer_KeySound();
 	   if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-	        Publish_Sterilization_ON_State();
+	        Publish_Reference_Update_State();
 	        HAL_Delay(30);
 	     
 	   	}
@@ -233,7 +233,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
            run_t.gPlasma=0;
 		   Buzzer_KeySound();
 	   if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-	       Publish_Sterilization_OFF_State();
+	         Publish_Reference_Update_State();
             HAL_Delay(30);
 	       
 	      
@@ -246,7 +246,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 		  run_t.gUltrasonic =1;
 		  Buzzer_KeySound();
 		  if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-			 Publish_Ultrasonic_ON_State();
+			  Publish_Reference_Update_State();
 			 HAL_Delay(30);
 		  }
 		
@@ -254,10 +254,11 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
        break;
 
        case ULTRASONIC_OFF :
+	   	    run_t.gUltrasonic =0;
 	        Buzzer_KeySound();
-		   run_t.gUltrasonic =0;
+		  
 		   if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-			 Publish_Ultrasonic_OFF_State();
+			  Publish_Reference_Update_State();
 			 HAL_Delay(30);
 		   }
 		 

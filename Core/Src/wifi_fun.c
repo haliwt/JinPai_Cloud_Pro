@@ -275,14 +275,14 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                          if(wifi_t.usart_wifi_model ==0){
 							run_t.gDry = 0;
                             Buzzer_KeySound();
-							Publish_PTC_State();
+							  Publish_Reference_Update_State();
 							Publish_Data_AllRef();
 							SendWifiCmd_To_Order(WIFI_PTC_OFF);
                          }
                          else{
 							run_t.gDry=1;
 						 	Buzzer_KeySound();
-							Publish_PTC_State();
+							  Publish_Reference_Update_State();
 							 Publish_Data_AllRef();
 							 SendWifiCmd_To_Order(WIFI_PTC_ON);
                          }
@@ -292,7 +292,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                          if(wifi_t.usart_wifi_model ==0){
 						 	run_t.gPlasma=0;
 							Buzzer_KeySound();
-                            Publish_Sterilization_OFF_State();
+                            Publish_Reference_Update_State();
 						    Publish_Data_AllRef();
 							SendWifiCmd_To_Order(WIFI_KILL_OFF);
 								
@@ -300,7 +300,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                          else{
 						  run_t.gPlasma=1;
 						  Buzzer_KeySound();
-                          Publish_Sterilization_ON_State();
+                          Publish_Reference_Update_State();
 						  Publish_Data_AllRef();
 						  SendWifiCmd_To_Order(WIFI_KILL_ON);
                          }
@@ -310,14 +310,14 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                         if(wifi_t.usart_wifi_model ==0){
 							run_t.gUltrasonic =0;
 							Buzzer_KeySound();
-                           Publish_Ultrasonic_OFF_State();
+                           Publish_Reference_Update_State();
 						    Publish_Data_AllRef();
 							SendWifiCmd_To_Order(WIFI_ULTRASONIC_OFF);
                          }
                          else{
 						 	run_t.gUltrasonic =1;
 						 	Buzzer_KeySound();
-                           	Publish_Ultrasonic_ON_State();
+                             Publish_Reference_Update_State();
 						   Publish_Data_AllRef();
 						   SendWifiCmd_To_Order(WIFI_ULTRASONIC_ON);
                          }
