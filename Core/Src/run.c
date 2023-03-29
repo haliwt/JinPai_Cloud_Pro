@@ -159,7 +159,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 			
 			Publish_Power_ON_State();
 			Publish_Data_AllRef();
-		    HAL_Delay(50);
+		    
 		 }
 		 
 	 cmd=0xff;  

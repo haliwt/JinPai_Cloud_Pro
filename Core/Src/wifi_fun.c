@@ -167,10 +167,19 @@ void RunWifi_Command_Handler(uint8_t command)
 		usart_wifi_t.usart_wifi_receive_success_flag=0;
 	  
 		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-			
-            Publish_Return_Repeat_Data();
-			wifi_t.publish_send_state_data=1;
-             
+			if(wifi_t.usart_wifi_frame_len < 0x0d ){
+				if(wifi_t.usart_wifi_frame_len==0x06){
+
+					wifi_t.publish_send_state_data=0;
+				}
+				else   wifi_t.publish_send_state_data=1;
+				Publish_Return_Repeat_Data();
+				
+		    } 
+			else{
+
+				wifi_t.publish_send_state_data=0;
+			} 
          }
 
 		
@@ -205,7 +214,14 @@ void RunWifi_Command_Handler(uint8_t command)
 }
 
 
-
+/********************************************************************************
+ * 
+  * @brief :void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
+  * @param 
+  * @return 
+  * @note 
+  * 
+  *******************************************************************************/
 void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 {
 
