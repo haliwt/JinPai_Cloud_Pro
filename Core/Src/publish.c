@@ -440,8 +440,8 @@ void Publish_PTC_State(void)
   SendFrame_Order(0x01);
   SendFrame_Power(0x01);
   SendFrame_Dry(run_t.gDry);
-  SendFrame_Ster(0x01);//8
-  SendFrame_Mouse(0x01);
+  SendFrame_Ster(run_t.gPlasma);//8
+  SendFrame_Mouse(run_t.gUltrasonic);
   if(run_t.set_temperature_value < 20)run_t.set_temperature_value=20;
   SendFrame_SetTemperature(run_t.set_temperature_value);//10
   SendFrame_SetTimer(0x01);
@@ -451,9 +451,9 @@ void Publish_PTC_State(void)
   SendFrame_Time_Remaining_One(0); //15
   SendFrame_Time_Remaining_Two(0);\
   SendFrame_Time_Working_One(0);
-  SendFrame_Time_Working_Two(0x14);
+  SendFrame_Time_Working_Two(0);
   SendFrame_Alarm_Infor(00);
-  temp_code = 0x048+0x14+0x01+0x01+0x01+0x01+run_t.gDry+0x01+0x01+run_t.set_temperature_value+0x01+0x01+run_t.gDht11_temperature+run_t.gDht11_humidity+0x14;
+  temp_code = 0x048+0x14+0x01+0x01+0x01+0x01+run_t.gDry +run_t.gPlasma+run_t.gUltrasonic+run_t.set_temperature_value+0x01+0x01+run_t.gDht11_temperature+run_t.gDht11_humidity+0;
 
   SendFrame_Sum(temp_code);
 

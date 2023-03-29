@@ -6,10 +6,66 @@
 
 #define WIFI_AUTO_SMART_CONFIG()       HAL_GPIO_WritePin(WIFI_CONFIG_GPIO_Port,WIFI_CONFIG_Pin,GPIO_PIN_RESET)
 #define WIFI_AUTO_EXIT_SMART_CONFIG()	HAL_GPIO_WritePin(WIFI_CONFIG_GPIO_Port,WIFI_CONFIG_Pin,GPIO_PIN_SET)
+
+
+typedef enum DISPLAY_STATE_T{
+   
+    WIFI_POWER_ON = 0x80,
+    WIFI_POWER_OFF=0X81,
+    WIFI_MODE_1=0X08,   //state ->normal works
+    WIFI_MODE_2=0X18,   //state->sleeping works
+    WIFI_KILL_ON=0x04,  //Anion(plasma)
+    WIFI_KILL_OFF=0x14,
+    WIFI_PTC_ON = 0x02, 
+    WIFI_PTC_OFF = 0x12,
+    WIFI_ULTRASONIC_ON = 0x01,       //ultrasonic
+    WIFI_ULTRASONIC_OFF = 0x11,
+    WIFI_WIND_SPEED= 0x90,
+    WIFI_TEMPERATURE = 0xA0
+
+
+}display_state_t;
+
+typedef enum _CLOUD_STATE{
+   OPEN_OFF_ITEM=0x01,
+   OPEN_ON_ITEM,
+   PTC_OFF_ITEM,
+   PTC_ON_ITEM,
+   STERILIZATION_OFF_ITEM,
+   STERILIZATION_ON_ITEM,
+   ULTRASONIC_OFF_ITEM,
+   ULTRASONIC_ON_ITEM,
+   STATE_ON_ITEM,
+   STATE_OFF_ITEM,
+   TEMPERATURE_ITEM,
+   FAN_ITEM
+}cloud_state;
+
+
+
+typedef enum _subSignal{ /* enumeration for CParser signals */
+   subscrible_data,
+   OPEN_SIG, 
+   STATE_SIG, 
+   PTC_SIG,
+   SONIC_SIG,
+   ANION_SIG,
+   TEMP_SIG,
+   FIND_SIG,
+   HUM_SIG,
+   NOWTEMP_SIG
+}subSignal;
+
+
+
 typedef enum{
   
-   wifi_AI=0x08 ,wifi_notAI=0x18,wifi_kill=0x04,wifi_notkill=0x14,
-   wifi_heat= 0x02,wifi_notheat=0x12
+   wifi_AI=0x08 ,
+   wifi_notAI=0x18,
+   wifi_kill=0x04,
+   wifi_notkill=0x14,
+   wifi_heat= 0x02,
+   wifi_notheat=0x12
 
 
 }wifi_mode_t;

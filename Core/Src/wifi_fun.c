@@ -257,6 +257,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 						 	Buzzer_KeySound();
                             Publish_Power_OFF_State();
 							Publish_Data_AllRef();
+							SendWifiCmd_To_Order(WIFI_POWER_OFF);
 						 
 						     
                          }
@@ -264,6 +265,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                             Buzzer_KeySound();
 							Publish_Power_ON_State();
 							Publish_Data_AllRef();
+							SendWifiCmd_To_Order(WIFI_POWER_ON);
 							 
 							}
 
@@ -275,12 +277,14 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                             Buzzer_KeySound();
 							Publish_PTC_State();
 							Publish_Data_AllRef();
+							SendWifiCmd_To_Order(WIFI_PTC_OFF);
                          }
                          else{
 							run_t.gDry=1;
 						 	Buzzer_KeySound();
 							Publish_PTC_State();
 							 Publish_Data_AllRef();
+							 SendWifiCmd_To_Order(WIFI_PTC_ON);
                          }
                     break;
 
@@ -289,27 +293,33 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 						 	run_t.gPlasma=0;
 							Buzzer_KeySound();
                             Publish_Sterilization_OFF_State();
-						     Publish_Data_AllRef();
+						    Publish_Data_AllRef();
+							SendWifiCmd_To_Order(WIFI_KILL_OFF);
 								
                          }
                          else{
-						 run_t.gPlasma=1;
-						Buzzer_KeySound();
+						  run_t.gPlasma=1;
+						  Buzzer_KeySound();
                           Publish_Sterilization_ON_State();
 						  Publish_Data_AllRef();
+						  SendWifiCmd_To_Order(WIFI_KILL_ON);
                          }
                     break;
 
                     case 0x09: //ultrasonic on or off 
                         if(wifi_t.usart_wifi_model ==0){
+							run_t.gUltrasonic =0;
 							Buzzer_KeySound();
                            Publish_Ultrasonic_OFF_State();
 						    Publish_Data_AllRef();
+							SendWifiCmd_To_Order(WIFI_ULTRASONIC_OFF);
                          }
                          else{
+						 	run_t.gUltrasonic =1;
 						 	Buzzer_KeySound();
                            	Publish_Ultrasonic_ON_State();
 						   Publish_Data_AllRef();
+						   SendWifiCmd_To_Order(WIFI_ULTRASONIC_ON);
                          }
 
                     break;
@@ -317,12 +327,12 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 					case 0x0B: //wind  speed control
                         if(wifi_t.usart_wifi_model ==0){
 							Buzzer_KeySound();
-							run_t.set_wind_speed_value=50;
-						
+							run_t.set_wind_speed_value=0;
+						 
                          }
                          else{
 							Buzzer_KeySound();
-						 	run_t.set_wind_speed_value=100;
+						 	run_t.set_wind_speed_value=1;
                          }
 
                     break;
@@ -331,13 +341,15 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 
                     case 0x0e : // set up temperature sensor value
 							Buzzer_KeySound();
-                         run_t.set_temperature_value = wifi_t.usart_wifi_model;
+                        run_t.set_temperature_value = wifi_t.usart_wifi_model;
+					   SendWifiData_To_WifiSetTemp(run_t.set_temperature_value);
                         
                     break;
 
 					case 0x0F : // set up timer timing value
                       	Buzzer_KeySound();
                         run_t.set_timing_value = wifi_t.usart_wifi_model;
+					    SendWifiData_To_PanelWindSpeed(run_t.set_timing_value);
                     break;
 
 					

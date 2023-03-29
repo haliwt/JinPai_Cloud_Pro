@@ -333,8 +333,7 @@ void RunCommand_MainBoard_Fun(void)
 		Update_DHT11_Value();
 		HAL_Delay(10);
 
-		if(wifi_t.usart_wifi_cloud_state==WIFI_PASS){
-			tencent_cloud_flag =1;
+		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 	 	    SendWifiData_To_Cmd(0x01) ;
 		}
 		
@@ -346,12 +345,7 @@ void RunCommand_MainBoard_Fun(void)
 	   	    run_t.gTimer_senddata_panel=0;
 	        ActionEvent_Handler();
 	 }
-	 if(wifi_t.usart_wifi_cloud_state==WIFI_PASS){
-	 	   if(run_t.gTimer_send_login_sucess > 11){
-	 	        SendWifiData_To_Cmd(0x01) ;
-	 	   	}
-	   }
-    
+	 
     break;
 
 
