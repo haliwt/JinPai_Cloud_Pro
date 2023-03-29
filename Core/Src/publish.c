@@ -396,9 +396,9 @@ void Publish_Power_OFF_State(void)
   uint8_t temp_code;
   SendHead();
   SendFrame_Len(0x14);
-  SendFrame_Type(0);
-  SendFrame_Numbers(0); //4
-  SendFrame_Order(0);
+  SendFrame_Type(0x01);
+  SendFrame_Numbers(0x01); //4
+  SendFrame_Order(0x01);
   SendFrame_Power(0);
   SendFrame_Dry(0);
   SendFrame_Ster(0);//8
@@ -411,9 +411,9 @@ void Publish_Power_OFF_State(void)
   SendFrame_Time_Remaining_One(0); //15
   SendFrame_Time_Remaining_Two(0);
   SendFrame_Time_Working_One(0);
-  SendFrame_Time_Working_Two(0x18);
+  SendFrame_Time_Working_Two(0x17);
   SendFrame_Alarm_Infor(00);
-  temp_code = 0x048+0x14+0x00+0x00+0x0+0x00+0x00+0x00+0x00+0x14+0x00+0x00+run_t.gDht11_temperature+run_t.gDht11_humidity +0x18;
+  temp_code = 0x048+0x14+0x01+0x01+0x01+0x00+0x00+0x00+0x00+0x14+0x00+0x00+run_t.gDht11_temperature+run_t.gDht11_humidity +0x17;
 
   SendFrame_Sum(temp_code);
 
