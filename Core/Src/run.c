@@ -438,9 +438,7 @@ void RunCommand_MainBoard_Fun(void)
 **********************************************************************/
 void MainBoard_Self_Inspection_PowerOn_Fun(void)
 {
-   
-
-	static uint8_t self_power_on_flag=0;
+   static uint8_t self_power_on_flag=0;
 	if(run_t.first_power_on_flag==0){
         run_t.first_power_on_flag++ ;
         Buzzer_KeySound();
