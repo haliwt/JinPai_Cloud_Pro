@@ -138,9 +138,9 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
         run_t.RunCommand_Label = POWER_OFF;
 		esp8266_t.esp8266_config_wifi_net_label=0;
       if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){ 
-		Dht11_Read_TempHumidity_Handler(&DHT11);
         Publish_Power_OFF_State();
-		 HAL_Delay(10);
+		//Publish_Data_AllRef();
+		HAL_Delay(50);
 	  }    
 
     cmd = 0xff;
@@ -148,16 +148,18 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 
     case 0x01: // power on
          Buzzer_KeySound();
+		// Dht11_Read_TempHumidity_Handler(&DHT11);
          run_t.gPower_flag = POWER_ON;
 		 run_t.gPower_On = POWER_ON;
          run_t.RunCommand_Label= POWER_ON;
 		 esp8266_t.esp8266_config_wifi_net_label=0;
 		 Update_DHT11_Value();
-		 HAL_Delay(200);
+		 HAL_Delay(20);
 		 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-			Dht11_Read_TempHumidity_Handler(&DHT11);
+			
 			Publish_Power_ON_State();
-		    HAL_Delay(10);
+			Publish_Data_AllRef();
+		    HAL_Delay(50);
 		 }
 		 
 	 cmd=0xff;  
