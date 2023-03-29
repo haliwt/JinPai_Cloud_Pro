@@ -17,7 +17,7 @@ RUN_T run_t;
 
 static void Single_Power_ReceiveCmd(uint8_t cmd);
 static void Single_Command_ReceiveCmd(uint8_t cmd); 
-uint8_t tencent_cloud_flag;
+
 
 
 
@@ -90,7 +90,7 @@ void Decode_RunCmd(void)
 		  if(run_t.gPower_flag==POWER_ON){
              run_t.set_timing_value = cmdType_2;
 			 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-				//Publish_Data_AllRef();
+				Publish_PTC_State();
 				HAL_Delay(30);
 
 			 }
@@ -334,6 +334,7 @@ void RunCommand_MainBoard_Fun(void)
 		HAL_Delay(10);
 
 		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
+			run_t.recoder_wifi_link_cloud_flag = 1;
 	 	    SendWifiData_To_Cmd(0x01) ;
 		}
 		
@@ -352,9 +353,11 @@ void RunCommand_MainBoard_Fun(void)
 
 	case POWER_OFF: //2
 		SetPowerOff_ForDoing();
-		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-	 	     tencent_cloud_flag = 1;
+		run_t.first_power_on_flag=0;
+	    if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
+			  run_t.recoder_wifi_link_cloud_flag = 1; //recoder has been linked cloud flag
 		}
+	
 		if(run_t.gTheFirst_powerOn ==0)
          	run_t.gFan_continueRun =0;
 		else{
@@ -438,20 +441,35 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 	    run_t.gTimer_send_prodky=0;
 	 
      }
-     if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_FAIL && run_t.first_power_on_flag < 2 ){
-			  wifi_t.publish_send_state_data=0;
-			
-            Read_USART2_Wifi_Data(wifi_t.usart_wifi_frame_type,wifi_t.usart_wifi_frame_len,wifi_t.usart_wifi_order);
-       
-	 }
 
-	if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS && run_t.first_power_on_flag == 1 && run_t.gPower_On == POWER_ON ){
-                run_t.first_power_on_flag++ ;
-				run_t.wifi_link_JPai_cloud = 1;
+	 if( run_t.recoder_wifi_link_cloud_flag ==1 && run_t.gPower_On == POWER_ON ){
+
+        run_t.recoder_wifi_link_cloud_flag++;
+		wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
+	     SendWifiData_To_Cmd(0x01) ;
+	    
+
+
+
+	 }
+	 else{
+	     if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_FAIL && run_t.first_power_on_flag < 2 ){
+				  wifi_t.publish_send_state_data=0;
 				
-				SendWifiData_To_Cmd(0x01) ;
-			
-     }
+	            Read_USART2_Wifi_Data(wifi_t.usart_wifi_frame_type,wifi_t.usart_wifi_frame_len,wifi_t.usart_wifi_order);
+	       
+		 }
+
+		 
+
+		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS && run_t.first_power_on_flag == 1 && run_t.gPower_On == POWER_ON ){
+	                run_t.first_power_on_flag++ ;
+					run_t.wifi_link_JPai_cloud = 1;
+					
+					SendWifiData_To_Cmd(0x01) ;
+				
+	     }
+	 }
 
 }
 
