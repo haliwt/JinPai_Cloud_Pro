@@ -313,12 +313,12 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 
                     case 0x0e: //set up temperature value
                          
-                       // Subscribe_Data_SetTemperatureValue(wifi_t.usart_wifi_model);
+                        run_t.set_temperature_value = wifi_t.usart_wifi_model;
                          
                     break;
 
                     case 0x0f: //set timer timing
-                       // Subscribe_Data_SetTimerValue(wifi_t.usart_wifi_model);
+                       
                     break;
 
 
@@ -328,7 +328,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
             break;
 
             case 0x0b: // set order status from
-               Subscribe_Data_AppointmentTime(wifi_t.usart_wifi_model, wifi_t.usart_wifi_state, wifi_t.usart_wifi_cloud_state, wifi_t.usart_wifi_signal_state,wifi_t.usart_wifi_pass_state);
+              
             break;
 
          

@@ -46,8 +46,8 @@ typedef enum{
 	 PLASMA_ON = 0x20,
 	 PLASMA_OFF = 0x21,
 
-	 FAN_ON =0x10,
-	 FAN_OFF = 0x11,
+	 ULTRASONIC_ON =0x10,
+	 ULTRASONIC_OFF = 0x11,
 
 	 WIFI_CONNECT_FAIL = 0x55,
      WIFI_CONNECT_SUCCESS= 0xAA
@@ -105,6 +105,7 @@ typedef struct _RUN_T{
 	  uint8_t noBuzzer_sound_dry_flag;
 	  
 	  uint8_t  set_temperature_value;
+	  uint8_t  set_timing_value;
 	  uint8_t  set_temperature_decade;
 	  uint8_t  set_temperature_unit;
 	  uint8_t  set_wind_speed_value;

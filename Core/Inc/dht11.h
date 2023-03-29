@@ -2,7 +2,7 @@
 #define __DHT11_H__
 #include "main.h"
 
-//IO·½ÏòÉèÖÃ
+//IOï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 #define DHT11_DATA_IO_IN()      {GPIOB->MODER&=0XFFFFFFFC;GPIOB->MODER|=0<<0;}  //0x00 input mode
 #define DHT11_DATA_IO_OUT()     {GPIOB->MODER&=0XFFFFFFFC;GPIOB->MODER|=1<<0;}   //0x01 output  mode 
 
@@ -14,42 +14,42 @@
 
 #define DHT11_ReadData()	            HAL_GPIO_ReadPin(DHT11_GPIO,DHT11_DATA)
 
-/* ºê¶¨Òå -------------------------------------------------------------------*/
-/***********************   DHT11 Á¬½ÓÒý½Å¶¨Òå  **************************/
+/* ï¿½ê¶¨ï¿½ï¿½ -------------------------------------------------------------------*/
+/***********************   DHT11 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¶ï¿½ï¿½ï¿½  **************************/
 #define DHT11_Dout_GPIO_CLK_ENABLE()              __HAL_RCC_GPIOB_CLK_ENABLE()//__HAL_RCC_GPIOA_CLK_ENABLE()
 #define DHT11_Dout_PORT                           GPIOB
 #define DHT11_Dout_PIN                            GPIO_PIN_13
 
-/***********************   DHT11 º¯Êýºê¶¨Òå  ****************************/
+/***********************   DHT11 ï¿½ï¿½ï¿½ï¿½ï¿½ê¶¨ï¿½ï¿½  ****************************/
 #define DHT11_Dout_LOW()                          HAL_GPIO_WritePin(DHT11_Dout_PORT, DHT11_Dout_PIN, GPIO_PIN_RESET)
 #define DHT11_Dout_HIGH()                         HAL_GPIO_WritePin(DHT11_Dout_PORT, DHT11_Dout_PIN, GPIO_PIN_SET)
 #define DHT11_Data_IN()	                          HAL_GPIO_ReadPin(DHT11_Dout_PORT,DHT11_Dout_PIN)
 
 
 
-/* ÀàÐÍ¶¨Òå ------------------------------------------------------------------*/
-/************************ DHT11 Êý¾ÝÀàÐÍ¶¨Òå******************************/
+/* ï¿½ï¿½ï¿½Í¶ï¿½ï¿½ï¿½ ------------------------------------------------------------------*/
+/************************ DHT11 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¶ï¿½ï¿½ï¿½******************************/
 typedef struct
 {
-	uint8_t  humi_high8bit;		//Ô­Ê¼Êý¾Ý£ºÊª¶È¸ß8Î»
-	uint8_t  humi_low8bit;	 	//Ô­Ê¼Êý¾Ý£ºÊª¶ÈµÍ8Î»
-	uint8_t  temp_high8bit;	 	//Ô­Ê¼Êý¾Ý£ºÎÂ¶È¸ß8Î»
-	uint8_t  temp_low8bit;	 	//Ô­Ê¼Êý¾Ý£ºÎÂ¶È¸ß8Î»
-	uint8_t  check_sum;	 	    //Ð£ÑéºÍ
-  float    humidity;            //Êµ¼ÊÊª¶È
-  float    temperature;        //Êµ¼ÊÎÂ¶È  
+	uint8_t  humi_high8bit;		//Ô­Ê¼ï¿½ï¿½ï¿½Ý£ï¿½Êªï¿½È¸ï¿½8Î»
+	uint8_t  humi_low8bit;	 	//Ô­Ê¼ï¿½ï¿½ï¿½Ý£ï¿½Êªï¿½Èµï¿½8Î»
+	uint8_t  temp_high8bit;	 	//Ô­Ê¼ï¿½ï¿½ï¿½Ý£ï¿½ï¿½Â¶È¸ï¿½8Î»
+	uint8_t  temp_low8bit;	 	//Ô­Ê¼ï¿½ï¿½ï¿½Ý£ï¿½ï¿½Â¶È¸ï¿½8Î»
+	uint8_t  check_sum;	 	    //Ð£ï¿½ï¿½ï¿½
+  float    humidity;            //Êµï¿½ï¿½Êªï¿½ï¿½
+  float    temperature;        //Êµï¿½ï¿½ï¿½Â¶ï¿½  
 } DHT11_Data_TypeDef;
 extern DHT11_Data_TypeDef DHT11;
 
 
-/* À©Õ¹±äÁ¿ ------------------------------------------------------------------*/
-/* º¯ÊýÉùÃ÷ ------------------------------------------------------------------*/
+/* ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½ ------------------------------------------------------------------*/
+/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ------------------------------------------------------------------*/
 //void DHT11_Init( void );
 //uint8_t DHT11_Read_TempAndHumidity(DHT11_Data_TypeDef * DHT11_Data);
 void Update_DHT11_Value(void);
 void Update_Dht11_Totencent_Value(void);
 
-
+void  Dht11_Read_TempHumidity_Handler(DHT11_Data_TypeDef * pdth11);
 #endif 
 
 

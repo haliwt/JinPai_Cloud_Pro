@@ -10,6 +10,7 @@
 #include "flash.h"
 #include "execute.h"
 #include "publish.h"
+#include "subscribe.h"
 
 
 RUN_T run_t; 
@@ -75,7 +76,7 @@ void Decode_RunCmd(void)
              run_t.set_temperature_value = cmdType_2;
 			 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 
-				Publish_Data_AllRef();
+				//Publish_Data_AllRef();
 				HAL_Delay(30);
 			 }
 			    
@@ -87,10 +88,9 @@ void Decode_RunCmd(void)
 
 	  case 'T':
 		  if(run_t.gPower_flag==POWER_ON){
-             run_t.set_temperature_value = cmdType_2;
-			// if(wifi_t.wifi_link_cloud ==1)
+             run_t.set_timing_value = cmdType_2;
 			 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-				Publish_Data_AllRef();
+				//Publish_Data_AllRef();
 				HAL_Delay(30);
 
 			 }
@@ -138,8 +138,9 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
         run_t.RunCommand_Label = POWER_OFF;
 		esp8266_t.esp8266_config_wifi_net_label=0;
       if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){ 
-         // Publish_Data_AllRef();//MqttData_Publish_SetOpen(0x0);
-		 // HAL_Delay(30);
+		Dht11_Read_TempHumidity_Handler(&DHT11);
+        Publish_Power_OFF_State();
+		 HAL_Delay(10);
 	  }    
 
     cmd = 0xff;
@@ -154,8 +155,9 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 		 Update_DHT11_Value();
 		 HAL_Delay(200);
 		 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-			//Publish_Data_AllRef();
-		  	HAL_Delay(30);
+			Dht11_Read_TempHumidity_Handler(&DHT11);
+			Publish_Power_ON_State();
+		    HAL_Delay(10);
 		 }
 		 
 	 cmd=0xff;  
@@ -192,8 +194,8 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 	      run_t.gFan_continueRun =0;
 		    Buzzer_KeySound();
 		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-		  Publish_Data_AllRef();
-		   HAL_Delay(30);
+		  
+            HAL_Delay(20);
 	      }
 		   
 		 
@@ -212,8 +214,8 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 
 		     }
 			if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-		        Publish_Data_AllRef();
-				 HAL_Delay(30);
+		   
+			    HAL_Delay(20);
 			}
 			   
        break;
@@ -223,7 +225,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
        		run_t.gUltrasonic =1;
 			Buzzer_KeySound();
 	   if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-	        Publish_Data_AllRef();
+	      
 	        HAL_Delay(30);
 	     
 	   	}
@@ -235,7 +237,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
            run_t.gUltrasonic =0;
 		   Buzzer_KeySound();
 	   if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-	         Publish_Data_AllRef();
+	       
             HAL_Delay(30);
 	       
 	      
@@ -243,22 +245,22 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 	   
        break;
 
-       case FAN_ON:
+       case ULTRASONIC_ON:
           run_t.set_wind_speed_value=100;
 		  Buzzer_KeySound();
 		  if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-			Publish_Data_AllRef();
+			
 			 HAL_Delay(30);
 		  }
 		
 		   
        break;
 
-       case FAN_OFF:
+       case ULTRASONIC_OFF :
 	        Buzzer_KeySound();
            run_t.set_wind_speed_value = 50;
 		   if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-			Publish_Data_AllRef();
+			
 			 HAL_Delay(30);
 		   }
 		 

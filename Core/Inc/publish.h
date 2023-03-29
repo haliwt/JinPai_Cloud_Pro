@@ -26,7 +26,7 @@ void Publish_Ultrasonic_ON_State(void);
 
 void Publish_Ultrasonic_OFF_State(void);
 
-
+void Publish_SetTemperature_Value(void);
 #endif 
 
 
