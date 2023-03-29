@@ -271,13 +271,15 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 
                     case 0x05://dry on or off
                          if(wifi_t.usart_wifi_model ==0){
+							run_t.gDry = 0;
                             Buzzer_KeySound();
-							Publish_PTC_OFF_State();
+							Publish_PTC_State();
 							Publish_Data_AllRef();
                          }
                          else{
+							run_t.gDry=1;
 						 	Buzzer_KeySound();
-							Publish_PTC_ON_State();
+							Publish_PTC_State();
 							 Publish_Data_AllRef();
                          }
                     break;
@@ -315,11 +317,12 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 					case 0x0B: //wind  speed control
                         if(wifi_t.usart_wifi_model ==0){
 							Buzzer_KeySound();
+							run_t.set_wind_speed_value=50;
 						
                          }
                          else{
 							Buzzer_KeySound();
-						 
+						 	run_t.set_wind_speed_value=100;
                          }
 
                     break;

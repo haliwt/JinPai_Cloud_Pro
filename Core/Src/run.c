@@ -193,10 +193,9 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 
        case DRY_ON:
          run_t.gDry = 1;
-	      run_t.gFan_continueRun =0;
 		    Buzzer_KeySound();
 		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-		    Publish_PTC_ON_State();
+		    Publish_PTC_State();//Publish_PTC_ON_State();
             HAL_Delay(30);
 	      }
 		   
@@ -209,14 +208,10 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 
 	  case DRY_OFF:
  			run_t.gDry = 0;
-			 Buzzer_KeySound();
-			 if(run_t.gPlasma ==0){ //plasma turn off flag
-			  run_t.gFan_counter =0;
-			   run_t.gFan_continueRun =1;
-
-		     }
+			Buzzer_KeySound();
+			
 			if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-				Publish_PTC_OFF_State();
+				Publish_PTC_State();
 			    HAL_Delay(30);
 			}
 			   
@@ -224,7 +219,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 
        case PLASMA_ON:
        		run_t.gPlasma=1;
-       		run_t.gUltrasonic =1;
+       	
 			Buzzer_KeySound();
 	   if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 	        Publish_Sterilization_ON_State();
@@ -236,7 +231,6 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 
        case PLASMA_OFF:
            run_t.gPlasma=0;
-           run_t.gUltrasonic =0;
 		   Buzzer_KeySound();
 	   if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 	       Publish_Sterilization_OFF_State();
@@ -248,7 +242,8 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
        break;
 
        case ULTRASONIC_ON:
-          run_t.set_wind_speed_value=100;
+        
+		  run_t.gUltrasonic =1;
 		  Buzzer_KeySound();
 		  if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 			 Publish_Ultrasonic_ON_State();
@@ -260,7 +255,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 
        case ULTRASONIC_OFF :
 	        Buzzer_KeySound();
-           run_t.set_wind_speed_value = 50;
+		   run_t.gUltrasonic =0;
 		   if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 			 Publish_Ultrasonic_OFF_State();
 			 HAL_Delay(30);
