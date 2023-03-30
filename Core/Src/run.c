@@ -449,15 +449,31 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 {
    static uint8_t self_power_on_flag=0;
 	if(run_t.first_power_on_flag==0){
-        run_t.first_power_on_flag++ ;
-        Buzzer_KeySound();
+       // run_t.first_power_on_flag++ ;
+       // Buzzer_KeySound();
+       WIFI_IC_ENABLE();
+      if(usart_wifi_t.usart_wifi_receive_read_data_flag==1){
+        // WIFI_IC_ENABLE();
+		usart_wifi_t.usart_wifi_receive_read_data_flag=0;
+       	usart_wifi_t.usart_wifi_start_receive_flag=0;
+		usart_wifi_t.usart_wifi_receive_success_flag=0;
+       
+		Publish_Data_ProdKey();		
+	    HAL_Delay(200);
+	    run_t.first_power_on_flag++ ;
+		 
+		
 	    run_t.gTimer_send_prodky=0;
 	 
      }
+     }
 
+    if(run_t.first_power_on_flag==1){
+        
 	 if( run_t.recoder_wifi_link_cloud_flag ==1 && run_t.gPower_On == POWER_ON ){
 
         run_t.recoder_wifi_link_cloud_flag++;
+		run_t.first_power_on_flag++;
 		wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
 	     SendWifiData_To_Cmd(0x01) ;
 	    
@@ -466,24 +482,27 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 
 	 }
 	 else{
-	     if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_FAIL && run_t.first_power_on_flag < 2 ){
-				  wifi_t.publish_send_state_data=0;
-				
-	            Read_USART2_Wifi_Data(wifi_t.usart_wifi_frame_type,wifi_t.usart_wifi_frame_len,wifi_t.usart_wifi_order);
-	       
-		 }
+         
+ 
+          if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_FAIL && run_t.first_power_on_flag < 2 ){
+                      wifi_t.publish_send_state_data=0;
+					  run_t.first_power_on_flag++;
+                    Read_USART2_Wifi_Data(wifi_t.usart_wifi_frame_type,wifi_t.usart_wifi_frame_len,wifi_t.usart_wifi_order);
+               
+             }
 
-		 
+             
 
-		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS && run_t.first_power_on_flag == 1 && run_t.gPower_On == POWER_ON ){
-	                run_t.first_power_on_flag++ ;
-					run_t.wifi_link_JPai_cloud = 1;
-					
-					SendWifiData_To_Cmd(0x01) ;
-				
-	     }
-	 }
+            if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS && run_t.first_power_on_flag == 1 && run_t.gPower_On == POWER_ON ){
+                        run_t.first_power_on_flag++ ;
+                        run_t.wifi_link_JPai_cloud = 1;
+                        Buzzer_KeySound();
+                        SendWifiData_To_Cmd(0x01) ;
+                
+                    
+             
+         }
+     }
+    }
 
-}
-
-    
+ }   

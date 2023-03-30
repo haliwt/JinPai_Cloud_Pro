@@ -237,7 +237,7 @@ void Publish_Data_ProdKey(void)
 	SendHead();
 	SendFrame_Len(0x16);//frame length = 0x16
 	SendFrame_Type(0xFE);
-	SendFrame_Numbers(0x01);
+	SendFrame_Numbers(0x08);
 	SendFrame_Order(0x21);
     SendProdKey_OneByte_One();
 	SendProdKey_OneByte_Two();
@@ -248,7 +248,7 @@ void Publish_Data_ProdKey(void)
     SendProdKey_Three();
     SendProdKey_Four();
      
-    product_sum = 0x2e; //0xb0+0x48+0x16+0xFE+0x01+0x21=0x22E;
+    product_sum = 0x35;//0x2E//ProdKey_sum +  0x48+0x16+0xFE+0x01+0x21; //0xb0+0x48+0x16+0xFE+0x01+0x21=0x22E;
 	SendFrame_Sum(product_sum);
 
 }
