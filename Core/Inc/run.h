@@ -114,15 +114,11 @@ typedef struct _RUN_T{
 	  uint8_t  wind_speed_decade;
 	  uint8_t  wind_speed_unit;
       uint8_t wifi_config_net_lable;
-	  uint8_t gTimer_send_login_sucess;
+	 
 	  uint8_t wifi_link_JPai_cloud;
 	  uint8_t first_power_on_flag;
-	  uint8_t gTimer_send_prodky;
 	  
-
 	  
-
-	
 	uint8_t gTimer_1s;
 	uint8_t gTimer_10s;
 	uint8_t gTimer_send_cloud_state;

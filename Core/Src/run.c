@@ -134,14 +134,15 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 
     case 0x00: //power off
         Buzzer_KeySound();
+	    wifi_t.gTimer_wifi_send_cloud_success_times=0;
         run_t.gPower_On=POWER_OFF;
         run_t.gPower_flag = POWER_OFF;
         run_t.RunCommand_Label = POWER_OFF;
 		esp8266_t.esp8266_config_wifi_net_label=0;
       if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){ 
-	  	esp8266_t.esp8266_config_wifi_net_label=wifi_publish_update_data;
+	  	wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;
+	
         Publish_Power_OFF_State();
-		//Publish_Data_AllRef();
 			
 		HAL_Delay(30);
 	  }    
@@ -159,6 +160,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 		 Update_DHT11_Value();
 		 HAL_Delay(20);
 		 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
+		 	wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;
 			esp8266_t.esp8266_config_wifi_net_label=wifi_publish_update_data;
 			Publish_Power_ON_State();
 			//Publish_Data_AllRef();
@@ -464,7 +466,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 	    run_t.first_power_on_flag++ ;
 		 
 		
-	    run_t.gTimer_send_prodky=0;
+	   
 	 
      }
      }
@@ -502,7 +504,14 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
                 
                     
              
-         }
+         	}
+
+			if(run_t.gPower_On == POWER_OFF){
+				 run_t.first_power_on_flag++;
+				 Publish_Power_OFF_State();
+
+
+			}
      }
     }
 

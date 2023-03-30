@@ -36,7 +36,7 @@ void RunWifi_Command_Handler(uint8_t command)
     static uint8_t times;
     static uint8_t recoder_times,publish_init_flag,repeat_times,repeat_send_times,pub_times ;
 
-	if(run_t.gPower_On == POWER_ON ){
+	
     	switch(command){
 
         case wifi_start_link_net://0x02
@@ -169,12 +169,13 @@ void RunWifi_Command_Handler(uint8_t command)
 	  
 		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 			if(wifi_t.usart_wifi_frame_len < 0x0d ){
-				if(wifi_t.usart_wifi_frame_len==0x06){
-
-					wifi_t.publish_send_state_data=0;
-				}
-				else   wifi_t.publish_send_state_data=1;
-						Publish_Return_Repeat_Data();
+//				if(wifi_t.usart_wifi_frame_len==0x06){
+//
+//					wifi_t.publish_send_state_data=0;
+//				}
+//				else   
+					wifi_t.publish_send_state_data=1;
+					Publish_Return_Repeat_Data();
 				
 		    } 
 			else{
@@ -196,13 +197,14 @@ void RunWifi_Command_Handler(uint8_t command)
 
     	}
     
-		//	if(run_t.first_power_on_flag ==1 && receive_usart_wifi_data ==1){
-		//	       
-		//           receive_usart_wifi_data ++;
-		//           Publish_Data_ProdKey();
-		//
-		//	   }
-    }
+		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS && run_t.gPower_On==POWER_ON && wifi_t.gTimer_wifi_send_cloud_success_times < 5){
+			//wifi_t.gTimer_wifi_send_cloud_success_times =0;
+
+			 SendWifiData_To_Cmd(0x01) ;
+
+
+		}
+   
     
 }
 
@@ -227,6 +229,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
             if( wifi_t.usart_wifi_model==1 && wifi_t.usart_wifi_state==1 &&  wifi_t.usart_wifi_cloud_state==1){
 
               wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
+			  wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;
 			  run_t.wifi_link_JPai_cloud = 1;
 			   SendWifiData_To_Cmd(0x01) ;
 
@@ -246,7 +249,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
          switch(len){
 
             case 0x06:
-               //Subscribe_Data_QueryDev();
+               Publish_Reference_Update_State();
             break;
 
             case 0x07:
@@ -254,7 +257,14 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                     case 0x02: //set Power on or off
 
                          if(wifi_t.usart_wifi_model ==0){
+							 wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS;
+
+						     wifi_t.gTimer_wifi_send_cloud_success_times=0;
+					        run_t.gPower_On=POWER_OFF;
+					        run_t.gPower_flag = POWER_OFF;
+					        run_t.RunCommand_Label = POWER_OFF;
 						 	Buzzer_KeySound();
+							wifi_t.gTimer_wifi_send_cloud_success_times=0;
                             Publish_Power_OFF_State();
 							HAL_Delay(30);
 							SendWifiCmd_To_Order(WIFI_POWER_OFF);
@@ -262,10 +272,16 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 						     
                          }
                          else{ //Power on 
+                             wifi_t.gTimer_wifi_send_cloud_success_times=0;
+                         	 run_t.gPower_flag = POWER_ON;
+							 run_t.gPower_On = POWER_ON;
+					         run_t.RunCommand_Label= POWER_ON;
+							wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS;
                             Buzzer_KeySound();
 							Publish_Power_ON_State();
 							HAL_Delay(30);
 							SendWifiCmd_To_Order(WIFI_POWER_ON);
+							esp8266_t.esp8266_config_wifi_net_label=wifi_publish_update_data;
 							 
 							}
 

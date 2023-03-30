@@ -99,13 +99,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         run_t.gTimer_1s ++;
 	 run_t.gTimer_10s++;
      wifi_t.gTimer_5s++;
-	 run_t.gTimer_send_prodky++;
+	
 	
 	   wifi_t.gTimer_get_beijing_time++;
 	   wifi_t.gTimer_beijing_time++;
 	
 	   run_t.gTimer_send_cloud_state++;
-	   run_t.gTimer_send_login_sucess++;
+	 
+	   wifi_t.gTimer_wifi_send_cloud_success_times++;
 	  
 	   if(run_t.gFan_continueRun ==1){
            run_t.gFan_counter++;
