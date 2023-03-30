@@ -431,8 +431,9 @@ void RunCommand_MainBoard_Fun(void)
 
 	 }
 
-	 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS  &&  run_t.wifi_link_JPai_cloud==1){
-	 	    run_t.wifi_link_JPai_cloud=0;
+	 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS  &&  run_t.wifi_link_JPai_cloud==0){
+	 	    run_t.wifi_link_JPai_cloud++;
+			SendWifiCmd_To_Order(WIFI_POWER_ON);
 	 	    SendWifiData_To_Cmd(0x01) ;
 	 }
 	 
@@ -461,8 +462,8 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
        	usart_wifi_t.usart_wifi_start_receive_flag=0;
 		usart_wifi_t.usart_wifi_receive_success_flag=0;
        
-		Publish_Data_ProdKey();		
-	    HAL_Delay(200);
+		Publish_Data_ProdKey();	
+		HAL_Delay(20);
 	    run_t.first_power_on_flag++ ;
 		 
 		
@@ -473,12 +474,19 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 
     if(run_t.first_power_on_flag==1){
         
-	 if( run_t.recoder_wifi_link_cloud_flag ==1 && run_t.gPower_On == POWER_ON ){
+	 if( run_t.recoder_wifi_link_cloud_flag ==1 ){
 
         run_t.recoder_wifi_link_cloud_flag++;
 		run_t.first_power_on_flag++;
 		wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
 	     SendWifiData_To_Cmd(0x01) ;
+
+		if(run_t.gPower_On == POWER_OFF){
+			run_t.first_power_on_flag= 0x0A;
+			Publish_Power_OFF_State();
+
+
+		}
 	    
 
 
@@ -496,18 +504,15 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 
              
 
-            if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS && run_t.first_power_on_flag == 1 && run_t.gPower_On == POWER_ON ){
+            if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS && run_t.first_power_on_flag == 1  ){
                         run_t.first_power_on_flag++ ;
                         run_t.wifi_link_JPai_cloud = 1;
                         Buzzer_KeySound();
                         SendWifiData_To_Cmd(0x01) ;
-                
-                    
-             
-         	}
+              }
 
 			if(run_t.gPower_On == POWER_OFF){
-				 run_t.first_power_on_flag++;
+				 run_t.first_power_on_flag= 0x0A;
 				 Publish_Power_OFF_State();
 
 

@@ -33,10 +33,10 @@ static void Wifi_ReceiveData_Handler(void);
   *********************************************************/
 void RunWifi_Command_Handler(uint8_t command)
 {
-    static uint8_t times;
+    static uint8_t times,send_times;
     static uint8_t recoder_times,publish_init_flag,repeat_times,repeat_send_times,pub_times ;
 
-	
+	  if(run_t.first_power_on_flag== 0x0A){
     	switch(command){
 
         case wifi_start_link_net://0x02
@@ -197,15 +197,16 @@ void RunWifi_Command_Handler(uint8_t command)
 
     	}
     
-		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS && run_t.gPower_On==POWER_ON && wifi_t.gTimer_wifi_send_cloud_success_times < 5){
-			//wifi_t.gTimer_wifi_send_cloud_success_times =0;
+		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS && run_t.gPower_On==POWER_ON && send_times ==0 ){
+			 send_times++;
+			 SendWifiCmd_To_Order(WIFI_POWER_ON);
 
 			 SendWifiData_To_Cmd(0x01) ;
 
 
 		}
    
-    
+	  	}
 }
 
 
@@ -257,7 +258,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                     case 0x02: //set Power on or off
 
                          if(wifi_t.usart_wifi_model ==0){
-							 wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS;
+							 wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
 
 						     wifi_t.gTimer_wifi_send_cloud_success_times=0;
 					        run_t.gPower_On=POWER_OFF;
@@ -276,7 +277,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                          	 run_t.gPower_flag = POWER_ON;
 							 run_t.gPower_On = POWER_ON;
 					         run_t.RunCommand_Label= POWER_ON;
-							wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS;
+							wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
                             Buzzer_KeySound();
 							Publish_Power_ON_State();
 							HAL_Delay(30);

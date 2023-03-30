@@ -123,6 +123,7 @@ int main(void)
 	#if 1
 	Decode_Function();
     RunCommand_MainBoard_Fun();
+	
     RunWifi_Command_Handler(esp8266_t.esp8266_config_wifi_net_label);
 	#endif 
   }
