@@ -103,7 +103,7 @@ typedef struct _RUN_T{
 	  uint8_t  alarm_call;
 	  uint8_t  gFan_counter;
 	 
-	  uint8_t noBuzzer_sound_dry_flag;
+
 	  
 	  uint8_t  set_temperature_value;
 	  uint8_t  set_timing_value;

@@ -97,7 +97,8 @@ void RunWifi_Command_Handler(uint8_t command)
 		   }
 		  if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 		  	
-		      esp8266_t.esp8266_config_wifi_net_label=  wifi_null;
+		      esp8266_t.esp8266_config_wifi_net_label=  wifi_publish_update_data;
+			   run_t.gTimer_send_cloud_state=0;
 
 		  }
 
@@ -142,15 +143,14 @@ void RunWifi_Command_Handler(uint8_t command)
 
     	break;
 
-		case wifi_null://7
-		  //    if(wifi_t.gTimer_5s > 30){
-			//  	wifi_t.gTimer_5s =0;
-			//  	Publish_Data_AllRef();
-			// }
-		//		   if(wifi_t.gTimer_5s > 62){
-		//            wifi_t.gTimer_5s =0;
-		//          	Publish_Command_Query();
-		//			}
+		case wifi_publish_update_data://7
+            if(run_t.gTimer_send_cloud_state > 119){
+                run_t.gTimer_send_cloud_state=0;
+                Dht11_Read_TempHumidity_Handler(&DHT11);
+                Publish_Reference_Update_State();
+
+			}
+		
 		break;
         
         default:

@@ -19,6 +19,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd);
 static void Single_Command_ReceiveCmd(uint8_t cmd); 
 
 
+uint8_t no_buzzer_sound_dry_off;
 
 
 
@@ -128,7 +129,7 @@ void Decode_RunCmd(void)
 static void Single_Power_ReceiveCmd(uint8_t cmd)
 {
   
-    
+  
     switch(cmd){
 
     case 0x00: //power off
@@ -138,8 +139,10 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
         run_t.RunCommand_Label = POWER_OFF;
 		esp8266_t.esp8266_config_wifi_net_label=0;
       if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){ 
+	  	esp8266_t.esp8266_config_wifi_net_label=wifi_publish_update_data;
         Publish_Power_OFF_State();
 		//Publish_Data_AllRef();
+			
 		HAL_Delay(30);
 	  }    
 
@@ -156,7 +159,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 		 Update_DHT11_Value();
 		 HAL_Delay(20);
 		 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-			
+			esp8266_t.esp8266_config_wifi_net_label=wifi_publish_update_data;
 			Publish_Power_ON_State();
 			//Publish_Data_AllRef();
 		    HAL_Delay(30);
@@ -184,17 +187,22 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 **********************************************************************/
 static void Single_Command_ReceiveCmd(uint8_t cmd)
 {
-    static uint8_t no_buzzer_sound_dry_off;
+
+    
 	switch(cmd){
 
 	    case DRY_ON_NO_BUZZER:
 
-	        run_t.noBuzzer_sound_dry_flag =1;
+	      no_buzzer_sound_dry_off=1;
 
        case DRY_ON:
          run_t.gDry = 1;
-		    Buzzer_KeySound();
-		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
+		 if(no_buzzer_sound_dry_off==0){
+		  	    Buzzer_KeySound();
+		  }
+		  else no_buzzer_sound_dry_off=0;
+			
+		 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 		    Publish_PTC_State();//Publish_PTC_ON_State();
             HAL_Delay(30);
 	      }
@@ -208,7 +216,12 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 
 	  case DRY_OFF:
  			run_t.gDry = 0;
-			Buzzer_KeySound();
+			
+			if(no_buzzer_sound_dry_off==0){
+				Buzzer_KeySound();
+            }
+			else no_buzzer_sound_dry_off=0;
+		
 			
 			if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 				Publish_Reference_Update_State();
