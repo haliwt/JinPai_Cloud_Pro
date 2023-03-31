@@ -109,7 +109,7 @@ void Decode_RunCmd(void)
         }
 	  break;
 
-	  case 'R': //remaining time minutes value
+	  case 'R': //remaining time minutes value ?
           if(run_t.gPower_flag==POWER_ON){
              run_t.time_remaining_minues_value = cmdType_2;
              if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){

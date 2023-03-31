@@ -348,13 +348,19 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 
 					case 0x0B: //wind  speed control
                         if(wifi_t.usart_wifi_model ==0){
-							Buzzer_KeySound();
 							run_t.set_wind_speed_value=0;
+							Buzzer_KeySound();
+							
+						    Publish_Reference_Update_State();
+						    HAL_Delay(300);
 						 
                          }
                          else{
-							Buzzer_KeySound();
 						 	run_t.set_wind_speed_value=1;
+							Buzzer_KeySound();
+						 	
+						    Publish_Reference_Update_State();
+						    HAL_Delay(300);
                          }
 
                     break;
@@ -365,14 +371,21 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 							Buzzer_KeySound();
                         run_t.set_temperature_value = wifi_t.usart_wifi_model;
 					
-					   SendWifiData_To_PanelTemp(run_t.set_temperature_value);
+					    
+					    Publish_Reference_Update_State();
+						HAL_Delay(300);
+						SendWifiData_To_PanelTemp(run_t.set_temperature_value);
                         
                     break;
 
 					case 0x0F : // set up timer timing value
                       	Buzzer_KeySound();
                         run_t.set_timer_timing_value = wifi_t.usart_wifi_model;
+						
+						Publish_Reference_Update_State();
+						HAL_Delay(300);
 						SendWifiData_To_PanelTime(run_t.set_timer_timing_value);
+						
                     break;
 
 					
@@ -395,6 +408,12 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
    break;
 
    case 0xFF:
+   	  Buzzer_KeySound();
+	  HAL_Delay(200);
+      Buzzer_KeySound();
+	  HAL_Delay(200);
+      Buzzer_KeySound();
+	  HAL_Delay(200);
       wifi_t.wifi_receive_data_error = 1;
 
    break;
