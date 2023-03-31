@@ -170,27 +170,27 @@ static void SendFrame_Time_Remaining_One(uint16_t rtiming)
 {
     uint8_t one_timing;
 	one_timing = rtiming >>8;
-    MYUSART_SendData(rtiming);
+    MYUSART_SendData(one_timing);
 }
 static void SendFrame_Time_Remaining_Two(uint16_t rtiming)
 {
    uint8_t two_timing;
    two_timing = rtiming & 0xff;
-   MYUSART_SendData(rtiming);
+   MYUSART_SendData(two_timing);
 }
 
 static void SendFrame_Time_Working_One(uint16_t wtiming)
 {
     uint8_t one_wtiming;
 	one_wtiming = wtiming >>8;
-	MYUSART_SendData(wtiming);
+	MYUSART_SendData(one_wtiming);
 }
 
 static void SendFrame_Time_Working_Two(uint16_t wtiming)
 {
     uint8_t two_wtiming;
     two_wtiming = wtiming & 0xff;
-    MYUSART_SendData(wtiming);
+    MYUSART_SendData(two_wtiming);
 }
 
 
@@ -198,6 +198,26 @@ static void SendFrame_Alarm_Infor(uint8_t inf)
 {
     MYUSART_SendData(inf);
 }
+/*****************************************************************************
+	*
+	*Function Name: void Publish_Data_ProdKey(void)
+	*Function : send product ID 
+	*Input Ref:NO
+	*Return Ref:NO
+	*
+*******************************************************************************/
+void Init_Publisher_Data_Ref(void)
+{
+   run_t.gPower_On = 1;
+   run_t.gDry = 1;
+   run_t.gPlasma = 1;
+   run_t.gUltrasonic = 1;
+   if(run_t.set_temperature_value < 20)run_t.set_temperature_value=20; //20~40度
+   run_t.gFanSpeed = 1; //fan speed high 
+   run_t.alarm_call = 0;
+
+}
+
 
 /*****************************************************************
 *
@@ -223,14 +243,14 @@ void Publish_Data_Special(uint8_t cmd,uint8_t d_type,uint8_t valid_d)
 
 
 }
-/****************************************************
+/*****************************************************************************
 	*
 	*Function Name: void Publish_Data_ProdKey(void)
 	*Function : send product ID 
 	*Input Ref:NO
 	*Return Ref:NO
 	*
-****************************************************/
+*******************************************************************************/
 void Publish_Data_ProdKey(void)
 {
 	uint8_t product_sum;
@@ -252,8 +272,14 @@ void Publish_Data_ProdKey(void)
 	SendFrame_Sum(product_sum);
 
 }
-
-
+/*****************************************************************************************************
+ * 
+ * Function Name: void Publish_Ultrasonic_OFF_State(void)
+ * Function Description::send to cloud data that ultrasonic
+ * Input Parameters:NO
+ * Return Parameter:NO
+ * 
+ ****************************************************************************************************/
 void Publish_Command_SmartCofnig(void)
 {
     SendHead();
@@ -282,56 +308,16 @@ void Publish_Command_Query(void)
 
 
 
-void Publish_Data_AllRef(void)
-{
-  uint8_t temp_value;
-  
-  SendHead();
-  SendFrame_Len(0x14);
-  SendFrame_Type(0x01);
-  SendFrame_Numbers(0x01); //4
-  SendFrame_Order(0x01);
-  SendFrame_Power(run_t.gPower_On);
-  SendFrame_Dry(run_t.gDry);
-  SendFrame_Ster(run_t.gPlasma);//8
-  SendFrame_Mouse(run_t.gUltrasonic);
-  SendFrame_SetTemperature(0x1A);//10
-  SendFrame_SetTimer(run_t.gTimer);
-  SendFrame_SetFanSpeed(run_t.gFanSpeed);
-  SendFrame_Read_TemperatureValue(0x20);
-  SendFrame_Read_HumidityValue(0x34);
-  SendFrame_Time_Remaining_One(0x0); //15
-   SendFrame_Time_Remaining_Two(run_t.time_remaining);
-  SendFrame_Time_Working_One(0x0);
-   SendFrame_Time_Working_Two(run_t.time_working);
-  SendFrame_Alarm_Infor(run_t.alarm_call);
-  temp_value = 0x48+0x14+0x01+0x01+run_t.gPower_On+run_t.gDry+run_t.gPlasma\
-             +run_t.gUltrasonic+0x1A+run_t.gTimer\
-			 +run_t.gFanSpeed+0x20+0x34+run_t.time_remaining+run_t.time_working+run_t.alarm_call;
-
-  SendFrame_Sum(temp_value);
 
 
-}
-
-void Init_Publisher_Data_Ref(void)
-{
-   run_t.gPower_On = 1;
-   run_t.gDry = 1;
-   run_t.gPlasma = 1;
-   run_t.gUltrasonic = 1;
-   run_t.set_temperature_value = 20;
-   run_t.gTimer = 0;
-   run_t.gFanSpeed = 1; //fan speed high 
-   run_t.gTemperature = run_t.gDht11_temperature; //read dht11 sensor 
-   run_t.gHumidity = run_t.gDht11_humidity; //read dht11 sensor
-   run_t.time_remaining = 0;
-   run_t.time_working = 0;
-   run_t.alarm_call = 0;
-
-}
-
-
+/*****************************************************************************
+	*
+	*Function Name: void Publish_Data_ProdKey(void)
+	*Function : send product ID 
+	*Input Ref:NO
+	*Return Ref:NO
+	*
+*******************************************************************************/
 void Publish_Return_Repeat_Data(void)
 {
   
@@ -373,23 +359,32 @@ void Publish_Power_ON_State(void)
   SendFrame_Dry(0x01);
   SendFrame_Ster(0x01);//8
   SendFrame_Mouse(0x01);
-  SendFrame_SetTemperature(0x14);//10
-  SendFrame_SetTimer(0x01);
+  if(run_t.set_temperature_value < 20)run_t.set_temperature_value=20;
+  SendFrame_SetTemperature(run_t.set_temperature_value);//10
+  SendFrame_SetTimer(run_t.set_timer_timing_value);
   SendFrame_SetFanSpeed(0x01);
   SendFrame_Read_TemperatureValue(run_t.gDht11_temperature);
   SendFrame_Read_HumidityValue(run_t.gDht11_humidity );
-  SendFrame_Time_Remaining_One(0); //15
-  SendFrame_Time_Remaining_Two(0);
-  SendFrame_Time_Working_One(0);
-  SendFrame_Time_Working_Two(0x14);
-  SendFrame_Alarm_Infor(00);
-  temp_codes = 0x048+0x14+0x01+0x01+0x01+0x01+0x01+0x01+0x01+0x14+0x01+0x01+run_t.gDht11_temperature+run_t.gDht11_humidity +0x14;
+  SendFrame_Time_Remaining_One(run_t.time_remaining_minues_value); //15
+  SendFrame_Time_Remaining_Two(run_t.time_remaining_minues_value);
+  SendFrame_Time_Working_One(run_t.work_time_minutes_value);
+  SendFrame_Time_Working_Two(run_t.work_time_minutes_value);
+  SendFrame_Alarm_Infor(run_t.alarm_call);
+  temp_codes = 0x048+0x14+0x01+0x01+0x01+0x01+0x01+0x01+0x01+run_t.set_temperature_value+run_t.set_timer_timing_value+0x01\
+  	+run_t.gDht11_temperature+run_t.gDht11_humidity +run_t.time_remaining_minues_value+run_t.work_time_minutes_value+run_t.alarm_call;
 
   SendFrame_Sum(temp_codes);
 
 
 }
-
+/*****************************************************************************************************
+ * 
+ * Function Name: void Publish_Ultrasonic_OFF_State(void)
+ * Function Description::send to cloud data that ultrasonic
+ * Input Parameters:NO
+ * Return Parameter:NO
+ * 
+ ****************************************************************************************************/
 void Publish_Power_OFF_State(void)
 {
 
@@ -403,63 +398,24 @@ void Publish_Power_OFF_State(void)
   SendFrame_Dry(0);
   SendFrame_Ster(0);//8
   SendFrame_Mouse(0);
-  SendFrame_SetTemperature(0x14);//10
-  SendFrame_SetTimer(0);
+  if(run_t.set_temperature_value < 20)run_t.set_temperature_value=20;
+  SendFrame_SetTemperature(run_t.set_temperature_value);//10
+  SendFrame_SetTimer(run_t.set_timer_timing_value);
   SendFrame_SetFanSpeed(0);
   SendFrame_Read_TemperatureValue(run_t.gDht11_temperature);
   SendFrame_Read_HumidityValue(run_t.gDht11_humidity);
-  SendFrame_Time_Remaining_One(0); //15
-  SendFrame_Time_Remaining_Two(0);
-  SendFrame_Time_Working_One(0);
-  SendFrame_Time_Working_Two(0x17);
-  SendFrame_Alarm_Infor(00);
-  temp_code = 0x048+0x14+0x01+0x01+0x01+0x00+0x00+0x00+0x00+0x14+0x00+0x00+run_t.gDht11_temperature+run_t.gDht11_humidity +0x17;
+  SendFrame_Time_Remaining_One(run_t.time_remaining_minues_value); //15
+  SendFrame_Time_Remaining_Two(run_t.time_remaining_minues_value);
+  SendFrame_Time_Working_One(run_t.work_time_minutes_value);
+  SendFrame_Time_Working_Two(run_t.work_time_minutes_value);
+  SendFrame_Alarm_Infor(run_t.alarm_call);
+  temp_code = 0x048+0x14+0x01+0x01+0x01+0x00+0x00+0x00+0x00+run_t.set_temperature_value+run_t.set_timer_timing_value\
+  	+0x00+run_t.gDht11_temperature+run_t.gDht11_humidity +run_t.time_remaining_minues_value+run_t.work_time_minutes_value+run_t.alarm_call;
 
   SendFrame_Sum(temp_code);
 
 
 }
-
-/*****************************************************************************************************
- * 
- * Function Name: void Publish_PTC_OFF_State(void)
- * Function Description::send to cloud data that ultrasonic
- * Input Parameters:NO
- * Return Parameter:NO
- * 
- ****************************************************************************************************/
-void Publish_PTC_State(void)
-{
-
-  uint8_t temp_code;
-
-  SendHead();
-  SendFrame_Len(0x14);
-  SendFrame_Type(0x01);
-  SendFrame_Numbers(0x01); //4
-  SendFrame_Order(0x01);
-  SendFrame_Power(0x01);
-  SendFrame_Dry(run_t.gDry);
-  SendFrame_Ster(run_t.gPlasma);//8
-  SendFrame_Mouse(run_t.gUltrasonic);
-  if(run_t.set_temperature_value < 20)run_t.set_temperature_value=20;
-  SendFrame_SetTemperature(run_t.set_temperature_value);//10
-  SendFrame_SetTimer(run_t.set_timing_value);
-  SendFrame_SetFanSpeed(run_t.set_wind_speed_value);
-  SendFrame_Read_TemperatureValue(run_t.gDht11_temperature);
-  SendFrame_Read_HumidityValue(run_t.gDht11_humidity);
-  SendFrame_Time_Remaining_One(0); //15
-  SendFrame_Time_Remaining_Two(0);\
-  SendFrame_Time_Working_One(0);
-  SendFrame_Time_Working_Two(0);
-  SendFrame_Alarm_Infor(00);
-  temp_code = 0x048+0x14+0x01+0x01+0x01+0x01+run_t.gDry +run_t.gPlasma+run_t.gUltrasonic+run_t.set_temperature_value+run_t.set_timing_value+run_t.set_wind_speed_value+run_t.gDht11_temperature+run_t.gDht11_humidity+0;
-
-  SendFrame_Sum(temp_code);
-
-
-}
-
 
 /*****************************************************************************************************
  * 
@@ -472,29 +428,38 @@ void Publish_PTC_State(void)
 void Publish_Reference_Update_State(void)
 {
 
-  uint8_t temp_code;
+  uint8_t temp_code,power_number;
 
   SendHead();
   SendFrame_Len(0x14);
   SendFrame_Type(0x01);
   SendFrame_Numbers(0x01); //4
   SendFrame_Order(0x01);
-  SendFrame_Power(0x01);
+  if(run_t.gPower_On==POWER_ON){
+      SendFrame_Power(0x01);
+      power_number= 0x01;
+  }
+  else 
+  {
+    SendFrame_Power(0x00);
+    power_number= 0;
+  }
   SendFrame_Dry(run_t.gDry);
   SendFrame_Ster(run_t.gPlasma);//8
   SendFrame_Mouse(run_t.gUltrasonic);
   if(run_t.set_temperature_value < 20)run_t.set_temperature_value=20;
   SendFrame_SetTemperature(run_t.set_temperature_value);//10
-  SendFrame_SetTimer(run_t.set_timing_value);
+  SendFrame_SetTimer(run_t.set_timer_timing_value);
   SendFrame_SetFanSpeed(run_t.set_wind_speed_value);
   SendFrame_Read_TemperatureValue(run_t.gDht11_temperature);
   SendFrame_Read_HumidityValue(run_t.gDht11_humidity);
-  SendFrame_Time_Remaining_One(0); //15
-  SendFrame_Time_Remaining_Two(0);\
-  SendFrame_Time_Working_One(0);
-  SendFrame_Time_Working_Two(0);
-  SendFrame_Alarm_Infor(00);
-  temp_code = 0x048+0x14+0x01+0x01+0x01+0x01+run_t.gDry +run_t.gPlasma+run_t.gUltrasonic+run_t.set_temperature_value+run_t.set_timing_value+run_t.set_wind_speed_value+run_t.gDht11_temperature+run_t.gDht11_humidity+0;
+  SendFrame_Time_Remaining_One(run_t.time_remaining_minues_value); //15
+  SendFrame_Time_Remaining_Two(run_t.time_remaining_minues_value);
+  SendFrame_Time_Working_One(run_t.work_time_minutes_value);
+  SendFrame_Time_Working_Two(run_t.work_time_minutes_value);
+  SendFrame_Alarm_Infor(run_t.alarm_call);
+  temp_code = 0x048+0x14+0x01+0x01+0x01+power_number+run_t.gDry +run_t.gPlasma+run_t.gUltrasonic+run_t.set_temperature_value+run_t.set_timer_timing_value\
+  	+run_t.set_wind_speed_value+run_t.gDht11_temperature+run_t.gDht11_humidity+run_t.time_remaining_minues_value+run_t.work_time_minutes_value+run_t.alarm_call;
 
   SendFrame_Sum(temp_code);
 

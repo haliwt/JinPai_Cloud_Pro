@@ -43,6 +43,7 @@ void RunWifi_Command_Handler(uint8_t command)
 
              //wifi gpio 13 pull down 5s 
             Publish_Command_SmartCofnig();
+            HAL_Delay(400);
             esp8266_t.esp8266_config_wifi_net_label = wifi_smartconfig_model;
            
           
@@ -55,6 +56,7 @@ void RunWifi_Command_Handler(uint8_t command)
               wifi_t.gTimer_5s =0;
               repeat_times++;
               Publish_Data_ProdKey();
+              HAL_Delay(400);
              
           }
           if(wifi_t.wifi_receive_data_error==1){ //is error 
@@ -77,6 +79,7 @@ void RunWifi_Command_Handler(uint8_t command)
              wifi_t.gTimer_5s =0;
              repeat_send_times++;
              Publish_Data_ProdKey();
+             HAL_Delay(400);
             
           }
           
@@ -87,6 +90,7 @@ void RunWifi_Command_Handler(uint8_t command)
           if(wifi_t.gTimer_5s > 20){
             wifi_t.gTimer_5s=0;
             Publish_Command_Query();
+            HAL_Delay(400);
 			 
           }
           if(wifi_t.wifi_link_JPai_cloud==1){
@@ -108,11 +112,13 @@ void RunWifi_Command_Handler(uint8_t command)
 		      if(publish_init_flag ==0){
 		        publish_init_flag++;
 		        Init_Publisher_Data_Ref();
+      
 		        wifi_t.gTimer_5s=0;
 		      }
 			  if(wifi_t.gTimer_5s > 10 &&   pub_times < 3){
 			  	  wifi_t.gTimer_5s=0;
-			     Publish_Data_AllRef();
+			      Publish_Reference_Update_State();
+            		HAL_Delay(400);
 			     pub_times ++;
 
     	    }
@@ -148,6 +154,7 @@ void RunWifi_Command_Handler(uint8_t command)
                 run_t.gTimer_send_cloud_state=0;
                 Dht11_Read_TempHumidity_Handler(&DHT11);
                 Publish_Reference_Update_State();
+                HAL_Delay(300);
 
 			}
 		
@@ -169,14 +176,11 @@ void RunWifi_Command_Handler(uint8_t command)
 	  
 		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 			if(wifi_t.usart_wifi_frame_len < 0x0d ){
-//				if(wifi_t.usart_wifi_frame_len==0x06){
-//
-//					wifi_t.publish_send_state_data=0;
-//				}
-//				else   
-					wifi_t.publish_send_state_data=1;
+
+					
 					Publish_Return_Repeat_Data();
-				
+          HAL_Delay(250);
+          wifi_t.publish_send_state_data=1;
 		    } 
 			else{
 
@@ -250,7 +254,8 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
          switch(len){
 
             case 0x06:
-               Publish_Reference_Update_State();
+              Publish_Reference_Update_State();
+              HAL_Delay(300);
             break;
 
             case 0x07:
@@ -267,7 +272,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 						 	Buzzer_KeySound();
 							wifi_t.gTimer_wifi_send_cloud_success_times=0;
                             Publish_Power_OFF_State();
-							HAL_Delay(30);
+							HAL_Delay(300);
 							SendWifiCmd_To_Order(WIFI_POWER_OFF);
 						 
 						     
@@ -280,7 +285,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 							wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
                             Buzzer_KeySound();
 							Publish_Power_ON_State();
-							HAL_Delay(30);
+							HAL_Delay(300);
 							SendWifiCmd_To_Order(WIFI_POWER_ON);
 							esp8266_t.esp8266_config_wifi_net_label=wifi_publish_update_data;
 							 
@@ -293,14 +298,14 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 							run_t.gDry = 0;
                             Buzzer_KeySound();
 							  Publish_Reference_Update_State();
-							HAL_Delay(30);
+							HAL_Delay(300);
 							SendWifiCmd_To_Order(WIFI_PTC_OFF);
                          }
                          else{
 							run_t.gDry=1;
 						 	Buzzer_KeySound();
 							  Publish_Reference_Update_State();
-							HAL_Delay(30);
+							HAL_Delay(300);
 							 SendWifiCmd_To_Order(WIFI_PTC_ON);
                          }
                     break;
@@ -310,7 +315,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 						 	run_t.gPlasma=0;
 							Buzzer_KeySound();
                             Publish_Reference_Update_State();
-						    HAL_Delay(30);
+						    HAL_Delay(300);
 							SendWifiCmd_To_Order(WIFI_KILL_OFF);
 								
                          }
@@ -318,7 +323,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 						  run_t.gPlasma=1;
 						  Buzzer_KeySound();
                           Publish_Reference_Update_State();
-						  HAL_Delay(30);
+						  HAL_Delay(300);
 						  SendWifiCmd_To_Order(WIFI_KILL_ON);
                          }
                     break;
@@ -328,14 +333,14 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 							run_t.gUltrasonic =0;
 							Buzzer_KeySound();
                            Publish_Reference_Update_State();
-						   HAL_Delay(30);
+						   HAL_Delay(300);
 							SendWifiCmd_To_Order(WIFI_ULTRASONIC_OFF);
                          }
                          else{
 						 	run_t.gUltrasonic =1;
 						 	Buzzer_KeySound();
                              Publish_Reference_Update_State();
-						   HAL_Delay(30);
+						   HAL_Delay(300);
 						   SendWifiCmd_To_Order(WIFI_ULTRASONIC_ON);
                          }
 
@@ -366,8 +371,8 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 
 					case 0x0F : // set up timer timing value
                       	Buzzer_KeySound();
-                        run_t.set_timing_value = wifi_t.usart_wifi_model;
-						SendWifiData_To_PanelTime(run_t.set_timing_value);
+                        run_t.set_timer_timing_value = wifi_t.usart_wifi_model;
+						SendWifiData_To_PanelTime(run_t.set_timer_timing_value);
                     break;
 
 					
@@ -379,7 +384,8 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
             break;
 
             case 0x0b: // set order status from
-				  
+				Publish_Reference_Update_State();
+				HAL_Delay(300); 
               
             break;
 

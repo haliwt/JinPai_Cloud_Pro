@@ -71,14 +71,13 @@ void Decode_RunCmd(void)
          
       break;
 
-	  case 'M':
+	  case 'M': //set up temperature value
 	  	if(run_t.gPower_flag==POWER_ON){
               
              run_t.set_temperature_value = cmdType_2;
 			 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-				Publish_PTC_State();
-				
-				HAL_Delay(30);
+				Publish_Reference_Update_State();//
+				HAL_Delay(300);
 			 }
 			    
 			   
@@ -87,22 +86,38 @@ void Decode_RunCmd(void)
 
 	  break;
 
-	  case 'T':
+	  case 'T': //set up tiemr timing
 		  if(run_t.gPower_flag==POWER_ON){
-             run_t.set_timing_value = cmdType_2;
+             run_t.set_timer_timing_value = cmdType_2;
 			 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-				Publish_PTC_State();
-				HAL_Delay(30);
+				Publish_Reference_Update_State();//
+				HAL_Delay(300);
 
 			 }
 			
 			   
          }
-	  
-
 	  break;
 
+	  case 'O': //works how long times minute ?
+          if(run_t.gPower_flag==POWER_ON){
+             run_t.work_time_minutes_value = cmdType_2;
+             if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
+                Publish_Reference_Update_State();//
+                HAL_Delay(300);
+		      }
+        }
+	  break;
 
+	  case 'R': //remaining time minutes value
+          if(run_t.gPower_flag==POWER_ON){
+             run_t.time_remaining_minues_value = cmdType_2;
+             if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
+                Publish_Reference_Update_State();//
+                HAL_Delay(300);
+             }
+	        }
+      break;
 	  case 'Z' ://buzzer sound 
 	    if(run_t.gPower_flag==POWER_ON){
 
@@ -115,8 +130,8 @@ void Decode_RunCmd(void)
 		}
      
 	    break;
- 	}
-    
+ 	
+}   
 }
 /**********************************************************************
 	*
@@ -143,8 +158,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 	  	wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;
 	
         Publish_Power_OFF_State();
-			
-		HAL_Delay(30);
+		HAL_Delay(300);
 	  }    
 
     cmd = 0xff;
@@ -163,8 +177,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 		 	wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;
 			esp8266_t.esp8266_config_wifi_net_label=wifi_publish_update_data;
 			Publish_Power_ON_State();
-			//Publish_Data_AllRef();
-		    HAL_Delay(30);
+		    HAL_Delay(300);
 		 }
 		 
 	 cmd=0xff;  
@@ -205,8 +218,8 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 		  else no_buzzer_sound_dry_off=0;
 			
 		 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-		    Publish_PTC_State();//Publish_PTC_ON_State();
-            HAL_Delay(30);
+		    Publish_Reference_Update_State();//Publish_PTC_State();//Publish_PTC_ON_State();
+            HAL_Delay(300);
 	      }
 		   
 		 
@@ -227,7 +240,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 			
 			if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 				Publish_Reference_Update_State();
-			    HAL_Delay(30);
+			    HAL_Delay(300);
 			}
 			   
        break;
@@ -238,7 +251,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 			Buzzer_KeySound();
 	   if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 	        Publish_Reference_Update_State();
-	        HAL_Delay(30);
+	        HAL_Delay(300);
 	     
 	   	}
 	    
@@ -249,7 +262,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 		   Buzzer_KeySound();
 	   if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 	         Publish_Reference_Update_State();
-            HAL_Delay(30);
+            HAL_Delay(300);
 	       
 	      
 	   	}
@@ -262,7 +275,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 		  Buzzer_KeySound();
 		  if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 			  Publish_Reference_Update_State();
-			 HAL_Delay(30);
+			 HAL_Delay(300);
 		  }
 		
 		   
@@ -274,7 +287,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 		  
 		   if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 			  Publish_Reference_Update_State();
-			 HAL_Delay(30);
+			 HAL_Delay(300);
 		   }
 		 
 		  
@@ -347,7 +360,7 @@ void RunCommand_MainBoard_Fun(void)
         run_t.gTimer_10s=0;
 		run_t.gTheFirst_powerOn=1;
 		Update_DHT11_Value();
-		HAL_Delay(10);
+		HAL_Delay(20);
 
 		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 			run_t.recoder_wifi_link_cloud_flag = 1;
@@ -452,18 +465,15 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 {
    static uint8_t self_power_on_flag=0;
 	if(run_t.first_power_on_flag==0){
-       // run_t.first_power_on_flag++ ;
-       // Buzzer_KeySound();
        run_t.set_wind_speed_value=1;
        WIFI_IC_ENABLE();
       if(usart_wifi_t.usart_wifi_receive_read_data_flag==1){
-        // WIFI_IC_ENABLE();
 		usart_wifi_t.usart_wifi_receive_read_data_flag=0;
        	usart_wifi_t.usart_wifi_start_receive_flag=0;
 		usart_wifi_t.usart_wifi_receive_success_flag=0;
-       
+        HAL_Delay(200);
 		Publish_Data_ProdKey();	
-		HAL_Delay(20);
+		HAL_Delay(1000);
 	    run_t.first_power_on_flag++ ;
 		 
 		
@@ -484,7 +494,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 		if(run_t.gPower_On == POWER_OFF){
 			run_t.first_power_on_flag= 0x0A;
 			Publish_Power_OFF_State();
-
+            HAL_Delay(300);
 
 		}
 	    
@@ -514,7 +524,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 			if(run_t.gPower_On == POWER_OFF){
 				 run_t.first_power_on_flag= 0x0A;
 				 Publish_Power_OFF_State();
-
+				 HAL_Delay(300);
 
 			}
      }

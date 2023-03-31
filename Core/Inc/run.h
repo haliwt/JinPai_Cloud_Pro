@@ -106,7 +106,7 @@ typedef struct _RUN_T{
 
 	  
 	  uint8_t  set_temperature_value;
-	  uint8_t  set_timing_value;
+	  uint8_t  set_timer_timing_value;
 	  uint8_t  set_temperature_decade;
 	  uint8_t  set_temperature_unit;
 	  uint8_t  set_wind_speed_value;
@@ -124,9 +124,8 @@ typedef struct _RUN_T{
 	uint8_t gTimer_send_cloud_state;
 	uint8_t gTimer_senddata_panel;
 
-	uint16_t  time_remaining;
-	uint16_t  time_working;
-	
+	uint16_t  time_remaining_minues_value;
+	uint16_t  work_time_minutes_value;
 
 	
 
