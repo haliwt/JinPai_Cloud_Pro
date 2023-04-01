@@ -13,7 +13,7 @@ USART_WIFI_T usart_wifi_t;
 
 
 uint8_t  inputBuf[4];
-uint8_t  inputCmd[2];
+uint8_t  inputCmd[3];
 uint8_t  wifiInputBuf[1];
 uint8_t test_counter;
 uint8_t test_counter_usat1;
@@ -65,11 +65,26 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         break;
         
         case 3:
-            inputCmd[1]= inputBuf[0];
-            run_t.decodeFlag =1;
-            state = 0;
+			if(inputCmd[0] != 'O' || inputCmd[0] !='R'){
+	            inputCmd[1]= inputBuf[0];
+	            run_t.decodeFlag =1;
+	            state = 0;
+			}
+			else{
+			  inputCmd[1]= inputBuf[0];
+			  state = 4;
+
+
+			}
         
         break;
+
+		case 4:
+		    inputCmd[2]= inputBuf[0];
+			run_t.decodeFlag =1;
+            state = 0;
+
+		break;
 	
 		default:
 			state=0;

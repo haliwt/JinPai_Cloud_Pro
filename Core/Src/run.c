@@ -34,7 +34,8 @@ uint8_t no_buzzer_sound_dry_off;
 void Decode_RunCmd(void)
 {
 
- uint8_t cmdType_1=inputCmd[0],cmdType_2 = inputCmd[1];
+ uint8_t cmdType_1=inputCmd[0],cmdType_2 = inputCmd[1],cmdType_3=inputCmd[2];
+
     
   switch(cmdType_1){
   
@@ -89,7 +90,8 @@ void Decode_RunCmd(void)
 	  case 'T': //set up tiemr timing
 		  if(run_t.gPower_flag==POWER_ON){
              run_t.set_timer_timing_value = cmdType_2;
-			 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
+			 
+			if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 				Publish_Reference_Update_State();//
 				HAL_Delay(300);
 
@@ -101,7 +103,9 @@ void Decode_RunCmd(void)
 
 	  case 'O': //works how long times minute ?
           if(run_t.gPower_flag==POWER_ON){
-             run_t.work_time_minutes_value = cmdType_2;
+
+		     run_t.work_time_minutes_one =  cmdType_2;
+             run_t.work_time_minutes_two =   cmdType_3;
              if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
                 Publish_Reference_Update_State();//
                 HAL_Delay(300);
@@ -111,8 +115,10 @@ void Decode_RunCmd(void)
 
 	  case 'R': //remaining time minutes value ?
           if(run_t.gPower_flag==POWER_ON){
-             run_t.time_remaining_minues_value = cmdType_2;
-             if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
+
+		     run_t.time_remaining_minues_one = cmdType_2;
+			 run_t.time_remaining_minues_two = cmdType_3;
+		    if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
                 Publish_Reference_Update_State();//
                 HAL_Delay(300);
              }

@@ -52,7 +52,7 @@ extern uint8_t rx_wifi_data[7];
 
 extern uint8_t inputBuf[4];
 
-extern uint8_t  inputCmd[2];
+extern uint8_t  inputCmd[3];
 extern uint8_t wifiInputBuf[1];
 
 void Decode_Function(void);

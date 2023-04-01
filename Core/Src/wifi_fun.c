@@ -52,42 +52,29 @@ void RunWifi_Command_Handler(uint8_t command)
 
         case wifi_smartconfig_model: //0x03
 
-          if(wifi_t.gTimer_5s > 5 && repeat_times ==0){
-              wifi_t.gTimer_5s =0;
+          if(repeat_times ==0){
               repeat_times++;
               Publish_Data_ProdKey();
               HAL_Delay(400);
-             
+             esp8266_t.esp8266_config_wifi_net_label=wifi_receive_data;
+			 wifi_t.gTimer_5s=0;
           }
+		  
           if(wifi_t.wifi_receive_data_error==1){ //is error 
 
              if(repeat_send_times >4){//exit smart config 
                 repeat_send_times=0;
-                esp8266_t.esp8266_config_wifi_net_label= wifi_null;
+                esp8266_t.esp8266_config_wifi_net_label= wifi_receive_data;
              }
            
 		  
           }
-          else{
-                 esp8266_t.esp8266_config_wifi_net_label = wifi_receive_data;
-                  wifi_t.gTimer_5s =0;
-                 repeat_times=0;
-                 repeat_send_times=0;
-          }
 
-          if(wifi_t.gTimer_5s > 10 && repeat_send_times < 5){
-             wifi_t.gTimer_5s =0;
-             repeat_send_times++;
-             Publish_Data_ProdKey();
-             HAL_Delay(400);
-            
-          }
-          
 
         break;
 
 		case wifi_receive_data: //0x04
-          if(wifi_t.gTimer_5s > 20){
+          if(wifi_t.gTimer_5s > 10){
             wifi_t.gTimer_5s=0;
             Publish_Command_Query();
             HAL_Delay(400);
@@ -179,8 +166,8 @@ void RunWifi_Command_Handler(uint8_t command)
 
 					
 					Publish_Return_Repeat_Data();
-          HAL_Delay(250);
-          wifi_t.publish_send_state_data=1;
+                    HAL_Delay(250);
+                   wifi_t.publish_send_state_data=1;
 		    } 
 			else{
 
