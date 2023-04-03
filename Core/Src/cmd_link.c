@@ -12,8 +12,8 @@
 USART_WIFI_T usart_wifi_t;
 
 
-uint8_t  inputBuf[4];
-uint8_t  inputCmd[3];
+uint8_t  inputBuf[5];
+uint8_t  inputCmd[5];
 uint8_t  wifiInputBuf[1];
 uint8_t test_counter;
 uint8_t test_counter_usat1;
@@ -38,7 +38,7 @@ volatile uint8_t usart2_transOngoingFlag;
 *******************************************************************************/
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-    static uint8_t state;
+    static uint8_t state,wr_flag;
  
 
 	if(huart->Instance==USART1)//if(huart==&huart1) // Motor Board receive data (filter)
@@ -48,43 +48,50 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		{
 		case 0:  //#0
 			if(inputBuf[0] == 'T')  //hex :54 - "T" -fixed
+
+			    wr_flag =0;
 				state=1; //=1
-		
-			break;
+		break;
 		case 1: //#1
-             if(inputBuf[0] == 'K')  //hex :4B - "K" -fixed
+             if(inputBuf[0] == 'K' || inputBuf[0]=='O' || inputBuf[0]=='R')  {//hex :4B - "K" -fixed
+                if(inputBuf[0]=='O' || inputBuf[0]=='R'){
+                       inputCmd[0]= inputBuf[0];
+					   wr_flag=1;
+					   
+				}
 				state=2; //=1
-			else
+
+             }
+			else{
+			   wr_flag =0;
 			   state =0;
+			}
 			break;
             
         case 2:
-             inputCmd[0]= inputBuf[0];
+			 if(wr_flag == 1){
+			    inputCmd[1]= inputBuf[0];
+
+			 }
+			 else
+             	inputCmd[0]= inputBuf[0];
              state = 3;
         
         break;
         
         case 3:
-			if(inputCmd[0] != 'O' || inputCmd[0] !='R'){
-	            inputCmd[1]= inputBuf[0];
-	            run_t.decodeFlag =1;
-	            state = 0;
-			}
-			else{
+		     if(wr_flag ==1){
+	           inputCmd[2]= inputBuf[0];
+		     }
+			 else
 			  inputCmd[1]= inputBuf[0];
-			  state = 4;
-
-
-			}
+	         run_t.decodeFlag =1;
+			
+	         state = 0;
         
         break;
 
-		case 4:
-		    inputCmd[2]= inputBuf[0];
-			run_t.decodeFlag =1;
-            state = 0;
-
-		break;
+	
 	
 		default:
 			state=0;

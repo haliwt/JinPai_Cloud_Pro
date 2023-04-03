@@ -33,7 +33,8 @@ uint8_t no_buzzer_sound_dry_off;
 **********************************************************************/
 void Decode_RunCmd(void)
 {
-
+  uint16_t count_total_times;
+  uint8_t count_rem_times_one,count_rem_times_two;
  uint8_t cmdType_1=inputCmd[0],cmdType_2 = inputCmd[1],cmdType_3=inputCmd[2];
 
     
@@ -89,9 +90,13 @@ void Decode_RunCmd(void)
 
 	  case 'T': //set up tiemr timing
 		  if(run_t.gPower_flag==POWER_ON){
-             run_t.set_timer_timing_value = cmdType_2;
-			 
+           
 			if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
+				run_t.set_timer_timing_value =  inputCmd[1];
+				count_total_times = run_t.set_timer_timing_value *60 ;
+			   run_t.time_remaining_minutes_one = count_total_times >>8;
+			   run_t.time_remaining_minutes_two =  count_total_times & 0xff;
+			
 				Publish_Reference_Update_State();//
 				HAL_Delay(300);
 
@@ -104,9 +109,10 @@ void Decode_RunCmd(void)
 	  case 'O': //works how long times minute ?
           if(run_t.gPower_flag==POWER_ON){
 
-		     run_t.work_time_minutes_one =  cmdType_2;
-             run_t.work_time_minutes_two =   cmdType_3;
+		   
              if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
+			 	run_t.work_time_minutes_one =  inputCmd[1];
+                run_t.work_time_minutes_two =  inputCmd[2];
                 Publish_Reference_Update_State();//
                 HAL_Delay(300);
 		      }
@@ -116,8 +122,8 @@ void Decode_RunCmd(void)
 	  case 'R': //remaining time minutes value ?
           if(run_t.gPower_flag==POWER_ON){
 
-		     run_t.time_remaining_minues_one = cmdType_2;
-			 run_t.time_remaining_minues_two = cmdType_3;
+		     run_t.time_remaining_minutes_one = inputCmd[1];
+			 run_t.time_remaining_minutes_two =  inputCmd[2];
 		    if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
                 Publish_Reference_Update_State();//
                 HAL_Delay(300);
@@ -159,6 +165,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
         run_t.gPower_On=POWER_OFF;
         run_t.gPower_flag = POWER_OFF;
         run_t.RunCommand_Label = POWER_OFF;
+		
 		esp8266_t.esp8266_config_wifi_net_label=0;
       if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){ 
 	  	wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;

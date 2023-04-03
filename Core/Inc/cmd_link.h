@@ -50,9 +50,9 @@ extern USART_WIFI_T usart_wifi_t;
 
 extern uint8_t rx_wifi_data[7];
 
-extern uint8_t inputBuf[4];
+extern uint8_t inputBuf[5];
 
-extern uint8_t  inputCmd[3];
+extern uint8_t  inputCmd[5];
 extern uint8_t wifiInputBuf[1];
 
 void Decode_Function(void);

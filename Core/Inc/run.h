@@ -124,8 +124,8 @@ typedef struct _RUN_T{
 	uint8_t gTimer_send_cloud_state;
 	uint8_t gTimer_senddata_panel;
 
-	uint8_t  time_remaining_minues_one;
-	uint8_t  time_remaining_minues_two;
+	uint8_t  time_remaining_minutes_one;
+	uint8_t  time_remaining_minutes_two;
 	uint8_t  work_time_minutes_one;
 	uint8_t  work_time_minutes_two;
 

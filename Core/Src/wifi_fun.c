@@ -191,8 +191,9 @@ void RunWifi_Command_Handler(uint8_t command)
 		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS && run_t.gPower_On==POWER_ON && send_times ==0 ){
 			 send_times++;
 			 SendWifiCmd_To_Order(WIFI_POWER_ON);
-
+			 HAL_Delay(200);
 			 SendWifiData_To_Cmd(0x01) ;
+		     HAL_Delay(100);
 
 
 		}

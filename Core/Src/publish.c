@@ -337,13 +337,13 @@ void Publish_Power_ON_State(void)
   SendFrame_SetFanSpeed(0x01);
   SendFrame_Read_TemperatureValue(run_t.gDht11_temperature);
   SendFrame_Read_HumidityValue(run_t.gDht11_humidity );
-  SendFrame_Time_Remaining_One(run_t.time_remaining_minues_one); //15
-  SendFrame_Time_Remaining_Two(run_t.time_remaining_minues_two);
+  SendFrame_Time_Remaining_One(run_t.time_remaining_minutes_one); //15
+  SendFrame_Time_Remaining_Two(run_t.time_remaining_minutes_two);
   SendFrame_Time_Working_One(run_t.work_time_minutes_one);
   SendFrame_Time_Working_Two(run_t.work_time_minutes_two);
   SendFrame_Alarm_Infor(run_t.alarm_call);
   temp_codes = 0x048+0x14+0x01+0x01+0x01+0x01+0x01+0x01+0x01+run_t.set_temperature_value+run_t.set_timer_timing_value+0x01\
-  	+run_t.gDht11_temperature+run_t.gDht11_humidity +run_t.time_remaining_minues_one+run_t.time_remaining_minues_two\
+  	+run_t.gDht11_temperature+run_t.gDht11_humidity +run_t.time_remaining_minutes_one+run_t.time_remaining_minutes_two\
     +run_t.work_time_minutes_one+run_t.work_time_minutes_two+run_t.alarm_call;
 
   SendFrame_Sum(temp_codes);
@@ -377,13 +377,13 @@ void Publish_Power_OFF_State(void)
   SendFrame_SetFanSpeed(0);
   SendFrame_Read_TemperatureValue(run_t.gDht11_temperature);
   SendFrame_Read_HumidityValue(run_t.gDht11_humidity);
-  SendFrame_Time_Remaining_One(run_t.time_remaining_minues_one); //15
-  SendFrame_Time_Remaining_Two(run_t.time_remaining_minues_two);
+  SendFrame_Time_Remaining_One(run_t.time_remaining_minutes_one); //15
+  SendFrame_Time_Remaining_Two(run_t.time_remaining_minutes_two);
   SendFrame_Time_Working_One(run_t.work_time_minutes_one);
   SendFrame_Time_Working_Two(run_t.work_time_minutes_two);
   SendFrame_Alarm_Infor(run_t.alarm_call);
   temp_code = 0x048+0x14+0x01+0x01+0x01+0x00+0x00+0x00+0x00+run_t.set_temperature_value+run_t.set_timer_timing_value\
-  	+0x00+run_t.gDht11_temperature+run_t.gDht11_humidity +run_t.time_remaining_minues_one+run_t.time_remaining_minues_two\
+  	+0x00+run_t.gDht11_temperature+run_t.gDht11_humidity +run_t.time_remaining_minutes_one+run_t.time_remaining_minutes_two\
     +run_t.work_time_minutes_one+run_t.work_time_minutes_two+run_t.alarm_call;
 
   SendFrame_Sum(temp_code);
@@ -427,13 +427,13 @@ void Publish_Reference_Update_State(void)
   SendFrame_SetFanSpeed(run_t.set_wind_speed_value);
   SendFrame_Read_TemperatureValue(run_t.gDht11_temperature);
   SendFrame_Read_HumidityValue(run_t.gDht11_humidity);
-  SendFrame_Time_Remaining_One(run_t.time_remaining_minues_one); //15
-  SendFrame_Time_Remaining_Two(run_t.time_remaining_minues_two);
+  SendFrame_Time_Remaining_One(run_t.time_remaining_minutes_one); //15
+  SendFrame_Time_Remaining_Two(run_t.time_remaining_minutes_two);
   SendFrame_Time_Working_One(run_t.work_time_minutes_one);
   SendFrame_Time_Working_Two(run_t.work_time_minutes_two);
   SendFrame_Alarm_Infor(run_t.alarm_call);
   temp_code = 0x048+0x14+0x01+0x01+0x01+power_number+run_t.gDry +run_t.gPlasma+run_t.gUltrasonic+run_t.set_temperature_value+run_t.set_timer_timing_value\
-  	+run_t.set_wind_speed_value+run_t.gDht11_temperature+run_t.gDht11_humidity+run_t.time_remaining_minues_one+run_t.time_remaining_minues_two\
+  	+run_t.set_wind_speed_value+run_t.gDht11_temperature+run_t.gDht11_humidity+run_t.time_remaining_minutes_one+run_t.time_remaining_minutes_two\
     +run_t.work_time_minutes_one+run_t.work_time_minutes_two+run_t.alarm_call;
 
   SendFrame_Sum(temp_code);
