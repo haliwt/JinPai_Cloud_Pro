@@ -167,12 +167,12 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
         run_t.RunCommand_Label = POWER_OFF;
 		
 		esp8266_t.esp8266_config_wifi_net_label=0;
-      if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){ 
-	  	wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;
-	
-        Publish_Power_OFF_State();
-		HAL_Delay(300);
-	  }    
+//      if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){ 
+//	  	wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;
+//	
+//        Publish_Power_OFF_State();
+//		HAL_Delay(300);
+//	  }    
 
     cmd = 0xff;
     break;
@@ -184,14 +184,14 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 		 run_t.gPower_On = POWER_ON;
          run_t.RunCommand_Label= POWER_ON;
 		 esp8266_t.esp8266_config_wifi_net_label=0;
-		 Update_DHT11_Value();
-		 HAL_Delay(20);
-		 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-		 	wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;
-			esp8266_t.esp8266_config_wifi_net_label=wifi_publish_update_data;
-			Publish_Power_ON_State();
-		    HAL_Delay(300);
-		 }
+		// Update_DHT11_Value();
+		// HAL_Delay(20);
+//		 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
+//		 	wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;
+//			esp8266_t.esp8266_config_wifi_net_label=wifi_publish_update_data;
+//			Publish_Power_ON_State();
+//		    HAL_Delay(300);
+//		 }
 		 
 	 cmd=0xff;  
      break;
@@ -368,38 +368,35 @@ void RunCommand_MainBoard_Fun(void)
 
 	case POWER_ON: //1
 		SetPowerOn_ForDoing();
-	    run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
+
+		run_t.gPower_flag = POWER_ON;
+		run_t.gPower_On = POWER_ON;
+		esp8266_t.esp8266_config_wifi_net_label=0;
+	    
 		power_just_on=0;
         run_t.gTimer_10s=0;
 		run_t.gTheFirst_powerOn=1;
-		Update_DHT11_Value();
+		Update_DHT11_Value(); //to message display 
 		HAL_Delay(20);
 
 		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 			run_t.recoder_wifi_link_cloud_flag = 1;
+			wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS; 
 	 	    SendWifiData_To_Cmd(0x01) ;
+			HAL_Delay(100);  	
+			esp8266_t.esp8266_config_wifi_net_label=wifi_publish_update_data;
+			Publish_Power_ON_State();
+		    HAL_Delay(300);
+			
 		}
-		
+		run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
 
 	break;
 
-   case UPDATE_TO_PANEL_DATA: //4
-     if(run_t.gTimer_senddata_panel >30 && run_t.gPower_On==POWER_ON){ //300ms
-	   	    run_t.gTimer_senddata_panel=0;
-	        ActionEvent_Handler();
-	 }
-	 
-    break;
-
-
-
-	case POWER_OFF: //2
+    case POWER_OFF: //2
 		SetPowerOff_ForDoing();
-	    if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-			  run_t.recoder_wifi_link_cloud_flag = 1; //recoder has been linked cloud flag
-		}
-	
-		if(run_t.gTheFirst_powerOn ==0)
+
+        if(run_t.gTheFirst_powerOn ==0)
          	run_t.gFan_continueRun =0;
 		else{
 		 run_t.gFan_continueRun =1;
@@ -409,18 +406,35 @@ void RunCommand_MainBoard_Fun(void)
 		
         
 	   run_t.gPower_flag =POWER_OFF;
-		
-       run_t.RunCommand_Label =0xff;
+	   run_t.RunCommand_Label =0xff;
+
+	   if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){ 
+	  	wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;
+		 run_t.recoder_wifi_link_cloud_flag = 1; //recoder has been linked cloud flag
+	
+        Publish_Power_OFF_State();
+		HAL_Delay(300);
+	  }    
 	break;
 
-    }
-	
-    if((run_t.gTimer_10s>30 && run_t.gPower_flag == POWER_ON)||power_just_on < 10){
+	case UPDATE_TO_PANEL_DATA: //4
+     if(run_t.gTimer_senddata_panel >30 && run_t.gPower_On==POWER_ON){ //300ms
+	   	    run_t.gTimer_senddata_panel=0;
+	        ActionEvent_Handler();
+	 }
+
+	if((run_t.gTimer_10s>30 && run_t.gPower_flag == POWER_ON)||power_just_on < 10){
     	power_just_on ++ ;
 		run_t.gTimer_10s=0;
 		Update_DHT11_Value();
 
      }
+	 
+    break;
+
+    }
+	
+   
 
 	
 

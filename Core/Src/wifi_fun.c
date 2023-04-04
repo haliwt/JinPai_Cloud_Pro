@@ -386,7 +386,14 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 
             case 0x0b: // set order status from
 				Publish_Reference_Update_State();
+				run_t.gPower_On = wifi_t.usart_wifi_model;
+			    run_t.gUltrasonic = wifi_t.usart_wifi_state;
+				run_t.gDry = wifi_t.usart_wifi_cloud_state;
+				run_t.gPlasma = wifi_t.usart_wifi_signal_state;
+				run_t.set_timer_timing_value = wifi_t.usart_wifi_pass_state;
 				HAL_Delay(300); 
+				if(run_t.gPower_On == POWER_ON)run_t.RunCommand_Label = POWER_ON;
+				else   run_t.RunCommand_Label = POWER_OFF;
               
             break;
 
