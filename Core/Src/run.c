@@ -385,10 +385,17 @@ void RunCommand_MainBoard_Fun(void)
 	 	    SendWifiData_To_Cmd(0x01) ;
 			HAL_Delay(100);  	
 			esp8266_t.esp8266_config_wifi_net_label=wifi_publish_update_data;
-			Publish_Power_ON_State();
+			if(run_t.app_appointment_time_power_on == POWER_ON){
+			//	run_t.app_appointment_time_power_on=0;
+				Publish_Reference_Update_State();
+			    
+			}
+			else
+			    Publish_Power_ON_State();
 		    HAL_Delay(300);
 			
 		}
+        SendWifiCmd_To_Order(WIFI_POWER_ON); //display pannel power on 
 		run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
 
 	break;
@@ -411,13 +418,15 @@ void RunCommand_MainBoard_Fun(void)
 	   if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){ 
 	  	wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;
 		 run_t.recoder_wifi_link_cloud_flag = 1; //recoder has been linked cloud flag
-	
+	  
         Publish_Power_OFF_State();
 		HAL_Delay(300);
-	  }    
+        
+	  }  
+      SendWifiCmd_To_Order(WIFI_POWER_OFF);       
 	break;
 
-	case UPDATE_TO_PANEL_DATA: //4
+	case UPDATE_TO_PANEL_DATA: //3
      if(run_t.gTimer_senddata_panel >30 && run_t.gPower_On==POWER_ON){ //300ms
 	   	    run_t.gTimer_senddata_panel=0;
 	        ActionEvent_Handler();
@@ -429,6 +438,12 @@ void RunCommand_MainBoard_Fun(void)
 		Update_DHT11_Value();
 
      }
+
+	if(run_t.app_appointment_time_power_on == POWER_ON){
+		run_t.app_appointment_time_power_on ++;
+        SendWifiData_To_PanelTime(run_t.set_timer_timing_value);
+
+	}
 	 
     break;
 

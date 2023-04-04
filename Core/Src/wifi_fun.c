@@ -392,7 +392,11 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 				run_t.gPlasma = wifi_t.usart_wifi_signal_state;
 				run_t.set_timer_timing_value = wifi_t.usart_wifi_pass_state;
 				HAL_Delay(300); 
-				if(run_t.gPower_On == POWER_ON)run_t.RunCommand_Label = POWER_ON;
+				if(run_t.gPower_On == POWER_ON){
+					Buzzer_KeySound();
+					run_t.app_appointment_time_power_on = POWER_ON;
+					run_t.RunCommand_Label = POWER_ON;
+				}
 				else   run_t.RunCommand_Label = POWER_OFF;
               
             break;
