@@ -439,7 +439,7 @@ void RunCommand_MainBoard_Fun(void)
 	    }
 		else
 			SendWifiCmd_To_Order(WIFI_ULTRASONIC_ON);
-        HAL_Delay(5);
+        HAL_Delay(20);
 		
 		if(run_t.gPlasma==0){
 		  SendWifiCmd_To_Order(WIFI_KILL_OFF);
@@ -447,7 +447,7 @@ void RunCommand_MainBoard_Fun(void)
 		}
 		else
 	         SendWifiCmd_To_Order(WIFI_KILL_ON);
-		HAL_Delay(5);
+		HAL_Delay(20);
 
 		if(run_t.gDry==0){
 		 SendWifiCmd_To_Order(WIFI_PTC_OFF);
@@ -455,7 +455,7 @@ void RunCommand_MainBoard_Fun(void)
 		}
 		else
 	    	SendWifiCmd_To_Order(WIFI_PTC_ON);
-       HAL_Delay(5);
+       HAL_Delay(20);
 
 	}
 	 
