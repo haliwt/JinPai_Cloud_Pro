@@ -101,6 +101,7 @@ typedef struct _RUN_T{
 	 
 	  uint8_t  alarm_call;
 	  uint8_t  gFan_counter;
+	  uint8_t fan_start_shut_off_flag;
 	 
 
 	  
@@ -117,6 +118,7 @@ typedef struct _RUN_T{
 	  uint8_t wifi_link_JPai_cloud;
 	  uint8_t first_power_on_flag;
 	  uint8_t app_appointment_time_power_on;
+	 
 	  
 	  
 	uint8_t gTimer_1s;

@@ -107,10 +107,7 @@ static void SendFrame_Order(uint8_t onum)
 {
 	MYUSART_SendData(onum);
 }
-static void SendFrame_Vaild_Data(uint8_t dat)
-{
-	MYUSART_SendData(dat);
-}
+
 
 static void SendFrame_Sum(uint8_t snum)
 {
@@ -293,7 +290,7 @@ void Publish_Command_Query(void)
 void Publish_Return_Repeat_Data(void)
 {
   
-   static uint8_t numbers,data;
+   static uint8_t data,numbers;
    numbers = usart_wifi_t.usart_wifi_counter;
    
    for(send_data_numbers =0; send_data_numbers <usart_wifi_t.usart_wifi_counter;send_data_numbers++ ){

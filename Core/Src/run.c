@@ -34,7 +34,7 @@ uint8_t no_buzzer_sound_dry_off;
 void Decode_RunCmd(void)
 {
   uint16_t count_total_times;
-  uint8_t count_rem_times_one,count_rem_times_two;
+//  uint8_t count_rem_times_one,count_rem_times_two;
  uint8_t cmdType_1=inputCmd[0],cmdType_2 = inputCmd[1],cmdType_3=inputCmd[2];
 
     
@@ -167,31 +167,19 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
         run_t.RunCommand_Label = POWER_OFF;
 		
 		esp8266_t.esp8266_config_wifi_net_label=0;
-//      if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){ 
-//	  	wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;
-//	
-//        Publish_Power_OFF_State();
-//		HAL_Delay(300);
-//	  }    
+ 
 
     cmd = 0xff;
     break;
 
     case 0x01: // power on
          Buzzer_KeySound();
-		// Dht11_Read_TempHumidity_Handler(&DHT11);
+		
          run_t.gPower_flag = POWER_ON;
 		 run_t.gPower_On = POWER_ON;
          run_t.RunCommand_Label= POWER_ON;
 		 esp8266_t.esp8266_config_wifi_net_label=0;
-		// Update_DHT11_Value();
-		// HAL_Delay(20);
-//		 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-//		 	wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;
-//			esp8266_t.esp8266_config_wifi_net_label=wifi_publish_update_data;
-//			Publish_Power_ON_State();
-//		    HAL_Delay(300);
-//		 }
+
 		 
 	 cmd=0xff;  
      break;
@@ -386,15 +374,15 @@ void RunCommand_MainBoard_Fun(void)
 			HAL_Delay(100);  	
 			esp8266_t.esp8266_config_wifi_net_label=wifi_publish_update_data;
 			if(run_t.app_appointment_time_power_on == POWER_ON){
-			//	run_t.app_appointment_time_power_on=0;
+			
 			   Publish_Reference_Update_State();
-			    
 			}
 			else{
 				 
 			    Publish_Power_ON_State();
 			}
 		    HAL_Delay(300);
+			
 			
 		}
         SendWifiCmd_To_Order(WIFI_POWER_ON); //display pannel power on 
@@ -445,6 +433,30 @@ void RunCommand_MainBoard_Fun(void)
 		run_t.app_appointment_time_power_on ++;
         SendWifiData_To_PanelTime(run_t.set_timer_timing_value);
 
+
+	    if(run_t.gUltrasonic == 0){
+			SendWifiCmd_To_Order(WIFI_ULTRASONIC_OFF);
+	    }
+		else
+			SendWifiCmd_To_Order(WIFI_ULTRASONIC_ON);
+        HAL_Delay(5);
+		
+		if(run_t.gPlasma==0){
+		  SendWifiCmd_To_Order(WIFI_KILL_OFF);
+
+		}
+		else
+	         SendWifiCmd_To_Order(WIFI_KILL_ON);
+		HAL_Delay(5);
+
+		if(run_t.gDry==0){
+		 SendWifiCmd_To_Order(WIFI_PTC_OFF);
+
+		}
+		else
+	    	SendWifiCmd_To_Order(WIFI_PTC_ON);
+       HAL_Delay(5);
+
 	}
 	 
     break;
@@ -455,7 +467,7 @@ void RunCommand_MainBoard_Fun(void)
 
 	
 
-	if(run_t.gFan_continueRun ==1 && run_t.gPower_flag == POWER_OFF){
+	if(run_t.gFan_continueRun ==1 && run_t.gPower_On == POWER_OFF){
           
                 if(run_t.gFan_counter < 60){
           
@@ -471,7 +483,7 @@ void RunCommand_MainBoard_Fun(void)
 	           }
 	  }
 
-	 if(run_t.gPlasma==0 && run_t.gDry==0 && run_t.gPower_flag ==POWER_ON && run_t.gFan_continueRun ==1){
+	 if(run_t.gPlasma==0 && run_t.gDry==0 && run_t.gPower_On ==POWER_ON && run_t.gFan_continueRun ==1){
 
               if(run_t.gFan_counter < 60){
           
