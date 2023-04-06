@@ -387,11 +387,13 @@ void RunCommand_MainBoard_Fun(void)
 			esp8266_t.esp8266_config_wifi_net_label=wifi_publish_update_data;
 			if(run_t.app_appointment_time_power_on == POWER_ON){
 			//	run_t.app_appointment_time_power_on=0;
-				Publish_Reference_Update_State();
+			   Publish_Reference_Update_State();
 			    
 			}
-			else
+			else{
+				 
 			    Publish_Power_ON_State();
+			}
 		    HAL_Delay(300);
 			
 		}
