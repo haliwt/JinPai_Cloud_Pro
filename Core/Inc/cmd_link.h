@@ -57,6 +57,9 @@ extern uint8_t wifiInputBuf[1];
 
 void Decode_Function(void);
 
+void sendData_Reference_Data(uint8_t dry,uint8_t ultra,uint8_t mouse);
+
+
 void sendData_Real_TimeHum(uint8_t hum,uint8_t temp);
 
 void SendWifiData_To_Cmd(uint8_t wdata);

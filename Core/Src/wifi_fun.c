@@ -270,11 +270,13 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                          	 run_t.gPower_flag = POWER_ON;
 							 run_t.gPower_On = POWER_ON;
 					         run_t.RunCommand_Label= POWER_ON;
+							
 							wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
+							run_t.app_appointment_time_power_on = WIFI_NORMAL_POWER_ON;
                             Buzzer_KeySound();
-							Publish_Power_ON_State();
+						    Publish_Power_ON_State();
 							HAL_Delay(300);
-							SendWifiCmd_To_Order(WIFI_POWER_ON);
+							SendWifiCmd_To_Order(WIFI_POWER_ON_NORMAL);
 							esp8266_t.esp8266_config_wifi_net_label=wifi_publish_update_data;
 							 
 							}

@@ -58,9 +58,7 @@ void Decode_RunCmd(void)
 	           wifi_t.gTimer_5s=0;
 			   
 		   }
-		 
-           
-        }
+		 }
        
 	   break;
         
@@ -84,8 +82,6 @@ void Decode_RunCmd(void)
 			    
 			   
          }
-	  
-
 	  break;
 
 	  case 'T': //set up tiemr timing
@@ -130,6 +126,8 @@ void Decode_RunCmd(void)
              }
 	        }
       break;
+
+	  
 	  case 'Z' ://buzzer sound 
 	    if(run_t.gPower_flag==POWER_ON){
 
@@ -366,6 +364,7 @@ void RunCommand_MainBoard_Fun(void)
 		run_t.gTheFirst_powerOn=1;
 		Update_DHT11_Value(); //to message display 
 		HAL_Delay(20);
+		
 
 		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 			run_t.recoder_wifi_link_cloud_flag = 1;
@@ -378,8 +377,10 @@ void RunCommand_MainBoard_Fun(void)
 			   Publish_Reference_Update_State();
 			}
 			else{
-				 
+
 			    Publish_Power_ON_State();
+
+			   
 			}
 		    HAL_Delay(300);
 			
@@ -393,13 +394,13 @@ void RunCommand_MainBoard_Fun(void)
     case POWER_OFF: //2
 		SetPowerOff_ForDoing();
 
-        if(run_t.gTheFirst_powerOn ==0)
+       if(run_t.gTheFirst_powerOn ==0)
          	run_t.gFan_continueRun =0;
 		else{
 		 run_t.gFan_continueRun =1;
 
 		}
-         run_t.gFan_counter=0;
+        run_t.gFan_counter=0;
 		
         
 	   run_t.gPower_flag =POWER_OFF;
@@ -432,32 +433,13 @@ void RunCommand_MainBoard_Fun(void)
 	if(run_t.app_appointment_time_power_on == POWER_ON){
 		run_t.app_appointment_time_power_on ++;
         SendWifiData_To_PanelTime(run_t.set_timer_timing_value);
-
-
-	    if(run_t.gUltrasonic == 0){
-			SendWifiCmd_To_Order(WIFI_ULTRASONIC_OFF);
-	    }
-		else
-			SendWifiCmd_To_Order(WIFI_ULTRASONIC_ON);
-        HAL_Delay(20);
-		
-		if(run_t.gPlasma==0){
-		  SendWifiCmd_To_Order(WIFI_KILL_OFF);
-
-		}
-		else
-	         SendWifiCmd_To_Order(WIFI_KILL_ON);
-		HAL_Delay(20);
-
-		if(run_t.gDry==0){
-		 SendWifiCmd_To_Order(WIFI_PTC_OFF);
-
-		}
-		else
-	    	SendWifiCmd_To_Order(WIFI_PTC_ON);
-       HAL_Delay(20);
+  
+        HAL_Delay(10);
+        sendData_Reference_Data(run_t.gDry,run_t.gPlasma,run_t.gUltrasonic);
+	    
 
 	}
+	
 	 
     break;
 
@@ -483,7 +465,7 @@ void RunCommand_MainBoard_Fun(void)
 	           }
 	  }
 
-	 if(run_t.gPlasma==0 && run_t.gDry==0 && run_t.gPower_On ==POWER_ON && run_t.gFan_continueRun ==1){
+	 if(run_t.gPower_On ==POWER_ON && run_t.gFan_continueRun ==1){
 
               if(run_t.gFan_counter < 60){
           

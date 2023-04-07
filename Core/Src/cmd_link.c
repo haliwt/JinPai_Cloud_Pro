@@ -121,7 +121,38 @@ void Decode_Function(void)
       
      }
 }
+/********************************************************************************
+	**
+	*Function Name:sendData_Real_TimeHum(uint8_t hum,uint8_t temp)
+	*Function :
+	*Input Ref: humidity value and temperature value
+	*Return Ref:NO
+	*
+*******************************************************************************/
+void sendData_Reference_Data(uint8_t dry,uint8_t kill,uint8_t mouse)
+{
 
+	//crc=0x55;
+	outputBuf[0]='M'; //master
+	outputBuf[1]='A'; //41
+	outputBuf[2]='R'; //
+	outputBuf[3]=dry; //	// 'R' rotator motor for select filter
+	outputBuf[4]=kill; // // one command parameter
+	outputBuf[5]=mouse;
+	
+	//for(i=3;i<6;i++) crc ^= outputBuf[i];
+	//outputBuf[i]=crc;
+	transferSize=6;
+	if(transferSize)
+	{
+		while(transOngoingFlag); //UART interrupt transmit flag ,disable one more send data.
+		transOngoingFlag=1;
+		HAL_UART_Transmit_IT(&huart1,outputBuf,transferSize);
+	}
+
+
+
+}
 /********************************************************************************
 	**
 	*Function Name:sendData_Real_TimeHum(uint8_t hum,uint8_t temp)
