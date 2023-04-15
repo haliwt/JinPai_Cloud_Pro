@@ -134,10 +134,11 @@ void USART1_Cmd_Error_Handler(UART_HandleTypeDef *huart)
 {
    uint32_t temp;
    static uint8_t error_usart_flag;
+  
    if(huart->Instance==USART1){
-    static uint8_t error_usart_flag;
+    
 
-	  if(run_t.gTimer_usart_error >230){
+	  if(run_t.gTimer_usart_error >260){
 	  	run_t.gTimer_usart_error=0;
 	      __HAL_UART_GET_FLAG(&huart1,UART_FLAG_ORE);//UART_FLAG_NE
          __HAL_UART_GET_FLAG(&huart1,UART_FLAG_NE); //USART_ISR_FE
@@ -168,11 +169,11 @@ void USART1_Cmd_Error_Handler(UART_HandleTypeDef *huart)
        
       }
     
-      if(run_t.gTimer_iwdg > 200){
+      if(run_t.gTimer_iwdg > 210){
           run_t.gTimer_iwdg = 0;
-         //SendData_Set_Command(0xB0);
+        // SendWifiCmd_To_Order(0xff);
      }
-     if(run_t.gTimer_check_iwdg_flag >240){
+     if(run_t.gTimer_check_iwdg_flag >250){
          run_t.gTimer_check_iwdg_flag=0;
          if(run_t.iwdg_feed_success_flag==1){
             run_t.iwdg_feed_success_flag=0;

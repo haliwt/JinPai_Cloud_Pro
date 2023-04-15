@@ -261,6 +261,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                             Publish_Power_OFF_State();
 							HAL_Delay(300);
 							SendWifiCmd_To_Order(WIFI_POWER_OFF);
+							 HAL_Delay(100);
 						 
 						     
                          }
@@ -276,6 +277,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 						    Publish_Power_ON_State();
 							HAL_Delay(300);
 							SendWifiCmd_To_Order(WIFI_POWER_ON_NORMAL);
+							 HAL_Delay(100);
 							esp8266_t.esp8266_config_wifi_net_label=wifi_publish_update_data;
 							 
 							}
@@ -289,6 +291,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 							  Publish_Reference_Update_State();
 							HAL_Delay(300);
 							SendWifiCmd_To_Order(WIFI_PTC_OFF);
+							 HAL_Delay(100);
                          }
                          else{
 							run_t.gDry=1;
@@ -296,6 +299,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 							  Publish_Reference_Update_State();
 							HAL_Delay(300);
 							 SendWifiCmd_To_Order(WIFI_PTC_ON);
+							 HAL_Delay(100);
                          }
                     break;
 
@@ -306,6 +310,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                             Publish_Reference_Update_State();
 						    HAL_Delay(300);
 							SendWifiCmd_To_Order(WIFI_KILL_OFF);
+							 HAL_Delay(100);
 								
                          }
                          else{
@@ -314,6 +319,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                           Publish_Reference_Update_State();
 						  HAL_Delay(300);
 						  SendWifiCmd_To_Order(WIFI_KILL_ON);
+						   HAL_Delay(100);
                          }
                     break;
 
@@ -324,6 +330,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                            Publish_Reference_Update_State();
 						   HAL_Delay(300);
 							SendWifiCmd_To_Order(WIFI_ULTRASONIC_OFF);
+							 HAL_Delay(100);
                          }
                          else{
 						 	run_t.gUltrasonic =1;
@@ -331,6 +338,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                              Publish_Reference_Update_State();
 						   HAL_Delay(300);
 						   SendWifiCmd_To_Order(WIFI_ULTRASONIC_ON);
+						    HAL_Delay(100);
                          }
 
                     break;
@@ -358,6 +366,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 					    Publish_Reference_Update_State();
 						HAL_Delay(300);
 						SendWifiData_To_PanelTemp(run_t.set_temperature_value);
+						 HAL_Delay(100);
                         
                     break;
 
@@ -368,6 +377,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 						Publish_Reference_Update_State();
 						HAL_Delay(300);
 						SendWifiData_To_PanelTime(run_t.set_timer_timing_value);
+						 HAL_Delay(100);
 						
                     break;
 
