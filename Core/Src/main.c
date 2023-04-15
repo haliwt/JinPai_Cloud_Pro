@@ -125,6 +125,7 @@ int main(void)
     RunCommand_MainBoard_Fun();
 	
     RunWifi_Command_Handler(esp8266_t.esp8266_config_wifi_net_label);
+	USART1_Cmd_Error_Handler(&huart1);
 	
   }
   /* USER CODE END 3 */
