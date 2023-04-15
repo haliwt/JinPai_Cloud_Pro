@@ -100,14 +100,15 @@ void ActionEvent_Handler(void)
 
 	}
 	
-    //shut off function and after 1 minutes shut off wind fan 
-	if(run_t.gPlasma ==0 && run_t.gDry==0 && run_t.fan_start_shut_off_flag ==0 ){
-
-        run_t.gFan_counter=0;
-		run_t.fan_start_shut_off_flag++ ;
-		run_t.gFan_continueRun=1;        
-
-	}
+//    //shut off function and after 1 minutes shut off wind fan 
+//	if(run_t.gPlasma ==0 && run_t.gDry==0 && run_t.fan_start_shut_off_flag ==0 ){
+//
+//        run_t.gFan_counter=0;
+//		run_t.fan_start_shut_off_flag++ ;
+//		run_t.gFan_continueRun=1;        
+//
+//	}
+	
 		
 
 

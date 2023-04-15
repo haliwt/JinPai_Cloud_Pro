@@ -74,6 +74,7 @@ void USART2_WIFI_Receive_Data(void)
 		wifi_t.usart_wifi_pass_state =usart_wifi_t.usart_wifi[9];
 
 		wifi_t.usart_wifi_seconds_value = usart_wifi_t.usart_wifi[10];
+		
         wifi_t.usart_wifi_sum_codes = usart_wifi_t.usart_wifi[usart_wifi_t.usart_wifi_counter];
 
    }
@@ -88,30 +89,28 @@ void USART2_WIFI_Receive_Data(void)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 
-    static uint8_t tm0,tm1 ;
+    static uint8_t tm0 ;
     if(htim->Instance==TIM14){
 		
 	   tm0 ++ ;
        run_t.gTimer_senddata_panel++;
 	 if(tm0 > 99){//100ms *10 = 1000ms =1s
         tm0 =0;
-		tm1++;
+		run_t.gFan_counter++;
+
         run_t.gTimer_1s ++;
-	 run_t.gTimer_10s++;
-     wifi_t.gTimer_5s++;
-	
-	
+	    run_t.gTimer_10s++;
+		
+        wifi_t.gTimer_5s++;
 	   wifi_t.gTimer_get_beijing_time++;
 	   wifi_t.gTimer_beijing_time++;
 	
 	   run_t.gTimer_send_cloud_state++;
 	 
 	   wifi_t.gTimer_wifi_send_cloud_success_times++;
-	  
-	   if(run_t.gFan_continueRun ==1){
-           run_t.gFan_counter++;
+	 
 		 
-	   }
+	   
 	 
 		}
  	}

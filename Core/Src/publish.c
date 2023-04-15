@@ -331,7 +331,7 @@ void Publish_Power_ON_State(void)
   if(run_t.set_temperature_value < 20)run_t.set_temperature_value=20;
   SendFrame_SetTemperature(run_t.set_temperature_value);//10
   SendFrame_SetTimer(run_t.set_timer_timing_value);
-  SendFrame_SetFanSpeed(0x01);
+  SendFrame_SetFanSpeed(run_t.set_wind_speed_value);
   SendFrame_Read_TemperatureValue(run_t.gDht11_temperature);
   SendFrame_Read_HumidityValue(run_t.gDht11_humidity );
   SendFrame_Time_Remaining_One(run_t.time_remaining_minutes_one); //15
@@ -339,7 +339,7 @@ void Publish_Power_ON_State(void)
   SendFrame_Time_Working_One(run_t.work_time_minutes_one);
   SendFrame_Time_Working_Two(run_t.work_time_minutes_two);
   SendFrame_Alarm_Infor(run_t.alarm_call);
-  temp_codes = 0x048+0x14+0x01+0x01+0x01+0x01+0x01+0x01+0x01+run_t.set_temperature_value+run_t.set_timer_timing_value+0x01\
+  temp_codes = 0x048+0x14+0x01+0x01+0x01+0x01+0x01+0x01+0x01+run_t.set_temperature_value+run_t.set_timer_timing_value+run_t.set_wind_speed_value\
   	+run_t.gDht11_temperature+run_t.gDht11_humidity +run_t.time_remaining_minutes_one+run_t.time_remaining_minutes_two\
     +run_t.work_time_minutes_one+run_t.work_time_minutes_two+run_t.alarm_call;
 
@@ -371,7 +371,7 @@ void Publish_Power_OFF_State(void)
   if(run_t.set_temperature_value < 20)run_t.set_temperature_value=20;
   SendFrame_SetTemperature(run_t.set_temperature_value);//10
   SendFrame_SetTimer(run_t.set_timer_timing_value);
-  SendFrame_SetFanSpeed(0);
+  SendFrame_SetFanSpeed(run_t.set_wind_speed_value);
   SendFrame_Read_TemperatureValue(run_t.gDht11_temperature);
   SendFrame_Read_HumidityValue(run_t.gDht11_humidity);
   SendFrame_Time_Remaining_One(run_t.time_remaining_minutes_one); //15
@@ -380,7 +380,7 @@ void Publish_Power_OFF_State(void)
   SendFrame_Time_Working_Two(run_t.work_time_minutes_two);
   SendFrame_Alarm_Infor(run_t.alarm_call);
   temp_code = 0x048+0x14+0x01+0x01+0x01+0x00+0x00+0x00+0x00+run_t.set_temperature_value+run_t.set_timer_timing_value\
-  	+0x00+run_t.gDht11_temperature+run_t.gDht11_humidity +run_t.time_remaining_minutes_one+run_t.time_remaining_minutes_two\
+  	+run_t.set_wind_speed_value+run_t.gDht11_temperature+run_t.gDht11_humidity +run_t.time_remaining_minutes_one+run_t.time_remaining_minutes_two\
     +run_t.work_time_minutes_one+run_t.work_time_minutes_two+run_t.alarm_call;
 
   SendFrame_Sum(temp_code);

@@ -33,8 +33,7 @@ static void Wifi_ReceiveData_Handler(void);
   *********************************************************/
 void RunWifi_Command_Handler(uint8_t command)
 {
-    static uint8_t times,send_times;
-    static uint8_t recoder_times,publish_init_flag,repeat_times,repeat_send_times,pub_times ;
+    static uint8_t repeat_times,repeat_send_times,publish_init_flag,pub_times,send_times;
 
 	  if(run_t.first_power_on_flag== 0x0A){
     	switch(command){
@@ -337,21 +336,15 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                     break;
 
 					case 0x0B: //wind  speed control
-                        if(wifi_t.usart_wifi_model ==0){
-							run_t.set_wind_speed_value=0;
+                        
+							run_t.set_wind_speed_value = wifi_t.usart_wifi_model;
 							Buzzer_KeySound();
 							
 						    Publish_Reference_Update_State();
 						    HAL_Delay(300);
 						 
-                         }
-                         else{
-						 	run_t.set_wind_speed_value=1;
-							Buzzer_KeySound();
-						 	
-						    Publish_Reference_Update_State();
-						    HAL_Delay(300);
-                         }
+                         
+                         
 
                     break;
 
@@ -394,6 +387,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 				run_t.gDry = wifi_t.usart_wifi_cloud_state;
 				run_t.gPlasma = wifi_t.usart_wifi_signal_state;
 				run_t.set_timer_timing_value = wifi_t.usart_wifi_pass_state;
+			 //   run_t.set_wind_speed_value = wifi_t.usart_wifi_fan_speed_value;
 				HAL_Delay(300); 
 				if(run_t.gPower_On == POWER_ON){
 					Buzzer_KeySound();

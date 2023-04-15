@@ -17,6 +17,8 @@ RUN_T run_t;
 
 static void Single_Power_ReceiveCmd(uint8_t cmd);
 static void Single_Command_ReceiveCmd(uint8_t cmd); 
+static void Fan_ContinueRun_OneMinute_Fun(void);
+
 
 
 uint8_t no_buzzer_sound_dry_off;
@@ -394,16 +396,9 @@ void RunCommand_MainBoard_Fun(void)
     case POWER_OFF: //2
 		SetPowerOff_ForDoing();
 
-       if(run_t.gTheFirst_powerOn ==0)
-         	run_t.gFan_continueRun =0;
-		else{
+ 
 		 run_t.gFan_continueRun =1;
-
-		}
-        run_t.gFan_counter=0;
-		
-        
-	   run_t.gPower_flag =POWER_OFF;
+        run_t.gPower_flag =POWER_OFF;
 	   run_t.RunCommand_Label =0xff;
 
 	   if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){ 
@@ -413,7 +408,7 @@ void RunCommand_MainBoard_Fun(void)
         Publish_Power_OFF_State();
 		HAL_Delay(300);
         
-	  }  
+	   	}  
       SendWifiCmd_To_Order(WIFI_POWER_OFF);       
 	break;
 
@@ -440,49 +435,16 @@ void RunCommand_MainBoard_Fun(void)
 
 	}
 	
-	 
+	
     break;
 
     }
 	
-   
+   Fan_ContinueRun_OneMinute_Fun();
 
 	
 
-	if(run_t.gFan_continueRun ==1 && run_t.gPower_On == POWER_OFF){
-          
-                if(run_t.gFan_counter < 60){
-          
-                       FAN_CCW_RUN();
-                  }       
-
-	           if(run_t.gFan_counter > 59){
-		           
-				   run_t.gFan_counter=0;
-				
-				   run_t.gFan_continueRun++;
-				   FAN_Stop();
-	           }
-	  }
-
-	 if(run_t.gPower_On ==POWER_ON && run_t.gFan_continueRun ==1){
-
-              if(run_t.gFan_counter < 60){
-          
-                       FAN_CCW_RUN();
-                  }       
-
-	           if(run_t.gFan_counter > 59){
-		           
-				   run_t.gFan_counter=0;
-				
-				   run_t.gFan_continueRun++;
-				   FAN_Stop();
-	           }
-
-	 }
-
-	 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS  &&  run_t.wifi_link_JPai_cloud==0){
+   if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS  &&  run_t.wifi_link_JPai_cloud==0){
 	 	    run_t.wifi_link_JPai_cloud++;
 			SendWifiCmd_To_Order(WIFI_POWER_ON);
 	 	    SendWifiData_To_Cmd(0x01) ;
@@ -503,7 +465,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 {
    static uint8_t self_power_on_flag=0;
 	if(run_t.first_power_on_flag==0){
-       run_t.set_wind_speed_value=1;
+    
        WIFI_IC_ENABLE();
       if(usart_wifi_t.usart_wifi_receive_read_data_flag==1){
 		usart_wifi_t.usart_wifi_receive_read_data_flag=0;
@@ -569,3 +531,24 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
     }
 
  }   
+
+static void Fan_ContinueRun_OneMinute_Fun(void)
+{
+	
+	if(run_t.gFan_continueRun ==1){
+          
+		if(run_t.gFan_counter < 60){
+
+				FAN_CCW_RUN();
+		}       
+        else if(run_t.gFan_counter > 59){
+
+		run_t.gFan_counter=0;
+
+		run_t.gFan_continueRun++;
+		FAN_Stop();
+		}
+	  }
+
+
+}
