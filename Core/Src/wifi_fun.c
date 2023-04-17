@@ -34,6 +34,7 @@ static void Wifi_ReceiveData_Handler(void);
 void RunWifi_Command_Handler(uint8_t command)
 {
     static uint8_t repeat_times,repeat_send_times,publish_init_flag,pub_times,send_times;
+	static uint8_t    send_times_fail;
 
 	  if(run_t.first_power_on_flag== 0x0A){
     	switch(command){
@@ -183,14 +184,14 @@ void RunWifi_Command_Handler(uint8_t command)
 		usart_wifi_t.usart_wifi_receive_success_flag=0;
 	  
 		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-			if(wifi_t.usart_wifi_frame_len < 0x0d ){
+			if(wifi_t.usart_wifi_frame_len < 0x0d  && wifi_t.usart_wifi_frame_len !=0x0B){
 
 					
 					Publish_Return_Repeat_Data();
                     HAL_Delay(250);
                    wifi_t.publish_send_state_data=1;
 		    } 
-			else{
+			else if(wifi_t.usart_wifi_frame_len ==0x0B){
 
 				wifi_t.publish_send_state_data=1;
 			} 
@@ -211,6 +212,7 @@ void RunWifi_Command_Handler(uint8_t command)
     
 		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS && run_t.gPower_On==POWER_ON && send_times ==0 ){
 			 send_times++;
+			 send_times_fail=0;
 			 SendWifiCmd_To_Order(WIFI_POWER_ON);
 			 HAL_Delay(200);
 			 SendWifiData_To_Cmd(0x01) ;
@@ -218,7 +220,11 @@ void RunWifi_Command_Handler(uint8_t command)
 
 
 		}
-   
+		else if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_FAIL && run_t.gPower_On==POWER_ON && send_times_fail ==0)
+             send_times_fail ++;
+		     send_times=0;
+			 SendWifiData_To_Cmd(0x00) ;
+		     HAL_Delay(100);
 	  	}
 }
 
@@ -250,8 +256,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 		   break;
 
 		   case 1:
-               if(wifi_t.wifi_link_JPai_cloud == WIFI_CLOUD_FAIL || wifi_t.detect_wifi_sig_flag == hasnot_wifi_sig){
-	               if(wifi_t.usart_wifi_state==1 &&  wifi_t.usart_wifi_cloud_state==1){
+               if(wifi_t.usart_wifi_state==1 &&  wifi_t.usart_wifi_cloud_state==1){
 
 		              wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
 					  
@@ -272,7 +277,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 					   HAL_Delay(100);
 
 				  }
-              }
+              
 		   break;
           }
         
