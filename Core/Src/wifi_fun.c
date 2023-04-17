@@ -42,7 +42,7 @@ void RunWifi_Command_Handler(uint8_t command)
 
              //wifi gpio 13 pull down 5s 
             Publish_Command_SmartCofnig();
-            HAL_Delay(400);
+            HAL_Delay(500);
             esp8266_t.esp8266_config_wifi_net_label = wifi_smartconfig_model;
            
           
@@ -140,9 +140,31 @@ void RunWifi_Command_Handler(uint8_t command)
                 run_t.gTimer_send_cloud_state=0;
                 Dht11_Read_TempHumidity_Handler(&DHT11);
                 Publish_Reference_Update_State();
-                HAL_Delay(300);
+                HAL_Delay(200);
 
 			}
+			if(wifi_t.gTimer_detect_wifi_donot > 170){
+			   wifi_t.gTimer_detect_wifi_donot =0;
+               Publish_Command_Query();
+               HAL_Delay(200);
+			}
+
+			if(wifi_t.detect_wifi_sig_flag ==  hasnot_wifi_sig ){
+                   wifi_t.detect_wifi_sig_flag=donot_detect_wifi_sig;
+              wifi_t.wifi_link_JPai_cloud = WIFI_CLOUD_FAIL;
+             SendWifiData_To_Cmd(0x00) ; //don't wifi single
+		     HAL_Delay(100);
+			}
+			
+			if(wifi_t.detect_wifi_sig_flag ==  has_wifi_sig){
+			   wifi_t.detect_wifi_sig_flag=donot_detect_wifi_sig;
+
+			    wifi_t.wifi_link_JPai_cloud = WIFI_CLOUD_SUCCESS;
+				SendWifiData_To_Cmd(0x01) ; //has  wifi single
+				HAL_Delay(100);
+
+
+			} 
 		
 		break;
         
@@ -420,8 +442,54 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 	  HAL_Delay(200);
       Buzzer_KeySound();
 	  HAL_Delay(200);
+	  if(wifi_t.usart_wifi_sequence==0x0B){
+         if(wifi_t.usart_wifi_order==0x02){
+			wifi_t.detect_wifi_sig_flag = hasnot_wifi_sig ;
+		 }      
+	  }
       wifi_t.wifi_receive_data_error = 1;
 
+   break;
+
+   case 0x01: //device report to APP type
+        switch(wifi_t.usart_wifi_model){
+
+		    case 0:
+			    wifi_t.wifi_link_JPai_cloud = WIFI_CLOUD_FAIL;
+		        wifi_t.detect_wifi_sig_flag =  hasnot_wifi_sig;
+ 
+		    break;
+
+		    case 1:
+
+			    switch(wifi_t.usart_wifi_state){
+
+				   case 0:
+				      wifi_t.wifi_link_JPai_cloud = WIFI_CLOUD_FAIL;
+				      wifi_t.detect_wifi_sig_flag =  hasnot_wifi_sig;
+
+				   break;
+
+				   case 1:
+				   	  if(wifi_t.usart_wifi_cloud_state==0x01){
+					  	wifi_t.detect_wifi_sig_flag =  has_wifi_sig; 
+						wifi_t.wifi_link_JPai_cloud = WIFI_CLOUD_SUCCESS;
+    
+
+					  }
+
+				   break;
+
+
+				}
+
+			break;
+	      
+			
+	   	    
+
+        }
+        
    break;
   }
 
