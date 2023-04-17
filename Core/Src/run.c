@@ -398,6 +398,7 @@ void RunCommand_MainBoard_Fun(void)
 
  
 		 run_t.gFan_continueRun =1;
+         run_t.gFan_counter=0;
         run_t.gPower_flag =POWER_OFF;
 	   run_t.RunCommand_Label =0xff;
 
@@ -539,7 +540,13 @@ static void Fan_ContinueRun_OneMinute_Fun(void)
           
 		if(run_t.gFan_counter < 60){
 
-				FAN_CCW_RUN();
+		       if(run_t.set_wind_speed_value ==0){
+
+			      Fan_Slowly_Speed();
+
+			   }
+			   else 
+				 FAN_CCW_RUN();
 		}       
         else if(run_t.gFan_counter > 59){
 

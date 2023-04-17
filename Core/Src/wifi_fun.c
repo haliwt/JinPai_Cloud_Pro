@@ -265,6 +265,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 					        run_t.gPower_On=POWER_OFF;
 					        run_t.gPower_flag = POWER_OFF;
 					        run_t.RunCommand_Label = POWER_OFF;
+                            run_t.gFan_counter=0;
 						 	Buzzer_KeySound();
 							wifi_t.gTimer_wifi_send_cloud_success_times=0;
                             Publish_Power_OFF_State();
@@ -423,12 +424,12 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
    break;
 
    case 0xFF:
-   	  Buzzer_KeySound();
-	  HAL_Delay(200);
-      Buzzer_KeySound();
-	  HAL_Delay(200);
-      Buzzer_KeySound();
-	  HAL_Delay(200);
+//   	  Buzzer_KeySound();
+//	  HAL_Delay(200);
+//      Buzzer_KeySound();
+//	  HAL_Delay(200);
+//      Buzzer_KeySound();
+//	  HAL_Delay(200);
       wifi_t.wifi_receive_data_error = 1;
 
    break;

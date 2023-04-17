@@ -24,22 +24,26 @@ void FAN_Stop(void)
 void Fan_Slowly_Speed(void)
 {
     static uint16_t fan_speed;
+	//static uint16_t  fan_dec;
 	fan_speed ++ ;
-	FAN_CW_SetLow();
 	
-	if(fan_speed < 95){
+	FAN_CW_SetLow();
+
+	if(fan_speed ==1)  FAN_CCW_SetLow(); //brake//Run fan//brake/Run fan //Run fan//brake //Run fan //brake //Run fan
+	
+	if(fan_speed % 2 ==0 ){
 	   FAN_CCW_SetHigh(); //Run fan
     }
-
-	if(fan_speed > 94  && fan_speed <  101){
+    if( fan_speed % 3 ==0 ){
   
 	  FAN_CCW_SetLow(); //brake
-
+	  
 	}
 
-	if(fan_speed > 99){
+	if(fan_speed > 10000){
 		fan_speed =0;
-	   FAN_CCW_SetHigh(); //Run fan
+	    
+	     FAN_CCW_SetLow(); //brake
 	}
 	
 }
