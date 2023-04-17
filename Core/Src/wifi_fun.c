@@ -192,7 +192,7 @@ void RunWifi_Command_Handler(uint8_t command)
 		    } 
 			else{
 
-				wifi_t.publish_send_state_data=0;
+				wifi_t.publish_send_state_data=1;
 			} 
          }
 
@@ -235,7 +235,7 @@ void RunWifi_Command_Handler(uint8_t command)
   *******************************************************************************/
 void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 {
-
+   static uint8_t receive_data_error;
   switch(type){
 
     case 0xFE: //frame type
@@ -250,28 +250,29 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 		   break;
 
 		   case 1:
+               if(wifi_t.wifi_link_JPai_cloud == WIFI_CLOUD_FAIL || wifi_t.detect_wifi_sig_flag == hasnot_wifi_sig){
+	               if(wifi_t.usart_wifi_state==1 &&  wifi_t.usart_wifi_cloud_state==1){
 
-               if(wifi_t.usart_wifi_state==1 &&  wifi_t.usart_wifi_cloud_state==1){
-
-	              wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
-				  
-				  wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;
-			      wifi_t.detect_wifi_sig_flag =  has_wifi_sig; 
-				
-				  wifi_t.wifi_link_JPai_cloud = WIFI_CLOUD_SUCCESS;
-				   SendWifiData_To_Cmd(0x01) ;
-				   HAL_Delay(100);
-
-              }
-			  else{
+		              wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
+					  
+					  wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;
+				      wifi_t.detect_wifi_sig_flag =  has_wifi_sig; 
 					
-				 wifi_t.wifi_link_JPai_cloud = WIFI_CLOUD_FAIL;
-				 wifi_t.detect_wifi_sig_flag =  hasnot_wifi_sig;
-			     run_t.wifi_link_JPai_cloud = WIFI_CLOUD_FAIL;
-			      SendWifiData_To_Cmd(0x00) ;
-				   HAL_Delay(100);
+					  wifi_t.wifi_link_JPai_cloud = WIFI_CLOUD_SUCCESS;
+					   SendWifiData_To_Cmd(0x01) ;
+					   HAL_Delay(100);
 
-			  }
+	              }
+				  else{
+						
+					 wifi_t.wifi_link_JPai_cloud = WIFI_CLOUD_FAIL;
+					 wifi_t.detect_wifi_sig_flag =  hasnot_wifi_sig;
+				     run_t.wifi_link_JPai_cloud = WIFI_CLOUD_FAIL;
+				      SendWifiData_To_Cmd(0x00) ;
+					   HAL_Delay(100);
+
+				  }
+              }
 		   break;
           }
         
@@ -475,13 +476,14 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 	  HAL_Delay(200);
       Buzzer_KeySound();
 	  HAL_Delay(200);
-	  
+	 
+	
        if(wifi_t.usart_wifi_order==0x02){
 			wifi_t.detect_wifi_sig_flag = hasnot_wifi_sig ;
 			wifi_t.wifi_receive_data_error = 1;
 		}      
 	  
-      
+	 
 
    break;
 
