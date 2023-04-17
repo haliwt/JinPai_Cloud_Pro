@@ -143,7 +143,7 @@ void RunWifi_Command_Handler(uint8_t command)
                 HAL_Delay(200);
 
 			}
-			if(wifi_t.gTimer_detect_wifi_donot > 120){
+			if(wifi_t.gTimer_detect_wifi_donot > 125){
 			   wifi_t.gTimer_detect_wifi_donot =0;
                Publish_Command_Query();
                HAL_Delay(200);
@@ -478,9 +478,10 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 	  
        if(wifi_t.usart_wifi_order==0x02){
 			wifi_t.detect_wifi_sig_flag = hasnot_wifi_sig ;
+			wifi_t.wifi_receive_data_error = 1;
 		}      
 	  
-      wifi_t.wifi_receive_data_error = 1;
+      
 
    break;
 

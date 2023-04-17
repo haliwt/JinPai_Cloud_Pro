@@ -31,13 +31,12 @@ void Fan_Slowly_Speed(void)
 	   FAN_CCW_SetHigh(); //Run fan
     }
 
-	if(fan_speed > 94  && fan_speed <  101){
+	if(fan_speed > 70  && fan_speed <  101){
   
 	  FAN_CCW_SetLow(); //brake
 
 	}
-
-	if(fan_speed > 99){
+   else if(fan_speed > 99){
 		fan_speed =0;
 	   FAN_CCW_SetHigh(); //Run fan
 	}
