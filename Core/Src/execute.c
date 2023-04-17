@@ -85,7 +85,7 @@ void ActionEvent_Handler(void)
 	if(run_t.set_wind_speed_value==0){
 	      Fan_Slowly_Speed();
     }
-	else {
+	else{
 
 	     FAN_CCW_RUN();
 

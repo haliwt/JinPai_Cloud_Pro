@@ -54,7 +54,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		break;
 		case 1: //#1
              if(inputBuf[0] == 'K' || inputBuf[0]=='O' || inputBuf[0]=='R')  {//hex :4B - "K" -fixed
-             
                 if(inputBuf[0]=='O' || inputBuf[0]=='R'){
                        inputCmd[0]= inputBuf[0];
 					   wr_flag=1;

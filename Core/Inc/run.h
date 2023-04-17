@@ -111,7 +111,10 @@ typedef struct _RUN_T{
     uint8_t gTimer_check_iwdg_fla;
     uint8_t gTimer_usart_error;
     uint8_t iwdg_feed_success_flag;
-     uint8_t  set_temperature_value;
+	 
+
+	  
+	  uint8_t  set_temperature_value;
 	  uint8_t  set_timer_timing_value;
 	  uint8_t  set_temperature_decade;
 	  uint8_t  set_temperature_unit;

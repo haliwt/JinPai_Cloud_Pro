@@ -120,12 +120,6 @@ typedef enum{
 }wifi_model_wifi_state_t;
 
 
-typedef enum{
-     donot_detect_wifi_sig,
-	 hasnot_wifi_sig = 0x01,
-	 has_wifi_sig
-
-}detect_wifi_t;
 
 
 
@@ -158,10 +152,6 @@ typedef struct _WIFI_FUN{
 	uint8_t publish_send_state_data;
 	uint8_t wifi_has_been_link_cloud;
 	uint8_t gTimer_wifi_send_cloud_success_times;
-
-	//detect wifi
-	uint8_t detect_wifi_sig_flag;
-    uint8_t gTimer_detect_wifi_donot;
 
 
     uint8_t real_hours;

@@ -113,10 +113,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	    run_t.gTimer_check_iwdg_flag++;
 	   run_t.gTimer_iwdg++;
 	   run_t.gTimer_usart_error++;
-
-	   //detect wifi
-	   wifi_t.gTimer_detect_wifi_donot++;
-	    
 	 
 		 
 	   
