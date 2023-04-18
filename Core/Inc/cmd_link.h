@@ -15,7 +15,8 @@ typedef enum {
 
 typedef enum {
     WIFI_CLOUD_FAIL,
-    WIFI_CLOUD_SUCCESS
+    WIFI_CLOUD_SUCCESS,
+    WIFI_DEFAULT_POWER_OFF
 
 }wifi_enum_link_cloud_state;
 typedef struct _usart_cmd_t {
