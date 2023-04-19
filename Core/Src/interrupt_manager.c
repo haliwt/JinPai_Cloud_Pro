@@ -114,7 +114,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	   run_t.gTimer_iwdg++;
 	   run_t.gTimer_usart_error++;
 	 
-		 
+		run_t.gTimer_ptc_adc_times ++; 
 	   
 	 
 		}

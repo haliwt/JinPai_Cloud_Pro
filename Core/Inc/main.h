@@ -106,6 +106,10 @@ void Error_Handler(void);
 #define WIFI_RESET_Pin                    GPIO_PIN_0
 #define WIFI_RESET_GPIO_Port              GPIOD
 
+
+#define PTC_ADC_Pin                         GPIO_PIN_1
+#define PTC_ADC_GPIO_Port                   GPIOA
+
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

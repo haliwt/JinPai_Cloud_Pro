@@ -88,6 +88,9 @@ typedef struct _RUN_T{
     uint8_t flash_read_data;
 	uint8_t runCommand_order_lable;
 	uint8_t recoder_wifi_link_cloud_flag;
+    //ptc
+    uint8_t ptc_temp_voltage;
+    uint8_t gTimer_ptc_adc_times ;
       
 
       uint8_t  gAi;

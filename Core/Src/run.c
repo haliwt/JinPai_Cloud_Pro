@@ -11,7 +11,7 @@
 #include "execute.h"
 #include "publish.h"
 #include "subscribe.h"
-
+#include "adc.h"
 
 RUN_T run_t; 
 
@@ -451,7 +451,12 @@ void RunCommand_MainBoard_Fun(void)
 
 	}
 	
-	
+	 if(run_t.gTimer_ptc_adc_times > 9 ){
+         run_t.gTimer_ptc_adc_times=0;
+		 Get_PTC_Temperature_Voltage(5);
+	     Judge_PTC_Temperature_Value();
+
+	 }
     break;
 
     }
