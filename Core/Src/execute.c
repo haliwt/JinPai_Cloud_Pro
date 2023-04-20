@@ -60,7 +60,7 @@ void SetPowerOff_ForDoing(void)
 
 void ActionEvent_Handler(void)
 {
-     
+   if(run_t.ptc_too_heat_value ==0){
 	if(run_t.gDry == 1){
 	
         PTC_SetHigh();
@@ -71,6 +71,8 @@ void ActionEvent_Handler(void)
 	   run_t.fan_start_shut_off_flag=0;
 
 	}
+   }
+    
 	//kill
 	if(run_t.gPlasma == 1){
 	     PLASMA_SetHigh();

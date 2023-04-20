@@ -451,9 +451,9 @@ void RunCommand_MainBoard_Fun(void)
 
 	}
 	
-	 if(run_t.gTimer_ptc_adc_times > 9 ){
+	 if(run_t.gTimer_ptc_adc_times > 124 ){
          run_t.gTimer_ptc_adc_times=0;
-		 Get_PTC_Temperature_Voltage(5);
+		 Get_PTC_Temperature_Voltage(1);
 	     Judge_PTC_Temperature_Value();
 
 	 }
@@ -486,7 +486,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 {
    static uint8_t self_power_on_flag=0;
 	if(run_t.first_power_on_flag==0){
-    
+         run_t.gTimer_ptc_adc_times=0;
        WIFI_IC_ENABLE();
       if(usart_wifi_t.usart_wifi_receive_read_data_flag==1){
 		usart_wifi_t.usart_wifi_receive_read_data_flag=0;
@@ -507,6 +507,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
      switch(run_t.recoder_wifi_link_cloud_flag){
 
 	   case 1: 
+	   	  run_t.gTimer_ptc_adc_times=0;
 	   	run_t.recoder_wifi_link_cloud_flag++;
 		run_t.first_power_on_flag++;
 		wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
@@ -514,19 +515,21 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 
 		if(run_t.gPower_On == POWER_OFF){
 			run_t.first_power_on_flag= 0x0A;
+			run_t.gTimer_fan_oneselt_test=0;
 			 wifi_t.gTimer_wifi_send_cloud_success_times=0;
 			 run_t.gPower_On=POWER_OFF;
 			 run_t.gPower_flag = POWER_OFF;
 			 run_t.RunCommand_Label = POWER_OFF;
 					
 			 esp8266_t.esp8266_config_wifi_net_label=0;
+			   FAN_CCW_RUN();
 
 		}
 
 	 break;
 
 	 case 0:
-
+            run_t.gTimer_ptc_adc_times=0;
 	    
           if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_FAIL && run_t.first_power_on_flag < 2 ){
                       wifi_t.publish_send_state_data=0;
@@ -547,22 +550,53 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 		
 		 if(run_t.gPower_On == POWER_OFF){
 			 run_t.first_power_on_flag= 0x0A;
-
+             run_t.gTimer_fan_oneselt_test=0;
 			wifi_t.gTimer_wifi_send_cloud_success_times=0;
 			run_t.gPower_On=POWER_OFF;
 			run_t.gPower_flag = POWER_OFF;
 			run_t.RunCommand_Label = POWER_OFF;
 
 			esp8266_t.esp8266_config_wifi_net_label=0;
+			  FAN_CCW_RUN();
 
 		 }
 		  
-        
+          run_t.gTimer_ptc_adc_times=0;
     
 	 break;
     }
 
- }   
+   } 
+
+//   if(run_t.gTimer_fan_oneselt_test > 9 && run_t.first_power_on_flag==0x0A  ){
+//	   //run_t.gTimer_fan_oneselt_test=0;
+//
+//       run_t.first_power_on_flag++ ;
+//   	   
+//	   if(FAN_DETECT_ERROR()==0){
+//
+//	       run_t.alarm_call = 0x02 ;  //fan is error
+//	       Buzzer_KeySound();
+//	       HAL_Delay(200);
+//		   Buzzer_KeySound();
+//	       HAL_Delay(200);
+//		   Buzzer_KeySound();
+//	       HAL_Delay(200);
+//		   Buzzer_KeySound();
+//	       HAL_Delay(200);
+//	   }
+//	   
+//
+//   }
+//
+//   if(run_t.first_power_on_flag==0x0B && run_t.gTimer_fan_oneselt_test > 9){
+//
+//     
+//	   FAN_Stop();
+//
+//
+//   }
+   
 }
 static void Fan_ContinueRun_OneMinute_Fun(void)
 {

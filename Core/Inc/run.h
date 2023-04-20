@@ -91,6 +91,8 @@ typedef struct _RUN_T{
     //ptc
     uint8_t ptc_temp_voltage;
     uint8_t gTimer_ptc_adc_times ;
+    uint8_t gTimer_fan_oneselt_test ;
+    uint8_t ptc_too_heat_value;
       
 
       uint8_t  gAi;

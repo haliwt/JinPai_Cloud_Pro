@@ -39,17 +39,18 @@ void RunWifi_Command_Handler(uint8_t command)
     	switch(command){
 
         case wifi_start_link_net://0x02
-
+             run_t.gTimer_ptc_adc_times=0;
              //wifi gpio 13 pull down 5s 
             Publish_Command_SmartCofnig();
             HAL_Delay(400);
             esp8266_t.esp8266_config_wifi_net_label = wifi_smartconfig_model;
-           
+            run_t.gTimer_ptc_adc_times=0;
           
       
         break;
 
         case wifi_smartconfig_model: //0x03
+              run_t.gTimer_ptc_adc_times=0;
 
           if(repeat_times ==0){
               repeat_times++;
@@ -73,6 +74,7 @@ void RunWifi_Command_Handler(uint8_t command)
         break;
 
 		case wifi_receive_data: //0x04
+		    run_t.gTimer_ptc_adc_times=0;
           if(wifi_t.gTimer_5s > 10){
             wifi_t.gTimer_5s=0;
             Publish_Command_Query();
@@ -95,6 +97,7 @@ void RunWifi_Command_Handler(uint8_t command)
 		break;
 
 		case wifi_publish_init_ref://5
+		      run_t.gTimer_ptc_adc_times=0;
 		      if(publish_init_flag ==0){
 		        publish_init_flag++;
 		        Init_Publisher_Data_Ref();
@@ -127,6 +130,7 @@ void RunWifi_Command_Handler(uint8_t command)
 			      }
 
 				}
+			     run_t.gTimer_ptc_adc_times=0;
 		break;
 
     	case wifi_subscribe_data://6
@@ -136,9 +140,11 @@ void RunWifi_Command_Handler(uint8_t command)
     	break;
 
 		case wifi_publish_update_data://7
+		
             if(run_t.gTimer_send_cloud_state > 119){
                 run_t.gTimer_send_cloud_state=0;
                 Dht11_Read_TempHumidity_Handler(&DHT11);
+				HAL_Delay(50);
                 Publish_Reference_Update_State();
                 HAL_Delay(300);
 

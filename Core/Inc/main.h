@@ -110,6 +110,9 @@ void Error_Handler(void);
 #define PTC_ADC_Pin                         GPIO_PIN_1
 #define PTC_ADC_GPIO_Port                   GPIOA
 
+#define FAN_DET_Pin                       GPIO_PIN_0
+#define FAN_DET_GPIO_Port                 GPIOA
+
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
