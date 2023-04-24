@@ -3,24 +3,26 @@
 #include "tim.h"
 #include "run.h"
 #include "delay.h"
+#include "adc.h"
 
 
 
-
+#if 0
 void FAN_CCW_RUN(void)
 {
    FAN_CW_SetLow();
    FAN_CCW_SetHigh(); //PA6
   
 }
-
+#endif 
 void FAN_Stop(void)
 {
     FAN_CCW_SetLow(); //brake
-    FAN_CW_SetLow(); //brake
+    HAL_TIM_PWM_Stop(&htim16,TIM_CHANNEL_1);
+    
 }
 
-
+#if 0
 void Fan_Slowly_Speed(void)
 {
     static uint16_t fan_speed;
@@ -48,7 +50,7 @@ void Fan_Slowly_Speed(void)
 	
 }
 
-
+#endif 
 
 void ShutDown_AllFunction(void)
 {
@@ -61,6 +63,19 @@ void ShutDown_AllFunction(void)
 
 
 }
+
+void Fan_Run_Fun(void)
+{
+	if(run_t.set_wind_speed_value==0){
+		   SetLevel_Fan_PWMA(50);
+	   }
+	   else{
+			
+		    SetLevel_Fan_PWMA(100);
+
+		}
+}
+
 //"杀毒" 
 void SterIlization(uint8_t sel)
 {
@@ -97,6 +112,19 @@ void Dry_Function(uint8_t sel)
    }
 
 }
-
+/********************************************************
+*
+*Function Name:void SetLevel_Fan_PWMA(uint8_t levelval)
+*Function: 
+*
+*
+********************************************************/
+void SetLevel_Fan_PWMA(uint8_t levelval)
+{
+     run_t.gFan_pwm_duty_level = levelval;
+     FAN_CW_SetLow();
+	 MX_TIM16_Init();
+	 HAL_TIM_PWM_Start(&htim16,TIM_CHANNEL_1);
+}
 
 

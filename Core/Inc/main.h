@@ -73,8 +73,8 @@ void Error_Handler(void);
 #define PLASMA_Pin                  GPIO_PIN_5
 #define PLASMA_GPIO_Port            GPIOA
 
-#define FAN_1_Pin GPIO_PIN_6
-#define FAN_1_GPIO_Port GPIOA
+//#define FAN_1_Pin GPIO_PIN_6
+//#define FAN_1_GPIO_Port GPIOA
 
 #define FAN_2_Pin GPIO_PIN_7
 #define FAN_2_GPIO_Port GPIOA

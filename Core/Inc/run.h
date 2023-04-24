@@ -29,7 +29,8 @@ typedef enum{
    POWER_CONNECTOR_WIFI,
    UPDATE_TO_PANEL_DATA,
    WIFI_RESTART_INIT,
-   WIFI_NORMAL_POWER_ON
+   WIFI_NORMAL_POWER_ON,
+   POWER_OFF_NULL
 
    
 
@@ -60,54 +61,68 @@ typedef enum{
 
 typedef struct _RUN_T{
     
+    //power on
 	uint8_t gPower_On;
-	uint8_t wifi_gPower_On;
+
 	uint8_t gPower_flag;
-	uint8_t gTheFirst_powerOn ;
 	uint8_t gDht11_flag;
 	
 
 	uint8_t gDht11_humidity ;
 	uint8_t gDht11_temperature;
 
-    uint8_t gFan_continueRun;
+    
 
 	uint8_t RunCommand_Label;
 	uint8_t dp_link_wifi_fail;
-	uint8_t wifi_set_temperature_value_flag;
+	//buzzer
 	uint8_t buzzer_sound_flag ;
   
     uint8_t decodeFlag;
-	uint8_t sendtimes;
-    uint8_t setup_timer_flag;
-    uint8_t gmt_time_flag;
-    uint8_t gTimer_send_0xaa;
-	uint8_t response_wifi_signal_label;
+
+ 
+ 
+
+    //flash 
     uint8_t flash_write_data_error;
 	uint8_t flash_write_data_flag;
     uint8_t flash_read_data;
-	uint8_t runCommand_order_lable;
-	uint8_t recoder_wifi_link_cloud_flag;
+	
+	
     //ptc
-    uint8_t ptc_temp_voltage;
+    uint8_t  gDry;
     uint8_t gTimer_ptc_adc_times ;
-    uint8_t gTimer_fan_oneselt_test ;
+   
     uint8_t ptc_too_heat_value;
+	
+	//fan 
+	uint8_t  gFan;
+	uint8_t gFan_pwm_duty_level;
+	uint8_t fan_detect_malfuntion;
+	uint8_t gFan_continueRun;
+	uint8_t  gFan_counter;
+	uint8_t fan_start_shut_off_flag;
+	uint8_t gTimer_fan_oneselt_test ;
+	uint8_t gTimer_fan_adc_times;
+	uint8_t self_check_fan_power_on;
+	
+
+	//adc 
+	uint8_t ADC_channel_No;
       
 
-      uint8_t  gAi;
       uint8_t  gPlasma;
-      uint8_t  gDry;
-	  uint8_t  gFan;
+     
+	 
 	  uint8_t  gUltrasonic;
 	  uint8_t  gTimer;
       uint8_t  gTemperature ;
 	  uint8_t  gFanSpeed;
 	  uint8_t  gHumidity;
-	 
+	//fault 
 	  uint8_t  alarm_call;
-	  uint8_t  gFan_counter;
-	  uint8_t fan_start_shut_off_flag;
+	
+	  
 
 	  //usart1
 	 uint8_t gTimer_iwdg;
@@ -116,7 +131,9 @@ typedef struct _RUN_T{
     uint8_t gTimer_check_iwdg_fla;
     uint8_t gTimer_usart_error;
     uint8_t iwdg_feed_success_flag;
-	 
+
+	//wifi 
+	uint8_t recoder_wifi_link_cloud_flag;
 
 	  
 	  uint8_t  set_temperature_value;
@@ -146,6 +163,9 @@ typedef struct _RUN_T{
 	uint8_t  work_time_minutes_one;
 	uint8_t  work_time_minutes_two;
 
+	uint16_t fan_detect_voltage; 
+	uint16_t ptc_temp_voltage;
+
 	
 
 	
@@ -171,7 +191,7 @@ void Single_Mode(void);
 void Single_ReceiveCmd(uint8_t cmd);
 void SystemReset(void);
 
-void MainBoard_Self_Inspection_PowerOn_Fun(void);
+
 
 #endif 
 

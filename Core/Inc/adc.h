@@ -1,9 +1,9 @@
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file    tim.h
+  * @file    adc.h
   * @brief   This file contains all the function prototypes for
-  *          the tim.c file
+  *          the adc.c file
   ******************************************************************************
   * @attention
   *
@@ -18,8 +18,8 @@
   */
 /* USER CODE END Header */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __TIM_H__
-#define __TIM_H__
+#ifndef __ADC_H__
+#define __ADC_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -32,27 +32,23 @@ extern "C" {
 
 /* USER CODE END Includes */
 
-extern TIM_HandleTypeDef htim1;
-
-extern TIM_HandleTypeDef htim3;
-
-extern TIM_HandleTypeDef htim14;
-
-extern TIM_HandleTypeDef htim16;
+extern ADC_HandleTypeDef hadc1;
 
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
 
-void MX_TIM1_Init(void);
-void MX_TIM3_Init(void);
-void MX_TIM14_Init(void);
-void MX_TIM16_Init(void);
-
-
-void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
+void MX_ADC1_Init(void);
 
 /* USER CODE BEGIN Prototypes */
+
+
+void Judge_PTC_Temperature_Value(void);
+void Get_PTC_Temperature_Voltage(uint32_t channel,uint8_t times);
+
+
+void Get_Fan_Adc_Fun(uint32_t channel,uint8_t times);
+
 
 /* USER CODE END Prototypes */
 
@@ -60,5 +56,5 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 }
 #endif
 
-#endif /* __TIM_H__ */
+#endif /* __ADC_H__ */
 

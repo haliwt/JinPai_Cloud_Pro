@@ -12,6 +12,7 @@
 #include "publish.h"
 #include "subscribe.h"
 #include "adc.h"
+#include "self_check.h"
 
 RUN_T run_t; 
 
@@ -37,7 +38,7 @@ void Decode_RunCmd(void)
 {
   uint16_t count_total_times;
 //  uint8_t count_rem_times_one,count_rem_times_two;
- uint8_t cmdType_1=inputCmd[0],cmdType_2 = inputCmd[1],cmdType_3=inputCmd[2];
+  uint8_t cmdType_1=inputCmd[0],cmdType_2 = inputCmd[1];
 
     
   switch(cmdType_1){
@@ -175,6 +176,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
     break;
 
     case 0x01: // power on
+       
          Buzzer_KeySound();
 		
          //run_t.gPower_flag = POWER_ON;
@@ -357,7 +359,7 @@ void RunCommand_MainBoard_Fun(void)
    switch(run_t.RunCommand_Label){
 
 	case POWER_ON: //1
-		SetPowerOn_ForDoing();
+	    SetPowerOn_ForDoing();
 
 		run_t.gPower_flag = POWER_ON;
 		run_t.gPower_On = POWER_ON;
@@ -365,7 +367,7 @@ void RunCommand_MainBoard_Fun(void)
 	    
 		power_just_on=0;
         run_t.gTimer_10s=0;
-		run_t.gTheFirst_powerOn=1;
+	
 		Update_DHT11_Value(); //to message display 
 		HAL_Delay(20);
 		
@@ -404,7 +406,7 @@ void RunCommand_MainBoard_Fun(void)
         run_t.gPower_flag =POWER_OFF;
 	   run_t.RunCommand_Label =0xff;
 
-	   if(run_t.theFirst_input_power_flag ==1){
+	   if(run_t.theFirst_input_power_flag ==1){ //input DC the first 
 	   	run_t.theFirst_input_power_flag ++;
 		run_t.gFan_continueRun =0;
 
@@ -451,13 +453,22 @@ void RunCommand_MainBoard_Fun(void)
 
 	}
 	
-	 if(run_t.gTimer_ptc_adc_times > 124 ){
+	 if(run_t.gTimer_ptc_adc_times > 2 ){ //2 minutes 120s
          run_t.gTimer_ptc_adc_times=0;
-		 Get_PTC_Temperature_Voltage(1);
+		 Get_PTC_Temperature_Voltage(ADC_CHANNEL_1,20);
 	     Judge_PTC_Temperature_Value();
 
 	 }
+
+	 if(run_t.gTimer_fan_adc_times > 3){ //3 minute 180s
+	     run_t.gTimer_fan_adc_times =0;
+	     Self_CheckFan_Handler(ADC_CHANNEL_0,20);
+	 }
     break;
+
+	case POWER_OFF_NULL:
+
+	break;
 
     }
 	
@@ -467,137 +478,14 @@ void RunCommand_MainBoard_Fun(void)
 
    if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS  &&  run_t.wifi_link_JPai_cloud==0){
 	 	    run_t.wifi_link_JPai_cloud++;
-			SendWifiCmd_To_Order(WIFI_POWER_ON);
+			//SendWifiCmd_To_Order(WIFI_POWER_ON);
 	 	    SendWifiData_To_Cmd(0x01) ;
 	 }
 	 
 		
 	
 }
-/**********************************************************************
-	*
-	*Functin Name: void MainBoard_Itself_PowerOn_Fun(void)
-	*Function :
-	*Input Ref:  key of value
-	*Return Ref: NO
-	*
-**********************************************************************/
-void MainBoard_Self_Inspection_PowerOn_Fun(void)
-{
-   static uint8_t self_power_on_flag=0;
-	if(run_t.first_power_on_flag==0){
-         run_t.gTimer_ptc_adc_times=0;
-       WIFI_IC_ENABLE();
-      if(usart_wifi_t.usart_wifi_receive_read_data_flag==1){
-		usart_wifi_t.usart_wifi_receive_read_data_flag=0;
-       	usart_wifi_t.usart_wifi_start_receive_flag=0;
-		usart_wifi_t.usart_wifi_receive_success_flag=0;
-	    run_t.first_power_on_flag++ ;
-        HAL_Delay(200);
-		Publish_Data_ProdKey();	
-		HAL_Delay(300);
-	   
-		 
-	  }
-	  run_t.theFirst_input_power_flag=1;
-     }
 
-    if(run_t.first_power_on_flag==1){
-        
-     switch(run_t.recoder_wifi_link_cloud_flag){
-
-	   case 1: 
-	   	  run_t.gTimer_ptc_adc_times=0;
-	   	run_t.recoder_wifi_link_cloud_flag++;
-		run_t.first_power_on_flag++;
-		wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
-	     SendWifiData_To_Cmd(0x01) ;
-
-		if(run_t.gPower_On == POWER_OFF){
-			run_t.first_power_on_flag= 0x0A;
-			run_t.gTimer_fan_oneselt_test=0;
-			 wifi_t.gTimer_wifi_send_cloud_success_times=0;
-			 run_t.gPower_On=POWER_OFF;
-			 run_t.gPower_flag = POWER_OFF;
-			 run_t.RunCommand_Label = POWER_OFF;
-					
-			 esp8266_t.esp8266_config_wifi_net_label=0;
-			   FAN_CCW_RUN();
-
-		}
-
-	 break;
-
-	 case 0:
-            run_t.gTimer_ptc_adc_times=0;
-	    
-          if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_FAIL && run_t.first_power_on_flag < 2 ){
-                      wifi_t.publish_send_state_data=0;
-					  run_t.first_power_on_flag++;
-                    Read_USART2_Wifi_Data(wifi_t.usart_wifi_frame_type,wifi_t.usart_wifi_frame_len,wifi_t.usart_wifi_order);
-               
-             }
-
-             
-
-            if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS && run_t.first_power_on_flag == 1  ){
-                        run_t.first_power_on_flag++ ;
-                        run_t.wifi_link_JPai_cloud = 1;
-                        Buzzer_KeySound();
-                        SendWifiData_To_Cmd(0x01) ;
-              }
-
-		
-		 if(run_t.gPower_On == POWER_OFF){
-			 run_t.first_power_on_flag= 0x0A;
-             run_t.gTimer_fan_oneselt_test=0;
-			wifi_t.gTimer_wifi_send_cloud_success_times=0;
-			run_t.gPower_On=POWER_OFF;
-			run_t.gPower_flag = POWER_OFF;
-			run_t.RunCommand_Label = POWER_OFF;
-
-			esp8266_t.esp8266_config_wifi_net_label=0;
-			  FAN_CCW_RUN();
-
-		 }
-		  
-          run_t.gTimer_ptc_adc_times=0;
-    
-	 break;
-    }
-
-   } 
-
-//   if(run_t.gTimer_fan_oneselt_test > 9 && run_t.first_power_on_flag==0x0A  ){
-//	   //run_t.gTimer_fan_oneselt_test=0;
-//
-//       run_t.first_power_on_flag++ ;
-//   	   
-//	   if(FAN_DETECT_ERROR()==0){
-//
-//	       run_t.alarm_call = 0x02 ;  //fan is error
-//	       Buzzer_KeySound();
-//	       HAL_Delay(200);
-//		   Buzzer_KeySound();
-//	       HAL_Delay(200);
-//		   Buzzer_KeySound();
-//	       HAL_Delay(200);
-//		   Buzzer_KeySound();
-//	       HAL_Delay(200);
-//	   }
-//	   
-//
-//   }
-//
-//   if(run_t.first_power_on_flag==0x0B && run_t.gTimer_fan_oneselt_test > 9){
-//
-//     
-//	   FAN_Stop();
-//
-//
-//   }
-   
-}
 static void Fan_ContinueRun_OneMinute_Fun(void)
 {
 	
@@ -605,13 +493,7 @@ static void Fan_ContinueRun_OneMinute_Fun(void)
           
 		if(run_t.gFan_counter < 60){
 
-		       if(run_t.set_wind_speed_value ==0){
-
-			      Fan_Slowly_Speed();
-
-			   }
-			   else 
-				 FAN_CCW_RUN();
+		    Fan_Run_Fun();
 		}       
         else if(run_t.gFan_counter > 59){
 
@@ -624,3 +506,6 @@ static void Fan_ContinueRun_OneMinute_Fun(void)
 
 
 }
+
+
+

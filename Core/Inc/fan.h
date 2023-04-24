@@ -39,17 +39,19 @@
 #define FAN_DETECT_ERROR()         HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_0)
 
 
-void FAN_CCW_RUN(void);
+//void FAN_CCW_RUN(void);
 void FAN_Stop(void);
 void SterIlization(uint8_t sel);
 
 
 
 
+void Fan_Run_Fun(void);
 
 void ShutDown_AllFunction(void);
 void Dry_Function(uint8_t sel);
-void Fan_Slowly_Speed(void);
+//void Fan_Slowly_Speed(void);
+void SetLevel_Fan_PWMA(uint8_t levelval);
 
 
 

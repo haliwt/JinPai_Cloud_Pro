@@ -27,27 +27,27 @@ static void subscribe_data_frame_oreder(uint8_t order)
     MYUSART_SendData(order);
 }
 
-static void subscribe_data_frame_bool(uint8_t onoff)
-{
-    MYUSART_SendData(onoff);
-}
+//static void subscribe_data_frame_bool(uint8_t onoff)
+//{
+//    MYUSART_SendData(onoff);
+//}
 
 static void subscribe_data_frame_sum(uint8_t value)
 {
     MYUSART_SendData(value);
 
 }
-static void subscribe_data_frame_value(uint8_t value)
-{
-    MYUSART_SendData(value);
+//static void subscribe_data_frame_value(uint8_t value)
+//{
+//    MYUSART_SendData(value);
 
-}
+//}
 
-static void subscribe_data_driver_mouse(uint8_t value)
-{
-    MYUSART_SendData(value);
+//static void subscribe_data_driver_mouse(uint8_t value)
+//{
+//    MYUSART_SendData(value);
 
-}
+//}
 void subscribe_data_sterilization(uint8_t ster)
 {
 

@@ -22,7 +22,7 @@ uint8_t sum_codes;
 uint8_t (*wifi_run_state_fun)(void);
 uint8_t wifi_receive_data_state_flag;
 uint8_t receive_usart_wifi_data;
-static void Wifi_ReceiveData_Handler(void);
+//static void Wifi_ReceiveData_Handler(void);
 /*********************************************************
  * 
   * @brief :void RunWifi_Command_Handler(uint8_t command)
