@@ -350,7 +350,7 @@ void SystemReset(void)
 void RunCommand_MainBoard_Fun(void)
 {
 
-   static uint8_t power_just_on;
+   static uint8_t power_just_on,power_off_fan_flag;
     
     if(run_t.buzzer_sound_flag == 1){
 	 	run_t.buzzer_sound_flag = 0;
@@ -366,7 +366,7 @@ void RunCommand_MainBoard_Fun(void)
 		run_t.gPower_flag = POWER_ON;
 		run_t.gPower_On = POWER_ON;
 		esp8266_t.esp8266_config_wifi_net_label=0;
-	    
+	    power_off_fan_flag=0;
 		power_just_on=0;
         run_t.gTimer_10s=0;
 	
@@ -401,10 +401,15 @@ void RunCommand_MainBoard_Fun(void)
 
     case POWER_OFF: //2
 		SetPowerOff_ForDoing();
-
-       
-		 run_t.gFan_continueRun =1;
-         run_t.gFan_counter=0;
+  
+        if(power_off_fan_flag==0){
+            power_off_fan_flag++;
+            run_t.gFan_counter =0;
+		    run_t.gFan_continueRun =1;
+    
+		}
+			
+		 
         run_t.gPower_flag =POWER_OFF;
 	   run_t.RunCommand_Label =0xff;
 
@@ -428,7 +433,7 @@ void RunCommand_MainBoard_Fun(void)
 
 	   }
      
-
+      	run_t.RunCommand_Label= 0xff;
 	 
 	break;
 
@@ -505,6 +510,14 @@ static void Fan_ContinueRun_OneMinute_Fun(void)
 		FAN_Stop();
 		}
 	  }
+
+	 if(run_t.RunCommand_Label== 0xff && run_t.gFan_continueRun ==2){
+
+	      FAN_Stop();
+
+
+
+	 }
 
 
 }
