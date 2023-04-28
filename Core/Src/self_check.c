@@ -39,60 +39,11 @@ void Self_Check_Fain_Init(void)
 **********************************************************************/
 void MainBoard_Self_Inspection_PowerOn_Fun(void)
 {
-   static uint8_t power_on_detect_buzzer,input_ac_power_the_first;
-   static uint8_t input_ac_power_the_firs=0,fan_error_flag;
-
-    switch(run_t.self_check_fan_power_on ){
-
-	case 0:
-	    run_t.self_check_fan_power_on =1;
-        run_t.open_fan_works_flag = 1;
-	   run_t.gTimer_fan_oneselt_test=0;
-
-	break;
-
-	case 1:
-		 if(fan_error_flag ==0){
-        // SendWifiCmd_To_Order(WIFI_POWER_ON);
-		   run_t.fan_set_level = 3;
-		   SetLevel_Fan_PWMA(100);
-		 
-		 if(run_t.gTimer_fan_oneselt_test > 9){
-			
-			// SendWifiCmd_To_Order(WIFI_POWER_OFF);
-			 FAN_Stop();
-			 run_t.gFan_continueRun =0;
-			 
-	
-		 }
-		 Self_CheckFan_Handler(ADC_CHANNEL_0,30);
-	
-	 
-		}
-	  
-		if(run_t.alarm_call == 0x02 && run_t.gTimer_fan_oneselt_test > 9){
-	
-			 Buzzer_KeySound();
-			 run_t.self_check_fan_power_on =1;
-		     fan_error_flag = 1;
-	
-		}
-	    else if(run_t.gTimer_fan_oneselt_test >9){
-		     Buzzer_KeySound();
-		     run_t.self_check_fan_power_on =2;
-		     run_t.gFan_continueRun =0;
-			 FAN_Stop();	  
-
-	    }
-
-	break;
-
-	case 2:
- 
-	  if(run_t.first_power_on_flag==0){
-        run_t.gTimer_ptc_adc_times=0;
+     static uint8_t self_power_on_flag=0, the_first_power_on =0,fan_error_flag;
+	if(run_t.first_power_on_flag==0){
+         run_t.gTimer_ptc_adc_times=0;
        WIFI_IC_ENABLE();
-      if(usart_wifi_t.usart_wifi_receive_read_data_flag==1){ //device rece data from wifi model
+      if(usart_wifi_t.usart_wifi_receive_read_data_flag==1){
 		usart_wifi_t.usart_wifi_receive_read_data_flag=0;
        	usart_wifi_t.usart_wifi_start_receive_flag=0;
 		usart_wifi_t.usart_wifi_receive_success_flag=0;
@@ -103,9 +54,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 	   
 		 
 	  }
-	  power_on_detect_buzzer=1;
 	  run_t.theFirst_input_power_flag=1;
-	  
      }
 
     if(run_t.first_power_on_flag==1){
@@ -119,7 +68,18 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 		wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
 	     SendWifiData_To_Cmd(0x01) ;
 
-	
+		if(run_t.gPower_On == POWER_OFF){
+			run_t.first_power_on_flag= 0x0A;
+			run_t.gTimer_fan_oneselt_test=0;
+			 wifi_t.gTimer_wifi_send_cloud_success_times=0;
+			 run_t.gPower_On=POWER_OFF;
+			 run_t.gPower_flag = POWER_OFF;
+			 run_t.RunCommand_Label = POWER_OFF;
+					
+			 esp8266_t.esp8266_config_wifi_net_label=0;
+			   
+
+		}
 
 	 break;
 
@@ -138,36 +98,74 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
             if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS && run_t.first_power_on_flag == 1  ){
                         run_t.first_power_on_flag++ ;
                         run_t.wifi_link_JPai_cloud = 1;
+                        Buzzer_KeySound();
                         SendWifiData_To_Cmd(0x01) ;
-						HAL_Delay(100);
               }
 
 		
-		
-		  
-     break;
-			//input AC 9V  default power off
-			if(run_t.gPower_On == POWER_OFF){
+		 if(run_t.gPower_On == POWER_OFF){
 			 run_t.first_power_on_flag= 0x0A;
-		   
-		     run_t.gTimer_ptc_adc_times=0;//ptc detect of timing initial
+             run_t.gTimer_fan_oneselt_test=0;
 			wifi_t.gTimer_wifi_send_cloud_success_times=0;
 			run_t.gPower_On=POWER_OFF;
 			run_t.gPower_flag = POWER_OFF;
 			run_t.RunCommand_Label = POWER_OFF;
 
 			esp8266_t.esp8266_config_wifi_net_label=0;
+			
 
-		   }
-	
-     
-
+		 }
+		  
+          run_t.gTimer_ptc_adc_times=0;
+    
+	 break;
     }
 
    } 
- 
-   break;
-   }
+  
+  
+
+
+
+   
+	if(the_first_power_on ==0 &&  run_t.first_power_on_flag== 0x0A){
+
+	         run_t.open_fan_works_flag=1;
+			 if(fan_error_flag ==0){
+			// SendWifiCmd_To_Order(WIFI_POWER_ON);
+			   run_t.fan_set_level = 3;
+			   SetLevel_Fan_PWMA(100);
+			 
+			 if(run_t.gTimer_fan_oneselt_test > 9){
+				
+				// SendWifiCmd_To_Order(WIFI_POWER_OFF);
+				 FAN_Stop();
+				 run_t.gFan_continueRun =0;
+				 the_first_power_on++;
+		
+			 }
+			 Self_CheckFan_Handler(ADC_CHANNEL_0,30);
+		
+		 
+			}
+		  
+			if(run_t.alarm_call == 0x02 && run_t.gTimer_fan_oneselt_test > 9){
+		
+				 Buzzer_KeySound();
+			
+				 fan_error_flag = 1;
+		
+			}
+			else if(run_t.gTimer_fan_oneselt_test >9){
+				 Buzzer_KeySound();
+		
+				 run_t.gFan_continueRun =0;
+				 FAN_Stop();	  
+	
+			}
+	
+
+	}
 
 }
 /**************************************************************
