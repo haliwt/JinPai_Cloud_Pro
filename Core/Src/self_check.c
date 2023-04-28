@@ -98,7 +98,8 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
             if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS && run_t.first_power_on_flag == 1  ){
                         run_t.first_power_on_flag++ ;
                         run_t.wifi_link_JPai_cloud = 1;
-                        Buzzer_KeySound();
+			            if( the_first_power_on==1)
+                              Buzzer_KeySound();
                         SendWifiData_To_Cmd(0x01) ;
               }
 
@@ -141,7 +142,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 				// SendWifiCmd_To_Order(WIFI_POWER_OFF);
 				 FAN_Stop();
 				 run_t.gFan_continueRun =0;
-				 the_first_power_on++;
+				 the_first_power_on=1;
 		
 			 }
 			 Self_CheckFan_Handler(ADC_CHANNEL_0,30);
