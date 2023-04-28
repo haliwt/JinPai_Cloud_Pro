@@ -433,7 +433,7 @@ void RunCommand_MainBoard_Fun(void)
 
 	   }
      
-      	run_t.RunCommand_Label= 0xff;
+      //	run_t.RunCommand_Label= 0xff;
 	 
 	break;
 

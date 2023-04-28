@@ -53,7 +53,7 @@ void SetPowerOff_ForDoing(void)
 	PLASMA_SetLow(); //
 	HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic Off 
 	PTC_SetLow();
-	if(run_t.open_fan_works_flag==1){ //input ac power be detect fan default 
+	if(run_t.open_fan_works_flag !=1){ //input ac power be detect fan default 
 		FAN_Stop();
 		run_t.gFan_continueRun=0;
 	}

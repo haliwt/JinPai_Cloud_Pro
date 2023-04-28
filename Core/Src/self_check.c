@@ -118,7 +118,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 			run_t.theFirst_input_power_flag =1;
 
 		 }
-		  
+		  if(the_first_power_on==0)run_t.open_fan_works_flag=1;
           run_t.gTimer_ptc_adc_times=0;
     
 	 break;
@@ -145,10 +145,12 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 				 FAN_Stop();
 				 run_t.gFan_continueRun =0;
 				 the_first_power_on++;
+				run_t.theFirst_input_power_flag =1;
 		
 			 }
-			 Self_CheckFan_Handler(ADC_CHANNEL_0,30);
-		
+			 if(run_t.gTimer_fan_oneselt_test > 4){
+			     Self_CheckFan_Handler(ADC_CHANNEL_0,30);
+		        run_t.theFirst_input_power_flag =1;
 		 
 			}
 		  
@@ -163,7 +165,8 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 				 Buzzer_KeySound();
 		
 				 run_t.gFan_continueRun =0;
-				 FAN_Stop();	  
+				 FAN_Stop();
+				 run_t.open_fan_works_flag++ ;
 	
 			}
             
@@ -171,6 +174,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 
 	}
 
+    }
 }
 /**************************************************************
 	*
