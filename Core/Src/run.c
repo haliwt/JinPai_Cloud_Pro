@@ -166,6 +166,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
     
         run_t.RunCommand_Label = POWER_OFF;
 
+        wifi_t.wifi_open_power_on_flag =0;
 	    Publish_Power_OFF_State();
 	    HAL_Delay(300);
 		
@@ -176,8 +177,9 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
     break;
 
     case 0x01: // power on
-       
-         Buzzer_KeySound();
+         if(wifi_t.wifi_open_power_on_flag == 0){
+         	Buzzer_KeySound();
+         }
 		
          //run_t.gPower_flag = POWER_ON;
 		// run_t.gPower_On = POWER_ON;
@@ -453,16 +455,16 @@ void RunCommand_MainBoard_Fun(void)
 
 	}
 	
-	 if(run_t.gTimer_ptc_adc_times > 2 ){ //2 minutes 120s
+	 if(run_t.gTimer_ptc_adc_times > 2 ){ //3 minutes 120s
          run_t.gTimer_ptc_adc_times=0;
 		 Get_PTC_Temperature_Voltage(ADC_CHANNEL_1,20);
 	     Judge_PTC_Temperature_Value();
 
 	 }
 
-	 if(run_t.gTimer_fan_adc_times > 3){ //3 minute 180s
+	 if(run_t.gTimer_fan_adc_times > 1){ //2 minute 180s
 	     run_t.gTimer_fan_adc_times =0;
-	     Self_CheckFan_Handler(ADC_CHANNEL_0,20);
+	     Self_CheckFan_Handler(ADC_CHANNEL_0,30);
 	 }
     break;
 

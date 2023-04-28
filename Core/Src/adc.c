@@ -227,9 +227,10 @@ void Get_PTC_Temperature_Voltage(uint32_t channel,uint8_t times)
 	adcx = Get_Adc_Average(channel,times);
 
     run_t.ptc_temp_voltage  =(uint16_t)((adcx * 3300)/4096); //amplification 100 ,3.11V -> 311
-    if(first < 1){ //power on the voltage is small 
+
+	if(first < 3){ //power on the voltage is small 
          first ++ ;
-         run_t.ptc_temp_voltage = 0xAA;
+         run_t.ptc_temp_voltage = 500;
     }
    
 }
@@ -282,13 +283,14 @@ void Judge_PTC_Temperature_Value(void)
 void Get_Fan_Adc_Fun(uint32_t channel,uint8_t times)
 {
 	uint16_t adc_fan_hex;
-    static uint8_t error_times;
+	static uint8_t detect_error_times=0;
+
 	adc_fan_hex = Get_Adc_Average(channel,times);
 
     run_t.fan_detect_voltage  =(uint16_t)((adc_fan_hex * 3300)/4096); //amplification 1000 ,3.111V -> 3111
 
 	if(run_t.fan_detect_voltage >800 &&  run_t.fan_detect_voltage < 1400){
-           error_times =0;
+           detect_error_times=0;
            run_t.alarm_call = 0x00 ;  //fan is run OK
            Publish_Reference_Update_State();
 	       HAL_Delay(200);
@@ -296,22 +298,23 @@ void Get_Fan_Adc_Fun(uint32_t channel,uint8_t times)
     }
 	else{
 
-	       error_times ++ ;
+	          
+			   if(detect_error_times >1){
+			   	detect_error_times=0;
+				   run_t.alarm_call = 0x02 ;  //fan is error
+				   Publish_Reference_Update_State();
+			       HAL_Delay(200);
+			       Buzzer_KeySound();
+			       HAL_Delay(100);
+				   Buzzer_KeySound();
+			       HAL_Delay(100);
+				   Buzzer_KeySound();
+			       HAL_Delay(100);
+				   Buzzer_KeySound();
+			       HAL_Delay(100);
 
-	       if(error_times > 2){
-		   	   error_times =0;
-			   run_t.alarm_call = 0x02 ;  //fan is error
-			   Publish_Reference_Update_State();
-		       HAL_Delay(200);
-		       Buzzer_KeySound();
-		       HAL_Delay(100);
-			   Buzzer_KeySound();
-		       HAL_Delay(100);
-			   Buzzer_KeySound();
-		       HAL_Delay(100);
-			   Buzzer_KeySound();
-		       HAL_Delay(100);
-	       }
+			   	}
+	           detect_error_times++;
 
      }
 }

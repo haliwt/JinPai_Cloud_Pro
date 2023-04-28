@@ -152,6 +152,7 @@ typedef struct _WIFI_FUN{
 	uint8_t publish_send_state_data;
 	uint8_t wifi_has_been_link_cloud;
 	uint8_t gTimer_wifi_send_cloud_success_times;
+	uint8_t wifi_open_power_on_flag;
 
 
     uint8_t real_hours;

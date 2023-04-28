@@ -289,6 +289,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 							
 							wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
 							run_t.app_appointment_time_power_on = WIFI_NORMAL_POWER_ON;
+							wifi_t.wifi_open_power_on_flag =1;
                             Buzzer_KeySound();
 						    Publish_Power_ON_State();
 							HAL_Delay(300);

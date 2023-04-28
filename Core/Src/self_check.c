@@ -43,11 +43,12 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 	if(run_t.first_power_on_flag==0){
          run_t.gTimer_ptc_adc_times=0;
        WIFI_IC_ENABLE();
+       HAL_Delay(1000);
       if(usart_wifi_t.usart_wifi_receive_read_data_flag==1){
 		usart_wifi_t.usart_wifi_receive_read_data_flag=0;
        	usart_wifi_t.usart_wifi_start_receive_flag=0;
 		usart_wifi_t.usart_wifi_receive_success_flag=0;
-	    run_t.first_power_on_flag++ ;
+	  //  run_t.first_power_on_flag++ ;
         HAL_Delay(200);
 		Publish_Data_ProdKey();	
 		HAL_Delay(300);
@@ -55,6 +56,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 		 
 	  }
 	  run_t.theFirst_input_power_flag=1;
+      run_t.first_power_on_flag++;
      }
 
     if(run_t.first_power_on_flag==1){
