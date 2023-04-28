@@ -115,7 +115,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 			run_t.RunCommand_Label = POWER_OFF;
 
 			esp8266_t.esp8266_config_wifi_net_label=0;
-			
+			run_t.theFirst_input_power_flag =1;
 
 		 }
 		  
@@ -144,7 +144,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 				// SendWifiCmd_To_Order(WIFI_POWER_OFF);
 				 FAN_Stop();
 				 run_t.gFan_continueRun =0;
-				 the_first_power_on=1;
+				 the_first_power_on++;
 		
 			 }
 			 Self_CheckFan_Handler(ADC_CHANNEL_0,30);
@@ -166,7 +166,8 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 				 FAN_Stop();	  
 	
 			}
-	
+            
+           
 
 	}
 

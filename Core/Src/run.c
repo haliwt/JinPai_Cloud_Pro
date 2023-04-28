@@ -411,7 +411,7 @@ void RunCommand_MainBoard_Fun(void)
 			
 		 
         run_t.gPower_flag =POWER_OFF;
-	   run_t.RunCommand_Label =0xff;
+	
 
 	   if(run_t.theFirst_input_power_flag ==1){ //input DC the first 
 	   	run_t.theFirst_input_power_flag ++;
