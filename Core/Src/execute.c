@@ -15,6 +15,7 @@ void SetPowerOn_ForDoing(void)
     run_t.gPower_flag = POWER_ON;
     run_t.gFan_continueRun =1;
     run_t.gPower_On=POWER_ON;
+	run_t.open_fan_works_flag++;
     
     if(run_t.app_appointment_time_power_on != POWER_ON){
 	    run_t.gFan = 1;
@@ -52,8 +53,10 @@ void SetPowerOff_ForDoing(void)
 	PLASMA_SetLow(); //
 	HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic Off 
 	PTC_SetLow();
-	if(run_t.self_check_fan_power_on !=1) //input ac power be detect fan default 
+	if(run_t.open_fan_works_flag==1){ //input ac power be detect fan default 
 		FAN_Stop();
+		run_t.gFan_continueRun=0;
+	}
 
 }
 
@@ -87,9 +90,11 @@ void ActionEvent_Handler(void)
 
     if(run_t.fan_detect_malfuntion== 0){
 		if(run_t.set_wind_speed_value==0){
-		     SetLevel_Fan_PWMA(50);
+			 run_t.fan_set_level = 1;
+		     SetLevel_Fan_PWMA(98);
 	    }
 		else{
+			 run_t.fan_set_level = 2;
 
 		     SetLevel_Fan_PWMA(100);
 

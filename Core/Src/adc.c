@@ -282,15 +282,12 @@ void Judge_PTC_Temperature_Value(void)
 void Get_Fan_Adc_Fun(uint32_t channel,uint8_t times)
 {
 	uint16_t adc_fan_hex;
-	
-    SetLevel_Fan_PWMA(100); //fan wind speed is maximum value 
-	
 
 	adc_fan_hex = Get_Adc_Average(channel,times);
 
     run_t.fan_detect_voltage  =(uint16_t)((adc_fan_hex * 3300)/4096); //amplification 1000 ,3.111V -> 3111
 
-	if(run_t.fan_detect_voltage >600 &&  run_t.fan_detect_voltage < 854){
+	if(run_t.fan_detect_voltage >800 &&  run_t.fan_detect_voltage < 1400){
 
            run_t.alarm_call = 0x00 ;  //fan is run OK
            Publish_Reference_Update_State();
@@ -298,7 +295,6 @@ void Get_Fan_Adc_Fun(uint32_t channel,uint8_t times)
 
     }
 	else{
-
 		   run_t.alarm_call = 0x02 ;  //fan is error
 		   Publish_Reference_Update_State();
 	       HAL_Delay(200);
@@ -311,9 +307,7 @@ void Get_Fan_Adc_Fun(uint32_t channel,uint8_t times)
 		   Buzzer_KeySound();
 	       HAL_Delay(100);
 
-
-
-	}
+     }
 }
 
     

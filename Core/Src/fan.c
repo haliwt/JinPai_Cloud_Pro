@@ -67,10 +67,11 @@ void ShutDown_AllFunction(void)
 void Fan_Run_Fun(void)
 {
 	if(run_t.set_wind_speed_value==0){
-		   SetLevel_Fan_PWMA(50);
+		    run_t.fan_set_level = 1;
+		   SetLevel_Fan_PWMA(98);
 	   }
 	   else{
-			
+			 run_t.fan_set_level = 2;
 		    SetLevel_Fan_PWMA(100);
 
 		}
@@ -121,9 +122,14 @@ void Dry_Function(uint8_t sel)
 ********************************************************/
 void SetLevel_Fan_PWMA(uint8_t levelval)
 {
-     run_t.gFan_pwm_duty_level = levelval;
+     static uint8_t fan_default_value=0xff;
+	 run_t.gFan_pwm_duty_level = levelval;
      FAN_CW_SetLow();
-	 MX_TIM16_Init();
+	 if(fan_default_value != run_t.fan_set_level){
+	 	fan_default_value=run_t.fan_set_level;
+	 	
+	   MX_TIM16_Init();
+	 }
 	 HAL_TIM_PWM_Start(&htim16,TIM_CHANNEL_1);
 }
 
