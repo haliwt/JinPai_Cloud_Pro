@@ -408,9 +408,7 @@ void RunCommand_MainBoard_Fun(void)
 		    run_t.gFan_continueRun =1;
     
 		}
-			
-		 
-        run_t.gPower_flag =POWER_OFF;
+	   run_t.gPower_flag =POWER_OFF;
 	
 
 	   if(run_t.theFirst_input_power_flag ==1){ //input DC the first 
@@ -511,13 +509,6 @@ static void Fan_ContinueRun_OneMinute_Fun(void)
 		}
 	  }
 
-	 if(run_t.RunCommand_Label== 0xff && run_t.gFan_continueRun ==2){
-
-	      FAN_Stop();
-
-
-
-	 }
 
 
 }

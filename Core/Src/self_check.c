@@ -89,21 +89,19 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
             run_t.gTimer_ptc_adc_times=0;
 	    
           if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_FAIL && run_t.first_power_on_flag < 2 ){
-                      wifi_t.publish_send_state_data=0;
-					  run_t.first_power_on_flag++;
-                    Read_USART2_Wifi_Data(wifi_t.usart_wifi_frame_type,wifi_t.usart_wifi_frame_len,wifi_t.usart_wifi_order);
+                 wifi_t.publish_send_state_data=0;
+				run_t.first_power_on_flag++;
+                Read_USART2_Wifi_Data(wifi_t.usart_wifi_frame_type,wifi_t.usart_wifi_frame_len,wifi_t.usart_wifi_order);
                
-             }
+           }
 
-             
-
-            if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS && run_t.first_power_on_flag == 1  ){
-                        run_t.first_power_on_flag++ ;
-                        run_t.wifi_link_JPai_cloud = 1;
-			            if( the_first_power_on==1)
-                              Buzzer_KeySound();
-                        SendWifiData_To_Cmd(0x01) ;
-              }
+           if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS && run_t.first_power_on_flag == 1  ){
+			run_t.first_power_on_flag++ ;
+			run_t.wifi_link_JPai_cloud = 1;
+			if(the_first_power_on==1)
+			Buzzer_KeySound();
+			SendWifiData_To_Cmd(0x01) ;
+           }
 
 		
 		 if(run_t.gPower_On == POWER_OFF){
@@ -127,51 +125,37 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
    } 
   
   
+  if(the_first_power_on ==0 &&  run_t.first_power_on_flag== 0x0A){
+
+	run_t.open_fan_works_flag=1;
+	run_t.theFirst_input_power_flag =1;
+	if(fan_error_flag ==0){
+	// SendWifiCmd_To_Order(WIFI_POWER_ON);
+	run_t.fan_set_level = 3;
+	SetLevel_Fan_PWMA(100);
+
+	if(run_t.gTimer_fan_oneselt_test > 4){
+		Self_CheckFan_Handler(ADC_CHANNEL_0,30);
 
 
+	}
 
-   
-	if(the_first_power_on ==0 &&  run_t.first_power_on_flag== 0x0A){
+	if(run_t.gTimer_fan_oneselt_test >9 && run_t.alarm_call==0){
+		Buzzer_KeySound();
 
-	         run_t.open_fan_works_flag=1;
-			 if(fan_error_flag ==0){
-			// SendWifiCmd_To_Order(WIFI_POWER_ON);
-			   run_t.fan_set_level = 3;
-			   SetLevel_Fan_PWMA(100);
-			 
-			 if(run_t.gTimer_fan_oneselt_test > 9){
-				
-				// SendWifiCmd_To_Order(WIFI_POWER_OFF);
-				 FAN_Stop();
-				 run_t.gFan_continueRun =0;
-				 the_first_power_on++;
-				run_t.theFirst_input_power_flag =1;
-		
-			 }
-			 if(run_t.gTimer_fan_oneselt_test > 4){
-			     Self_CheckFan_Handler(ADC_CHANNEL_0,30);
-		        run_t.theFirst_input_power_flag =1;
-		 
-			}
-		  
-			if(run_t.alarm_call == 0x02 && run_t.gTimer_fan_oneselt_test > 9){
-		
-				 Buzzer_KeySound();
-			
-				 fan_error_flag = 1;
-		
-			}
-			else if(run_t.gTimer_fan_oneselt_test >9){
-				 Buzzer_KeySound();
-		
-				 run_t.gFan_continueRun =0;
-				 FAN_Stop();
-				 run_t.open_fan_works_flag++ ;
-	
-			}
-            
-           
+		run_t.gFan_continueRun =0;
+		FAN_Stop();
+		run_t.open_fan_works_flag++ ;
+		the_first_power_on++;
 
+	}
+
+	if(run_t.gTimer_fan_oneselt_test >9 && run_t.alarm_call==0x02){
+	   Buzzer_KeySound();
+       FAN_Stop();
+	   the_first_power_on =0;
+
+	}
 	}
 
     }

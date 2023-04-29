@@ -55,7 +55,7 @@ void SetPowerOff_ForDoing(void)
 	PTC_SetLow();
 	if(run_t.open_fan_works_flag !=1){ //input ac power be detect fan default 
 		FAN_Stop();
-		run_t.gFan_continueRun=0;
+		
 	}
 
 }

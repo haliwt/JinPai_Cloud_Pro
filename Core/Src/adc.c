@@ -33,6 +33,7 @@
 
 static  uint16_t Get_Adc_Average(uint32_t ch,uint8_t times);
 static uint16_t Get_Adc_Channel(uint32_t ch)  ;
+ uint8_t detect_error_times=0;
 
 
 
@@ -223,12 +224,12 @@ static uint16_t Get_Adc_Average(uint32_t ch,uint8_t times)
 void Get_PTC_Temperature_Voltage(uint32_t channel,uint8_t times)
 {
     static uint8_t first;
-	//run_t.ADC_channel_No = ADC_CHANNEL_1;
+	
 	adcx = Get_Adc_Average(channel,times);
 
     run_t.ptc_temp_voltage  =(uint16_t)((adcx * 3300)/4096); //amplification 100 ,3.11V -> 311
 
-	if(first < 3){ //power on the voltage is small 
+	if(first < 1){ //power on the voltage is small 
          first ++ ;
          run_t.ptc_temp_voltage = 500;
     }
@@ -283,11 +284,14 @@ void Judge_PTC_Temperature_Value(void)
 void Get_Fan_Adc_Fun(uint32_t channel,uint8_t times)
 {
 	uint16_t adc_fan_hex;
-	static uint8_t detect_error_times=0;
+	
+	run_t.fan_set_level = 4;
+	SetLevel_Fan_PWMA(100);
 
 	adc_fan_hex = Get_Adc_Average(channel,times);
 
     run_t.fan_detect_voltage  =(uint16_t)((adc_fan_hex * 3300)/4096); //amplification 1000 ,3.111V -> 3111
+	HAL_Delay(20);
 
 	if(run_t.fan_detect_voltage >800 &&  run_t.fan_detect_voltage < 1400){
            detect_error_times=0;
@@ -299,7 +303,7 @@ void Get_Fan_Adc_Fun(uint32_t channel,uint8_t times)
 	else{
 
 	          
-			   if(detect_error_times >1){
+			   if(detect_error_times >0){
 			   	detect_error_times=0;
 				   run_t.alarm_call = 0x02 ;  //fan is error
 				   Publish_Reference_Update_State();
