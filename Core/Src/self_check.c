@@ -51,15 +51,18 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 	  //  run_t.first_power_on_flag++ ;
         HAL_Delay(200);
 		Publish_Data_ProdKey();	
-		HAL_Delay(300);
+		HAL_Delay(200);
 	   
 		 
 	  }
-	  run_t.theFirst_input_power_flag=1;
+	//  run_t.theFirst_input_power_flag=1;
       run_t.first_power_on_flag++;
+	  run_t.open_fan_works_flag=1;
      }
 
     if(run_t.first_power_on_flag==1){
+
+	
         
      switch(run_t.recoder_wifi_link_cloud_flag){
 
@@ -70,18 +73,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 		wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
 	     SendWifiData_To_Cmd(0x01) ;
 
-		if(run_t.gPower_On == POWER_OFF){
-			run_t.first_power_on_flag= 0x0A;
-			run_t.gTimer_fan_oneselt_test=0;
-			 wifi_t.gTimer_wifi_send_cloud_success_times=0;
-			 run_t.gPower_On=POWER_OFF;
-			 run_t.gPower_flag = POWER_OFF;
-			 run_t.RunCommand_Label = POWER_OFF;
-					
-			 esp8266_t.esp8266_config_wifi_net_label=0;
-			   
-
-		}
+		
 
 	 break;
 
@@ -98,13 +90,18 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
            if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS && run_t.first_power_on_flag == 1  ){
 			run_t.first_power_on_flag++ ;
 			run_t.wifi_link_JPai_cloud = 1;
-			if(the_first_power_on==1)
-			Buzzer_KeySound();
+			//Buzzer_KeySound();
 			SendWifiData_To_Cmd(0x01) ;
            }
 
 		
-		 if(run_t.gPower_On == POWER_OFF){
+		
+    
+	 break;
+    }
+
+	  if(run_t.gPower_On == POWER_OFF){
+	    
 			 run_t.first_power_on_flag= 0x0A;
              run_t.gTimer_fan_oneselt_test=0;
 			wifi_t.gTimer_wifi_send_cloud_success_times=0;
@@ -114,17 +111,15 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 
 			esp8266_t.esp8266_config_wifi_net_label=0;
 			run_t.theFirst_input_power_flag =1;
+		     Buzzer_KeySound();
 
 		 }
 		  if(the_first_power_on==0)run_t.open_fan_works_flag=1;
           run_t.gTimer_ptc_adc_times=0;
-    
-	 break;
-    }
 
    } 
-  
-  
+}
+ #if 0
   if(the_first_power_on ==0 &&  run_t.first_power_on_flag== 0x0A){
 
 	run_t.open_fan_works_flag=1;
@@ -159,7 +154,8 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 	}
 
     }
-}
+  #endif 
+
 /**************************************************************
 	*
 	*Function Name:static void Self_Checking_Function(void)

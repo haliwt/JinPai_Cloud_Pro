@@ -157,7 +157,7 @@ void Decode_RunCmd(void)
 static void Single_Power_ReceiveCmd(uint8_t cmd)
 {
   
-  
+  static uint8_t  first_power_on_buzzer=0;
     switch(cmd){
 
     case 0x00: //power off
@@ -180,6 +180,12 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
          if(wifi_t.wifi_open_power_on_flag == 0){
          	Buzzer_KeySound();
          }
+		 if(first_power_on_buzzer ==0){
+		    first_power_on_buzzer ++;
+
+		     Buzzer_KeySound();
+
+		 }
 		
          //run_t.gPower_flag = POWER_ON;
 		// run_t.gPower_On = POWER_ON;
@@ -350,7 +356,7 @@ void SystemReset(void)
 void RunCommand_MainBoard_Fun(void)
 {
 
-   static uint8_t power_just_on,power_off_fan_flag;
+   static uint8_t power_just_on,power_off_fan_flag,wifi_set_power_off=0;
     
     if(run_t.buzzer_sound_flag == 1){
 	 	run_t.buzzer_sound_flag = 0;
@@ -363,6 +369,7 @@ void RunCommand_MainBoard_Fun(void)
 	case POWER_ON: //1
 	    SetPowerOn_ForDoing();
 
+        wifi_set_power_off=0;
 		run_t.gPower_flag = POWER_ON;
 		run_t.gPower_On = POWER_ON;
 		esp8266_t.esp8266_config_wifi_net_label=0;
@@ -400,38 +407,52 @@ void RunCommand_MainBoard_Fun(void)
 	break;
 
     case POWER_OFF: //2
-		SetPowerOff_ForDoing();
-  
-        if(power_off_fan_flag==0){
-            power_off_fan_flag++;
-            run_t.gFan_counter =0;
-		    run_t.gFan_continueRun =1;
     
-		}
+		SetPowerOff_ForDoing();
+
+	     if(power_off_fan_flag==0){
+		 	power_off_fan_flag++;
+            run_t.fan_set_level=5;
+     
+           run_t.gFan_counter =0;
+		   run_t.gFan_continueRun =1;
+    
+	     }
 	   run_t.gPower_flag =POWER_OFF;
 	
 
-	   if(run_t.theFirst_input_power_flag ==1){ //input DC the first 
+	   if(run_t.theFirst_input_power_flag < 8){ //input DC the first 
 	   	run_t.theFirst_input_power_flag ++;
 		run_t.gFan_continueRun =0;
 
-	    Update_DHT11_Value(); //to message display 
-		HAL_Delay(20);
+	  
+		    Update_DHT11_Value(); //to message display 
+		    HAL_Delay(10);
 
-	   if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS && run_t.recoder_wifi_link_cloud_flag==0  ){ 
+	   if(run_t.gDht11_humidity==0)
+	          run_t.gDht11_humidity=50;
+		if(run_t.gDht11_temperature==0)	run_t.gDht11_temperature=25;
+		
+
+	  // if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS && run_t.recoder_wifi_link_cloud_flag==0  ){ 
 	  	wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;
 		 run_t.recoder_wifi_link_cloud_flag = 1; //recoder has been linked cloud flag
 	  
         Publish_Power_OFF_State();
-		HAL_Delay(300);
-		SendWifiCmd_To_Order(WIFI_POWER_OFF); 
-		HAL_Delay(100);
-        
-	   	}  
+		HAL_Delay(200);
+		if(wifi_set_power_off){
+			wifi_set_power_off++;
+			SendWifiCmd_To_Order(WIFI_POWER_OFF); 
+			HAL_Delay(100);
+		}
 
 	   }
+        
+	  
+
+	  
      
-      //	run_t.RunCommand_Label= 0xff;
+     //	run_t.RunCommand_Label= 0xff;
 	 
 	break;
 
@@ -494,7 +515,7 @@ void RunCommand_MainBoard_Fun(void)
 static void Fan_ContinueRun_OneMinute_Fun(void)
 {
 	
-	if(run_t.gFan_continueRun ==1){
+	if(run_t.gFan_continueRun ==1 && run_t.gPower_On ==POWER_OFF){
           
 		if(run_t.gFan_counter < 60){
 
