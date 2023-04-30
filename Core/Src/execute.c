@@ -28,7 +28,7 @@ void SetPowerOn_ForDoing(void)
 		Fan_Run_Fun();
 	    PLASMA_SetHigh(); //
 	    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);//ultrasnoic ON 
-	    PTC_SetHigh();
+	    PTC_SetHigh(); //bug is be detect 2023.04.30
     }
    
 	
