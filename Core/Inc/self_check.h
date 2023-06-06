@@ -2,7 +2,7 @@
 #define __SELF_CHECK_H
 #include "main.h"
 
-void Self_Check_Fain_Init(void);
+
 
 void MainBoard_Self_Inspection_PowerOn_Fun(void);
 

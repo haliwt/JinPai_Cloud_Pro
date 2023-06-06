@@ -3,13 +3,12 @@
 #include "usart.h"
 #include "run.h"
 #include "fan.h"
-#include "esp8266.h"
 #include "interrupt_manager.h"
-#include "wifi_fun.h"
+
 
 #define MAX_BUFFER_SIZE  30
 
-USART_WIFI_T usart_wifi_t;
+
 
 
 uint8_t  inputBuf[5];
@@ -138,7 +137,7 @@ void USART1_Cmd_Error_Handler(UART_HandleTypeDef *huart)
    if(huart->Instance==USART1){
     
 
-	  if(run_t.gTimer_usart_error >260){
+	  if(run_t.gTimer_usart_error >240){
 	  	run_t.gTimer_usart_error=0;
 	      __HAL_UART_GET_FLAG(&huart1,UART_FLAG_ORE);//UART_FLAG_NE
          __HAL_UART_GET_FLAG(&huart1,UART_FLAG_NE); //USART_ISR_FE
@@ -149,7 +148,7 @@ void USART1_Cmd_Error_Handler(UART_HandleTypeDef *huart)
                __HAL_UART_CLEAR_FEFLAG(&huart1);
              error_usart_flag=0;
           
-          temp=USART1->ISR;
+      
           temp = USART1->RDR;
 		 
           

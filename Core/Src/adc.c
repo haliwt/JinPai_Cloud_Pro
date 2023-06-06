@@ -257,17 +257,7 @@ void Judge_PTC_Temperature_Value(void)
         run_t.ptc_too_heat_value =1;
            run_t.alarm_call= 0x04;
    	      
-            
-           Publish_Reference_Update_State();
-		    Buzzer_KeySound();
-		   HAL_Delay(100);
-			HAL_Delay(100);
-			Buzzer_KeySound();
-			HAL_Delay(100);
-			 Buzzer_KeySound();
-            HAL_Delay(100);
-            Buzzer_KeySound();
-				
+          
 			
    	}
 }
@@ -296,7 +286,7 @@ void Get_Fan_Adc_Fun(uint32_t channel,uint8_t times)
 	if(run_t.fan_detect_voltage >800 &&  run_t.fan_detect_voltage < 1400){
            detect_error_times=0;
            run_t.alarm_call = 0x00 ;  //fan is run OK
-           Publish_Reference_Update_State();
+
 	       HAL_Delay(200);
 
     }
@@ -306,7 +296,7 @@ void Get_Fan_Adc_Fun(uint32_t channel,uint8_t times)
 			   if(detect_error_times >0){
 			   	detect_error_times=0;
 				   run_t.alarm_call = 0x02 ;  //fan is error
-				   Publish_Reference_Update_State();
+				
 			       HAL_Delay(200);
 			       Buzzer_KeySound();
 			       HAL_Delay(100);

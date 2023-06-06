@@ -25,13 +25,11 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "delay.h"
-#include "esp8266.h"
 #include "cmd_link.h"
 #include "run.h"
-#include "subscribe.h"
-#include "publish.h"
+
 #include "interrupt_manager.h"
-#include "wifi_fun.h"
+
 #include "buzzer.h"
 #include "dht11.h" 
 #include "execute.h"
@@ -115,7 +113,7 @@ int main(void)
   //HAL_UART_Receive_IT(&huart2,usart_wifi_t.usart_wifi_data,1);
   //UART_Start_Receive_IT(&huart2,usart_wifi_t.usart_wifi,sizeof(usart_wifi_t.usart_wifi)/sizeof(usart_wifi_t.usart_wifi[0]));
   __HAL_UART_ENABLE_IT(&huart2,UART_IT_RXNE);
- 
+   printf("Initialize is over\n");
 
   /* USER CODE END 2 */
   
@@ -126,17 +124,12 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    MainBoard_Self_Inspection_PowerOn_Fun();
+  
 	
 	Decode_Function();
-    
+    RunCommand_MainBoard_Fun();
 	
-    RunWifi_Command_Handler(esp8266_t.esp8266_config_wifi_net_label);
-
-	RunCommand_MainBoard_Fun();
-	
-
-	USART1_Cmd_Error_Handler(&huart1);
+   USART1_Cmd_Error_Handler(&huart1);
 	
   }
   /* USER CODE END 3 */

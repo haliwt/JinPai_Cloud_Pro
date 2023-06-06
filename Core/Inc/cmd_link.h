@@ -26,30 +26,9 @@ typedef struct _usart_cmd_t {
 
 }USART_CMD_T;
 
-extern USART_CMD_T usart_cmd_t;
-
-typedef struct _usart_wifi_t {
-    
-    uint8_t usart_wifi_frame_len[1];
-
-    uint8_t usart_wifi_sum;
-    uint8_t usart_wifi_counter;
-    uint8_t usart_receive_numbers;
-    uint8_t usart_wifi_receive_success_flag;
-	uint8_t usart_wifi_start_receive_flag;
-    uint8_t usart_wifi_receive_read_data_flag;
-   
-    uint8_t usart_wifi_data[1];
-	uint8_t usart_wifi[USART_WIFI_NUMBERS];
-    
 
 
-}USART_WIFI_T;
 
-extern USART_WIFI_T usart_wifi_t;
-
-
-extern uint8_t rx_wifi_data[7];
 
 extern uint8_t inputBuf[5];
 

@@ -61,7 +61,7 @@ extern TIM_HandleTypeDef htim14;
 extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;
 /* USER CODE BEGIN EV */
-
+uint8_t usart_data[1];
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -184,8 +184,8 @@ void USART2_IRQHandler(void)
   /* USER CODE BEGIN USART2_IRQn 1 */
       if(USART2->ISR & UART_FLAG_RXFNE){
 
-	  usart_wifi_t.usart_wifi_data[0] = USART2 ->RDR;
-      USART2_WIFI_Receive_Interrupt_Data();
+	  usart_data[0] = USART2 ->RDR;
+      USART2_Receive_Interrupt_Data();
 		  
 	}
   /* USER CODE END USART2_IRQn 1 */
