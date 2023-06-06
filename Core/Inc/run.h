@@ -120,7 +120,7 @@ typedef struct _RUN_T{
 	  uint8_t  gUltrasonic;
 	  uint8_t  gTimer;
       uint8_t  gTemperature ;
-	  uint8_t  gFanSpeed;
+
 	  uint8_t  gHumidity;
 	//fault 
 	  uint8_t  alarm_call;
