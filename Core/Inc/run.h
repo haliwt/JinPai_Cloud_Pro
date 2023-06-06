@@ -107,6 +107,7 @@ typedef struct _RUN_T{
 	uint8_t self_check_fan_power_on;
 	uint8_t fan_set_level;
 	uint8_t open_fan_works_flag;
+	uint8_t gFanSpeed;
 	
 
 	//adc 
