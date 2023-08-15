@@ -23,8 +23,8 @@ static void Fan_ContinueRun_OneMinute_Fun(void);
 
 
 uint8_t no_buzzer_sound_dry_off;
-uint16_t receive_form_display_power_flag;
-uint16_t receive_form_display_power_off_flag;
+uint16_t receive_from_display_power_flag;
+uint16_t receive_from_display_power_off_flag;
 
 
 
@@ -168,12 +168,12 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 
 
     case 0x01: // power on
-         receive_form_display_power_flag++;
+         receive_from_display_power_flag++;
          SendWifiData_To_Cmd(0x54); //0x54= 'R',receive order from display power on command copy a command 
          
-         if(receive_form_display_power_flag !=buzzer_power_on_sound && first_power_off_flag !=1 ){ 
+         if(receive_from_display_power_flag !=buzzer_power_on_sound && first_power_off_flag !=1 ){ 
             first_power_off_flag++;
-            buzzer_power_on_sound = receive_form_display_power_flag ;
+            buzzer_power_on_sound = receive_from_display_power_flag ;
          	Buzzer_KeySound();
          }
          SendWifiData_To_Cmd(0x54);
@@ -187,13 +187,13 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
      break;
 
     case 0x00: //power off
-        receive_form_display_power_off_flag++;
+        receive_from_display_power_off_flag++;
 
         SendWifiData_To_Cmd(0x53); //0x53= 'R' power off copy command from display power off
         if(first_power_off_flag==1)first_power_off_flag++;
 
-        if(receive_form_display_power_off_flag !=buzzer_power_Off_sound){
-            buzzer_power_Off_sound= receive_form_display_power_off_flag;
+        if(receive_from_display_power_off_flag !=buzzer_power_Off_sound){
+            buzzer_power_Off_sound= receive_from_display_power_off_flag;
             Buzzer_KeySound();
         }
         SendWifiData_To_Cmd(0x53); //0x53= 'R' power off copy command from display power off
