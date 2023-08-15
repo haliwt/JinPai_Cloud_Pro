@@ -23,6 +23,8 @@ static void Fan_ContinueRun_OneMinute_Fun(void);
 
 
 uint8_t no_buzzer_sound_dry_off;
+uint16_t receive_form_display_power_flag;
+uint16_t receive_form_display_power_off_flag;
 
 
 
@@ -37,7 +39,7 @@ uint8_t no_buzzer_sound_dry_off;
 void Decode_RunCmd(void)
 {
   uint16_t count_total_times;
-//  uint8_t count_rem_times_one,count_rem_times_two;
+  static uint8_t wifi_looking_for;
   uint8_t cmdType_1=inputCmd[0],cmdType_2 = inputCmd[1];
 
     
@@ -54,8 +56,10 @@ void Decode_RunCmd(void)
 	      if(run_t.gPower_flag==POWER_ON){
 	      if(cmdType_2==1){//long press key that power key
               //fast blink led for link to tencent cloud
+              SendWifiData_To_Cmd(0x52); //0x52= 'R' -> looking for wifi netware
               WIFI_IC_ENABLE();
-			  Buzzer_KeySound();	
+			  Buzzer_KeySound();
+              SendWifiData_To_Cmd(0x52); //0x52= 'R' -> looking for wifi netware
 			   wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_FAIL;
 		       esp8266_t.esp8266_config_wifi_net_label=wifi_start_link_net;
 	           wifi_t.gTimer_5s=0;
@@ -157,18 +161,49 @@ void Decode_RunCmd(void)
 static void Single_Power_ReceiveCmd(uint8_t cmd)
 {
   
-  static uint8_t  first_power_on_buzzer=0;
+ 
+  static uint8_t buzzer_power_on_sound,buzzer_power_Off_sound;
+  static uint16_t first_power_off_flag;
     switch(cmd){
 
+
+    case 0x01: // power on
+         receive_form_display_power_flag++;
+         SendWifiData_To_Cmd(0x54); //0x54= 'R',receive order from display power on command copy a command 
+         
+         if(receive_form_display_power_flag !=buzzer_power_on_sound && first_power_off_flag !=1 ){ 
+            first_power_off_flag++;
+            buzzer_power_on_sound = receive_form_display_power_flag ;
+         	Buzzer_KeySound();
+         }
+         SendWifiData_To_Cmd(0x54);
+	
+		
+         run_t.RunCommand_Label= POWER_ON;
+		 esp8266_t.esp8266_config_wifi_net_label=0;
+
+		 
+	 cmd=0xff;  
+     break;
+
     case 0x00: //power off
-        Buzzer_KeySound();
+        receive_form_display_power_off_flag++;
+
+        SendWifiData_To_Cmd(0x53); //0x53= 'R' power off copy command from display power off
+        if(first_power_off_flag==1)first_power_off_flag++;
+
+        if(receive_form_display_power_off_flag !=buzzer_power_Off_sound){
+            buzzer_power_Off_sound= receive_form_display_power_off_flag;
+            Buzzer_KeySound();
+        }
+        SendWifiData_To_Cmd(0x53); //0x53= 'R' power off copy command from display power off
 	    wifi_t.gTimer_wifi_send_cloud_success_times=0;
     
         run_t.RunCommand_Label = POWER_OFF;
 
         wifi_t.wifi_open_power_on_flag =0;
-	    Publish_Power_OFF_State();
-	    HAL_Delay(300);
+	  //  Publish_Power_OFF_State();
+	  //  HAL_Delay(300);
 		
 
  
@@ -176,25 +211,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
     cmd = 0xff;
     break;
 
-    case 0x01: // power on
-         if(wifi_t.wifi_open_power_on_flag == 0){
-         	Buzzer_KeySound();
-         }
-		 if(first_power_on_buzzer ==0){
-		    first_power_on_buzzer ++;
-
-		     Buzzer_KeySound();
-
-		 }
-		
-         //run_t.gPower_flag = POWER_ON;
-		// run_t.gPower_On = POWER_ON;
-         run_t.RunCommand_Label= POWER_ON;
-		 esp8266_t.esp8266_config_wifi_net_label=0;
-
-		 
-	 cmd=0xff;  
-     break;
+   
 
     
 
@@ -407,6 +424,9 @@ void RunCommand_MainBoard_Fun(void)
 	break;
 
     case POWER_OFF: //2
+
+        Publish_Power_OFF_State();
+	    HAL_Delay(200);
     
 		SetPowerOff_ForDoing();
 
@@ -436,10 +456,10 @@ void RunCommand_MainBoard_Fun(void)
 
 	  // if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS && run_t.recoder_wifi_link_cloud_flag==0  ){ 
 	  	wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;
-		 run_t.recoder_wifi_link_cloud_flag = 1; //recoder has been linked cloud flag
+		run_t.recoder_wifi_link_cloud_flag = 1; //recoder has been linked cloud flag
 	  
-        Publish_Power_OFF_State();
-		HAL_Delay(200);
+      //  Publish_Power_OFF_State();
+	  //HAL_Delay(200);
 		if(wifi_set_power_off){
 			wifi_set_power_off++;
 			SendWifiCmd_To_Order(WIFI_POWER_OFF); 
