@@ -70,6 +70,7 @@ void RunWifi_Command_Handler(uint8_t command)
 		  
           }
 
+          run_t.display_cmd_link_wifi =0; //WT.edit 2023.08.16
 
         break;
 
@@ -93,6 +94,7 @@ void RunWifi_Command_Handler(uint8_t command)
 			   run_t.gTimer_send_cloud_state=0;
 
 		  }
+          run_t.display_cmd_link_wifi =0; //WT.edit 2023.08.16
 
 		break;
 
@@ -149,7 +151,7 @@ void RunWifi_Command_Handler(uint8_t command)
                 HAL_Delay(300);
 
 			}
-		
+		     run_t.display_cmd_link_wifi =0; //WT.edit 2023.08.16
 		break;
         
         default:

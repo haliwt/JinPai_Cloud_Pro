@@ -16,7 +16,7 @@
 
 RUN_T run_t; 
 
-static void Single_Power_ReceiveCmd(uint8_t cmd);
+static void Display_Command_ReceiveData(uint8_t cmd);
 static void Single_Command_ReceiveCmd(uint8_t cmd); 
 static void Fan_ContinueRun_OneMinute_Fun(void);
 
@@ -24,7 +24,7 @@ static void Fan_ContinueRun_OneMinute_Fun(void);
 
 uint8_t no_buzzer_sound_dry_off;
 uint16_t receive_from_display_power_flag;
-uint16_t receive_from_display_power_off_flag;
+uint8_t receive_from_display_power_off_flag;
 
 
 
@@ -46,8 +46,8 @@ void Decode_RunCmd(void)
   switch(cmdType_1){
   
       case 'P': //power on and off
-        
-      	Single_Power_ReceiveCmd(cmdType_2);  
+        run_t.display_cmd_link_wifi =0; //WT.edit 2023.08.16
+      	Display_Command_ReceiveData(cmdType_2);  
            
       break;
       
@@ -57,8 +57,12 @@ void Decode_RunCmd(void)
 	      if(cmdType_2==1){//long press key that power key
               //fast blink led for link to tencent cloud
               SendWifiData_To_Cmd(0x52); //0x52= 'R' -> looking for wifi netware
+             
               WIFI_IC_ENABLE();
-			  Buzzer_KeySound();
+              if(run_t.display_cmd_link_wifi ==0){
+                run_t.display_cmd_link_wifi++;
+			    Buzzer_KeySound();
+              }
               SendWifiData_To_Cmd(0x52); //0x52= 'R' -> looking for wifi netware
 			   wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_FAIL;
 		       esp8266_t.esp8266_config_wifi_net_label=wifi_start_link_net;
@@ -70,8 +74,10 @@ void Decode_RunCmd(void)
 	   break;
         
       case 'C':
+           run_t.display_cmd_link_wifi =0; //WT.edit 2023.08.16
            if(run_t.gPower_flag==POWER_ON){
-              Single_Command_ReceiveCmd(cmdType_2); //Single_ReceiveCmd(cmdType_2); 
+            
+             Single_Command_ReceiveCmd(cmdType_2); //Single_ReceiveCmd(cmdType_2); 
               
            }
      
@@ -79,6 +85,7 @@ void Decode_RunCmd(void)
       break;
 
 	  case 'M': //set up temperature value
+	     
 	  	if(run_t.gPower_flag==POWER_ON){
               
              run_t.set_temperature_value = cmdType_2;
@@ -92,6 +99,7 @@ void Decode_RunCmd(void)
 	  break;
 
 	  case 'T': //set up tiemr timing
+	   
 		  if(run_t.gPower_flag==POWER_ON){
            
 			if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
@@ -158,7 +166,7 @@ void Decode_RunCmd(void)
 	*Return Ref: NO
 	*
 **********************************************************************/
-static void Single_Power_ReceiveCmd(uint8_t cmd)
+static void Display_Command_ReceiveData(uint8_t cmd)
 {
   
  
@@ -169,6 +177,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
 
     case 0x01: // power on
          receive_from_display_power_flag++;
+         receive_from_display_power_off_flag++;
          SendWifiData_To_Cmd(0x54); //0x54= 'R',receive order from display power on command copy a command 
          
          if(receive_from_display_power_flag !=buzzer_power_on_sound && first_power_off_flag !=1 ){ 
@@ -187,7 +196,7 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
      break;
 
     case 0x00: //power off
-        receive_from_display_power_off_flag++;
+
 
         SendWifiData_To_Cmd(0x53); //0x53= 'R' power off copy command from display power off
         if(first_power_off_flag==1)first_power_off_flag++;
@@ -384,6 +393,9 @@ void RunCommand_MainBoard_Fun(void)
    switch(run_t.RunCommand_Label){
 
 	case POWER_ON: //1
+	    run_t.run_off_process_step=0;
+	    if(run_t.run_process_step ==0){
+        run_t.run_process_step ++;  
 	    SetPowerOn_ForDoing();
 
         wifi_set_power_off=0;
@@ -395,40 +407,65 @@ void RunCommand_MainBoard_Fun(void)
         run_t.gTimer_10s=0;
 	
 		Update_DHT11_Value(); //to message display 
-		HAL_Delay(20);
+		HAL_Delay(2);//HAL_Delay(20);
+
+        }
 		
 
 		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 			run_t.recoder_wifi_link_cloud_flag = 1;
-			wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS; 
+			wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;
+        
 	 	    SendWifiData_To_Cmd(0x01) ;
-			HAL_Delay(100);  	
+			HAL_Delay(2);//HAL_Delay(100);  	
 			esp8266_t.esp8266_config_wifi_net_label=wifi_publish_update_data;
-			if(run_t.app_appointment_time_power_on == POWER_ON){
-			
+			if(run_t.app_appointment_time_power_on == POWER_ON && run_t.run_process_step ==1){
+			    run_t.run_process_step ++;
 			   Publish_Reference_Update_State();
+               run_t.gTimer_run_process_times=0;
 			}
-			else{
-
+			else if(run_t.run_process_step ==1){
+                run_t.run_process_step ++;
 			    Publish_Power_ON_State();
+                run_t.gTimer_run_process_times=0;
 
 			   
 			}
-		    HAL_Delay(300);
+            if(run_t.gTimer_run_process_times > 0 &&  run_t.run_process_step ==2){
+		   // HAL_Delay(300);
+		         SendWifiCmd_To_Order(WIFI_POWER_ON); //display pannel power on 
+    		    run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
 			
-			
+             }
 		}
-        SendWifiCmd_To_Order(WIFI_POWER_ON); //display pannel power on 
-		run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
+        else{
+            SendWifiCmd_To_Order(WIFI_POWER_ON); //display pannel power on 
+    		run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
+
+       }
 
 	break;
 
     case POWER_OFF: //2
 
-        Publish_Power_OFF_State();
-	    HAL_Delay(200);
+        if(run_t.run_off_process_step ==0){
+           run_t.run_off_process_step++;
+            Publish_Power_OFF_State();
+           run_t.gTimer_run_process_times=0;
+	    }
+
+        if(run_t.gTimer_run_process_times>0 && run_t.run_off_process_step==1 ){
+
+           run_t.run_off_process_step++;
+
+           SetPowerOff_ForDoing();
+
+          run_t.gTimer_run_process_times=0;
+
+
+        }
     
-		SetPowerOff_ForDoing();
+		
 
 	     if(power_off_fan_flag==0){
 		 	power_off_fan_flag++;
@@ -439,6 +476,7 @@ void RunCommand_MainBoard_Fun(void)
     
 	     }
 	   run_t.gPower_flag =POWER_OFF;
+        run_t.run_process_step=0;
 	
 
 	   if(run_t.theFirst_input_power_flag < 8){ //input DC the first 
@@ -468,10 +506,7 @@ void RunCommand_MainBoard_Fun(void)
 
 	   }
         
-	  
-
-	  
-     
+	    
      //	run_t.RunCommand_Label= 0xff;
 	 
 	break;
@@ -493,7 +528,7 @@ void RunCommand_MainBoard_Fun(void)
 		run_t.app_appointment_time_power_on ++;
         SendWifiData_To_PanelTime(run_t.set_timer_timing_value);
   
-        HAL_Delay(10);
+        HAL_Delay(2);
         sendData_Reference_Data(run_t.gDry,run_t.gPlasma,run_t.gUltrasonic);
 	    
 

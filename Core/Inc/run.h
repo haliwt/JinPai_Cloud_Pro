@@ -79,8 +79,13 @@ typedef struct _RUN_T{
 	uint8_t buzzer_sound_flag ;
   
     uint8_t decodeFlag;
+    //run step
+    uint8_t run_process_step ;
+    uint8_t gTimer_run_process_times;
+    uint8_t run_off_process_step;
 
- 
+    //display command 
+    uint8_t display_cmd_link_wifi;
  
 
     //flash 

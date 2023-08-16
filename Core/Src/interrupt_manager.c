@@ -89,7 +89,7 @@ void USART2_WIFI_Receive_Data(void)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 
-    static uint8_t tm0,tm1,tm2 ;
+    static uint8_t tm0,tm1;
     if(htim->Instance==TIM14){
 		
 	   tm0 ++ ;
@@ -97,7 +97,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	 if(tm0 > 99){//100ms *10 = 1000ms =1s
         tm0 =0;
 		tm1 ++ ;
-	    tm2++;
+	
 		run_t.gFan_counter++;
 
         run_t.gTimer_1s ++;
@@ -116,6 +116,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	   run_t.gTimer_iwdg++;
 	   run_t.gTimer_usart_error++;
 	   run_t.gTimer_fan_oneselt_test++;
+        run_t.gTimer_run_process_times++ ;
 		
 	  if(tm1 >59){ //minutes
 	  	tm1=0;
@@ -123,12 +124,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         run_t.gTimer_fan_adc_times++ ;
 	  }
 
-	  if(tm2 > 46){ //46s 
-		tm2=0;
 
-
-	  }
-	  
 	   
 	 
 	}
