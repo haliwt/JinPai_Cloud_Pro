@@ -18,7 +18,7 @@ void SetPowerOn_ForDoing(void)
     run_t.gPower_On=POWER_ON;
 	run_t.open_fan_works_flag++;
     
-    if(run_t.app_appointment_time_power_on != POWER_ON){
+    if(run_t.app_appointment_time_power_on != WIFI_TIMER_POWER_ON ){
 	    run_t.gFan = 1;
 		run_t.gDry = 1;
 		run_t.gPlasma =1;       //"杀菌"

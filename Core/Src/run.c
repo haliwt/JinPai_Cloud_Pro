@@ -419,12 +419,10 @@ void RunCommand_MainBoard_Fun(void)
 	 	    SendWifiData_To_Cmd(0x01) ;
 			HAL_Delay(2);//HAL_Delay(100);  	
 			esp8266_t.esp8266_config_wifi_net_label=wifi_publish_update_data;
-			if(run_t.app_appointment_time_power_on == POWER_ON && run_t.run_process_step ==1){
+			if(run_t.app_appointment_time_power_on == WIFI_NORMAL_POWER_ON  && run_t.run_process_step ==1){
 			    run_t.run_process_step ++;
                //
-               SendWifiData_To_PanelTime(run_t.set_timer_timing_value);//WT.EDIT .2023-08-19
-               
-			   Publish_Reference_Update_State();
+              Publish_Reference_Update_State();
                run_t.gTimer_run_process_times=0;
 			}
 			else if(run_t.run_process_step ==1){
@@ -454,6 +452,7 @@ void RunCommand_MainBoard_Fun(void)
         if(run_t.run_off_process_step ==0){
            run_t.run_off_process_step++;
             Publish_Power_OFF_State();
+            HAL_Delay(200);
            run_t.gTimer_run_process_times=0;
 	    }
 
@@ -480,6 +479,8 @@ void RunCommand_MainBoard_Fun(void)
 	     }
 	   run_t.gPower_flag =POWER_OFF;
         run_t.run_process_step=0;
+        run_t.set_timer_timing_value=0;
+        run_t.app_appointment_time_power_on = POWER_OFF_NULL;
 	
 
 	   if(run_t.theFirst_input_power_flag < 8){ //input DC the first 
@@ -487,8 +488,8 @@ void RunCommand_MainBoard_Fun(void)
 		run_t.gFan_continueRun =0;
 
 	  
-		    Update_DHT11_Value(); //to message display 
-		    HAL_Delay(10);
+//		    Update_DHT11_Value(); //to message display 
+//		    HAL_Delay(5);
 
 	   if(run_t.gDht11_humidity==0)
 	          run_t.gDht11_humidity=50;
@@ -504,7 +505,7 @@ void RunCommand_MainBoard_Fun(void)
 		if(wifi_set_power_off){
 			wifi_set_power_off++;
 			SendWifiCmd_To_Order(WIFI_POWER_OFF); 
-			HAL_Delay(100);
+			HAL_Delay(5);
 		}
 
 	   }
@@ -524,15 +525,17 @@ void RunCommand_MainBoard_Fun(void)
     	power_just_on ++ ;
 		run_t.gTimer_10s=0;
 		Update_DHT11_Value();
-
+        HAL_Delay(5);
      }
 
-	if(run_t.app_appointment_time_power_on == POWER_ON){
-		run_t.app_appointment_time_power_on ++;
-        SendWifiData_To_PanelTime(run_t.set_timer_timing_value);
+	if(run_t.app_appointment_time_power_on == WIFI_TIMER_POWER_ON){
+		run_t.app_appointment_time_power_on =POWER_NULL;
+        
+       // SendWifiData_To_PanelTime(run_t.set_timer_timing_value);
   
-        HAL_Delay(2);
+       
         sendData_Reference_Data(run_t.gDry,run_t.gPlasma,run_t.gUltrasonic);
+        HAL_Delay(5);
 	    
 
 	}
@@ -564,6 +567,7 @@ void RunCommand_MainBoard_Fun(void)
 	 	    run_t.wifi_link_JPai_cloud++;
 			//SendWifiCmd_To_Order(WIFI_POWER_ON);
 	 	    SendWifiData_To_Cmd(0x01) ;
+            HAL_Delay(5);
 	 }
 	 
 		
