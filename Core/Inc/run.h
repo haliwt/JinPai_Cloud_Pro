@@ -31,7 +31,6 @@ typedef enum{
    WIFI_RESTART_INIT,
    WIFI_NORMAL_POWER_ON,
    WIFI_TIMER_POWER_ON,
-   POWER_NULL,
    POWER_OFF_NULL
 
    
@@ -143,7 +142,6 @@ typedef struct _RUN_T{
 
 	//wifi 
 	uint8_t recoder_wifi_link_cloud_flag;
-  
 
 	  
 	  uint8_t  set_temperature_value;
