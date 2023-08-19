@@ -119,42 +119,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 
    } 
 }
- #if 0
-  if(the_first_power_on ==0 &&  run_t.first_power_on_flag== 0x0A){
-
-	run_t.open_fan_works_flag=1;
-	run_t.theFirst_input_power_flag =1;
-	if(fan_error_flag ==0){
-	// SendWifiCmd_To_Order(WIFI_POWER_ON);
-	run_t.fan_set_level = 3;
-	SetLevel_Fan_PWMA(100);
-
-	if(run_t.gTimer_fan_oneselt_test > 4){
-		Self_CheckFan_Handler(ADC_CHANNEL_0,30);
-
-
-	}
-
-	if(run_t.gTimer_fan_oneselt_test >9 && run_t.alarm_call==0){
-		Buzzer_KeySound();
-
-		run_t.gFan_continueRun =0;
-		FAN_Stop();
-		run_t.open_fan_works_flag++ ;
-		the_first_power_on++;
-
-	}
-
-	if(run_t.gTimer_fan_oneselt_test >9 && run_t.alarm_call==0x02){
-	   Buzzer_KeySound();
-       FAN_Stop();
-	   the_first_power_on =0;
-
-	}
-	}
-
-    }
-  #endif 
+ 
 
 /**************************************************************
 	*

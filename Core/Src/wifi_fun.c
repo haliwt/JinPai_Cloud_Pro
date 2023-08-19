@@ -232,13 +232,13 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 			  wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;
 			  run_t.wifi_link_JPai_cloud = 1;
 			   SendWifiData_To_Cmd(0x01) ;
-			   HAL_Delay(100);
+			   HAL_Delay(2);//HAL_Delay(100);
 
             }
 			else{
 			    wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_FAIL;
 			    SendWifiData_To_Cmd(0x00) ;
-			    HAL_Delay(100);
+			    HAL_Delay(2);//HAL_Delay(100);
 
 
 
@@ -250,11 +250,12 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
         wifi_t.BJ_time_minutes =   wifi_t.usart_wifi_pass_state;
         wifi_t.BJ_time_seconds  =  wifi_t.usart_wifi_seconds_value;
 		    SendData_Real_GMT(wifi_t.BJ_time_hours,wifi_t.BJ_time_minutes, wifi_t.BJ_time_seconds );
+            HAL_Delay(2);
 		  }
       wifi_t.wifi_receive_data_error = 0;
    break;
    
-   case 0x02: //device answering from wifi model from command 
+   case 0x02: //frame typedef //device answering from wifi model from command 
          switch(len){
 
             case 0x06:
@@ -396,7 +397,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 						Publish_Reference_Update_State();
 						HAL_Delay(300);
 						SendWifiData_To_PanelTime(run_t.set_timer_timing_value);
-						 HAL_Delay(100);
+						HAL_Delay(2); //HAL_Delay(100);
 						
                     break;
 
@@ -408,7 +409,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
               
             break;
 
-            case 0x0b: // set order status from
+            case 0x0b:// length = 0x0b // set order status from
 				Publish_Reference_Update_State();
 				
 				run_t.gPower_On = wifi_t.usart_wifi_model;
@@ -430,6 +431,17 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
          
 
          }
+   break;
+
+   case 0x01: //frme typedef //2023-08-19
+       if(len ==0x14){
+
+            
+            run_t.set_timer_timing_value = wifi_t.usart_wifi_seconds_value;
+            SendWifiData_To_PanelTime(run_t.set_timer_timing_value);
+
+       }
+
    break;
 
    case 0xFF:

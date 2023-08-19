@@ -421,6 +421,9 @@ void RunCommand_MainBoard_Fun(void)
 			esp8266_t.esp8266_config_wifi_net_label=wifi_publish_update_data;
 			if(run_t.app_appointment_time_power_on == POWER_ON && run_t.run_process_step ==1){
 			    run_t.run_process_step ++;
+               //
+               SendWifiData_To_PanelTime(run_t.set_timer_timing_value);//WT.EDIT .2023-08-19
+               
 			   Publish_Reference_Update_State();
                run_t.gTimer_run_process_times=0;
 			}

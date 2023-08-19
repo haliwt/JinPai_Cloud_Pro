@@ -74,6 +74,9 @@ void USART2_WIFI_Receive_Data(void)
 		wifi_t.usart_wifi_pass_state =usart_wifi_t.usart_wifi[9];
 
 		wifi_t.usart_wifi_seconds_value = usart_wifi_t.usart_wifi[10];
+
+        
+        
 		
         wifi_t.usart_wifi_sum_codes = usart_wifi_t.usart_wifi[usart_wifi_t.usart_wifi_counter];
 
