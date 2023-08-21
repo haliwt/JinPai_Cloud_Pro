@@ -8,6 +8,7 @@
 #define WIFI_AUTO_EXIT_SMART_CONFIG()				HAL_GPIO_WritePin(WIFI_CONFIG_GPIO_Port,WIFI_CONFIG_Pin,GPIO_PIN_SET)
 
 
+extern uint8_t wifi_app_timer[1];
 typedef enum DISPLAY_STATE_T{
    
     WIFI_POWER_ON = 0x80,

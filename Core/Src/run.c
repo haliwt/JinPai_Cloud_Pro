@@ -212,8 +212,7 @@ static void Display_Command_ReceiveData(uint8_t cmd)
         run_t.RunCommand_Label = POWER_OFF;
 
         wifi_t.wifi_open_power_on_flag =0;
-	  //  Publish_Power_OFF_State();
-	  //  HAL_Delay(300);
+	
 		
 
  
@@ -428,24 +427,28 @@ void RunCommand_MainBoard_Fun(void)
 	 	    SendWifiData_To_Cmd(0x01) ;
 			HAL_Delay(2);//HAL_Delay(100);  	
 			esp8266_t.esp8266_config_wifi_net_label=wifi_publish_update_data;
-			if(run_t.app_appointment_time_power_on == WIFI_NORMAL_POWER_ON){
-               //
+			if(run_t.wifi_normal_power_on == WIFI_NORMAL_POWER_ON){
+              // run_t.set_timer_timing_value =0;
                Publish_Reference_Update_State();
                run_t.gTimer_run_process_times=0;
                run_t.run_process_step =2;
 			}
-            else{
+            else if(run_t.app_appointment_time_power_on == WIFI_TIMER_POWER_ON){
+               run_t.set_timer_timing_value = wifi_app_timer[0];
                 Publish_Reference_Update_State();
                 run_t.gTimer_run_process_times=0;
                 run_t.run_process_step =2;
 
             }
+          
 			
           
 		}
         else{
          
     		run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
+            run_t.set_timer_timing_value =0;
+            SendWifiData_To_PanelTime(run_t.set_timer_timing_value);
 
        }
 
@@ -476,6 +479,8 @@ void RunCommand_MainBoard_Fun(void)
 
      }
 
+  
+
 	if((run_t.app_appointment_time_power_on == WIFI_TIMER_POWER_ON && appointment_powr_onf_flag==0) &&  run_t.gTimer_run_process_times > 0 ){ //
 		appointment_powr_onf_flag++;
   
@@ -494,12 +499,23 @@ void RunCommand_MainBoard_Fun(void)
         
 
        
-        SendWifiData_To_PanelTime(run_t.set_timer_timing_value);
+        SendWifiData_To_PanelTime(wifi_app_timer[0]);
   
         HAL_Delay(5);
       
 
 	}
+
+    if(run_t.wifi_normal_power_on == WIFI_NORMAL_POWER_ON && appointment_powr_onf_flag !=1 &&  run_t.gTimer_run_process_times > 0){
+           run_t.wifi_normal_power_on = WIFI_NULL;
+        
+
+        run_t.set_timer_timing_value =0;
+        SendWifiData_To_PanelTime(run_t.set_timer_timing_value);
+  
+        HAL_Delay(5);
+
+    }
     
 	
 	 if(run_t.gTimer_ptc_adc_times > 2 ){ //3 minutes 120s
@@ -520,6 +536,8 @@ void RunCommand_MainBoard_Fun(void)
         switch(power_off_step){
 
         case 0:
+            run_t.wifi_normal_power_on =0;
+            esp8266_t.esp8266_config_wifi_net_label=0xff;
             run_t.run_process_step=0;
             SendWifiCmd_To_Order(WIFI_POWER_OFF); 
 		    HAL_Delay(5);//HAL_Delay(100);
@@ -574,8 +592,14 @@ void RunCommand_MainBoard_Fun(void)
 	
         wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;
 		run_t.recoder_wifi_link_cloud_flag = 1; //recoder has been linked cloud flag
-	  
-        run_t.RunCommand_Label= 0xff;
+		run_t.set_timer_timing_value=0;
+        if( run_t.gTimer_run_process_times >5){
+           run_t.gTimer_run_process_times=0;
+            run_t.set_timer_timing_value=0;
+           Publish_Power_OFF_State();
+
+       }
+       
 
       break;
       }

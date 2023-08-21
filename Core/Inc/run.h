@@ -158,6 +158,7 @@ typedef struct _RUN_T{
 	  uint8_t wifi_link_JPai_cloud;
 	  uint8_t first_power_on_flag;
 	  uint8_t app_appointment_time_power_on;
+      uint8_t wifi_normal_power_on;
 
 	 
 	  

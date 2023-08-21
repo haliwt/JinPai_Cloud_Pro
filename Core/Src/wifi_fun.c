@@ -22,6 +22,8 @@ uint8_t sum_codes;
 uint8_t (*wifi_run_state_fun)(void);
 uint8_t wifi_receive_data_state_flag;
 uint8_t receive_usart_wifi_data;
+uint8_t wifi_app_timer[1];
+
 //static void Wifi_ReceiveData_Handler(void);
 /*********************************************************
  * 
@@ -291,7 +293,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 					         run_t.RunCommand_Label= POWER_ON;
 							
 							wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
-							run_t.app_appointment_time_power_on = WIFI_NORMAL_POWER_ON;
+							run_t.wifi_normal_power_on = WIFI_NORMAL_POWER_ON;
 							wifi_t.wifi_open_power_on_flag =1;
                             Buzzer_KeySound();
 						    Publish_Power_ON_State();
@@ -419,6 +421,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 				run_t.gDry = wifi_t.usart_wifi_cloud_state;
 				run_t.gPlasma = wifi_t.usart_wifi_signal_state;
 				run_t.set_timer_timing_value = wifi_t.usart_wifi_pass_state;
+                wifi_app_timer[0]=wifi_t.usart_wifi_pass_state;
 			 //   run_t.set_wind_speed_value = wifi_t.usart_wifi_fan_speed_value;
 			    Publish_Reference_Update_State();
 				HAL_Delay(300); 
@@ -431,8 +434,9 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                wifi_t.wifi_open_power_on_flag =1;
                  SendWifiCmd_To_Order(WIFI_POWER_ON_NORMAL);
 				  HAL_Delay(5);
-               //  SendWifiData_To_PanelTime(run_t.set_timer_timing_value);
-               // HAL_Delay(5);
+
+             
+           
 				
 
                 break;
