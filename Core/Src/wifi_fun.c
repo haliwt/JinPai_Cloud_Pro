@@ -199,10 +199,10 @@ void RunWifi_Command_Handler(uint8_t command)
     
 		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS && run_t.gPower_On==POWER_ON && send_times ==0 ){
 			 send_times++;
-			 SendWifiCmd_To_Order(WIFI_POWER_ON);
-			 HAL_Delay(200);
+			// SendWifiCmd_To_Order(WIFI_POWER_ON);
+			// HAL_Delay(200);
 			 SendWifiData_To_Cmd(0x01) ;
-		     HAL_Delay(100);
+		     HAL_Delay(5); //HAL_Delay(100);
 
 
 		}
@@ -432,7 +432,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 				run_t.gPower_On = POWER_ON;
 			   run_t.RunCommand_Label= POWER_ON;
                wifi_t.wifi_open_power_on_flag =1;
-                 SendWifiCmd_To_Order(WIFI_POWER_ON_NORMAL);
+                 SendWifiCmd_To_Order(WIFI_POWER_ON_TIMER);
 				  HAL_Delay(5);
 
              
@@ -457,32 +457,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
          }
    break;
 
-   case 0x01: //frme typedef //2023-08-19
-//       if(len ==0x14){
-//
-//           if(wifi_t.usart_wifi_model  == 1){
-//                run_t.set_timer_timing_value = wifi_t.usart_wifi_seconds_value;
-//             
-//
-//                Publish_Reference_Update_State();
-//				HAL_Delay(300); 
-//		        run_t.gPower_flag = POWER_ON;
-//				run_t.gPower_On = POWER_ON;
-//			   run_t.RunCommand_Label= POWER_ON;
-//               wifi_t.wifi_open_power_on_flag =1;
-//				Buzzer_KeySound();
-//					run_t.app_appointment_time_power_on = WIFI_TIMER_POWER_ON;
-//					run_t.RunCommand_Label = POWER_ON;
-//                 SendWifiCmd_To_Order(WIFI_POWER_ON_NORMAL);
-//				  HAL_Delay(5);
-//
-//               SendWifiData_To_PanelTime(run_t.set_timer_timing_value);
-//                HAL_Delay(5);
-//            }
-//
-//       }
 
-   break;
 
    case 0xFF:
 //   	  Buzzer_KeySound();

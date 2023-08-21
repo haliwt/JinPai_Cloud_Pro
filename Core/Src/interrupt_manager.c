@@ -125,6 +125,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	  	tm1=0;
 	    run_t.gTimer_ptc_adc_times ++; 
         run_t.gTimer_fan_adc_times++ ;
+        run_t.gTimer_minuter_times++;
 	  }
 
 

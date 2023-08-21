@@ -396,8 +396,17 @@ void RunCommand_MainBoard_Fun(void)
 	      power_off_step =0;
         if(wifi_t.wifi_open_power_on_flag ==1){
             wifi_t.wifi_open_power_on_flag =0;
-            SendWifiCmd_To_Order(WIFI_POWER_ON); //display pannel power on 
-            HAL_Delay(5);//HAL_Delay(20);
+
+            if(run_t.wifi_normal_power_on == WIFI_NORMAL_POWER_ON){
+                SendWifiCmd_To_Order(WIFI_POWER_ON_NORMAL); //display pannel power on 
+                HAL_Delay(5);//HAL_Delay(20);
+            }
+            else{
+               SendWifiCmd_To_Order(WIFI_POWER_ON_TIMER); //display pannel power on 
+               HAL_Delay(5);//HAL_Delay(20);
+
+
+            }
             SendWifiData_To_Cmd(0x54);
             HAL_Delay(5);//HAL_Delay(20);
              run_t.gTimer_run_process_times=0;
@@ -428,7 +437,7 @@ void RunCommand_MainBoard_Fun(void)
 			HAL_Delay(2);//HAL_Delay(100);  	
 			esp8266_t.esp8266_config_wifi_net_label=wifi_publish_update_data;
 			if(run_t.wifi_normal_power_on == WIFI_NORMAL_POWER_ON){
-              // run_t.set_timer_timing_value =0;
+               run_t.set_timer_timing_value =0;
                Publish_Reference_Update_State();
                run_t.gTimer_run_process_times=0;
                run_t.run_process_step =2;
@@ -449,6 +458,8 @@ void RunCommand_MainBoard_Fun(void)
     		run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
             run_t.set_timer_timing_value =0;
             SendWifiData_To_PanelTime(run_t.set_timer_timing_value);
+            
+            
 
        }
 
@@ -593,9 +604,9 @@ void RunCommand_MainBoard_Fun(void)
         wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;
 		run_t.recoder_wifi_link_cloud_flag = 1; //recoder has been linked cloud flag
 		run_t.set_timer_timing_value=0;
-        if( run_t.gTimer_run_process_times >5){
-           run_t.gTimer_run_process_times=0;
-            run_t.set_timer_timing_value=0;
+        if(run_t.gTimer_minuter_times >5){
+           run_t.gTimer_minuter_times=0;
+           run_t.set_timer_timing_value=0;
            Publish_Power_OFF_State();
 
        }

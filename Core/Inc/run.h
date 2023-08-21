@@ -84,6 +84,7 @@ typedef struct _RUN_T{
     //run step
     uint8_t run_process_step ;
     uint8_t gTimer_run_process_times;
+    uint8_t gTimer_minuter_times;
   
 
     //display command 
