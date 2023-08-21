@@ -406,7 +406,7 @@ void RunCommand_MainBoard_Fun(void)
 	    if(run_t.run_process_step ==0){
         run_t.run_process_step ++;  
 	    SetPowerOn_ForDoing();
-
+        run_t.gTimer_run_process_times=0;
 		run_t.gPower_flag = POWER_ON;
 		run_t.gPower_On = POWER_ON;
 		esp8266_t.esp8266_config_wifi_net_label=0;
@@ -419,9 +419,10 @@ void RunCommand_MainBoard_Fun(void)
         }
 		
 
-		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
+		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS && run_t.run_process_step==1){
 			run_t.recoder_wifi_link_cloud_flag = 1;
 			wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;
+            run_t.gTimer_run_process_times=0;
         
 	 	    SendWifiData_To_Cmd(0x01) ;
 			HAL_Delay(2);//HAL_Delay(100);  	
@@ -433,8 +434,11 @@ void RunCommand_MainBoard_Fun(void)
                run_t.run_process_step =2;
 			}
             else{
+                Publish_Reference_Update_State();
+                run_t.gTimer_run_process_times=0;
+                run_t.run_process_step =2;
 
-                run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
+                
 
             }
 			
@@ -454,12 +458,68 @@ void RunCommand_MainBoard_Fun(void)
 
 	break;
 
-    case POWER_OFF: //2
+   
+
+	case UPDATE_TO_PANEL_DATA: //3
+     run_t.run_process_step =0;
+     if(run_t.gTimer_senddata_panel >30 && run_t.gPower_On==POWER_ON){ //300ms
+	   	    run_t.gTimer_senddata_panel=0;
+	        ActionEvent_Handler();
+	 }
+
+	if((run_t.gTimer_10s>30 && run_t.gPower_flag == POWER_ON)||power_just_on < 10){
+    	power_just_on ++ ;
+		run_t.gTimer_10s=0;
+		Update_DHT11_Value();
+        HAL_Delay(5);
+
+     }
+
+	if(run_t.app_appointment_time_power_on == WIFI_TIMER_POWER_ON && appointment_powr_onf_flag==0 ){ //
+		appointment_powr_onf_flag++;
+  
+ 
+        sendData_Reference_Data(run_t.gDry,run_t.gPlasma,run_t.gUltrasonic);
+	    HAL_Delay(20);
+      //  Publish_Reference_Update_State();
+        run_t.gTimer_run_process_times =0;
+
+	}
+
+    if(run_t.app_appointment_time_power_on == WIFI_TIMER_POWER_ON &&  run_t.gTimer_run_process_times > 0){ //
+	
+     
+        run_t.app_appointment_time_power_on = WIFI_NULL;
+        
+
+        
+        SendWifiData_To_PanelTime(run_t.set_timer_timing_value);
+  
+        HAL_Delay(5);
+      
+
+	}
+    
+	
+	 if(run_t.gTimer_ptc_adc_times > 2 ){ //3 minutes 120s
+         run_t.gTimer_ptc_adc_times=0;
+		 Get_PTC_Temperature_Voltage(ADC_CHANNEL_1,20);
+	     Judge_PTC_Temperature_Value();
+
+	 }
+
+	 if(run_t.gTimer_fan_adc_times > 1){ //2 minute 180s
+	     run_t.gTimer_fan_adc_times =0;
+	     Self_CheckFan_Handler(ADC_CHANNEL_0,30);
+	 }
+    break;
+
+     case POWER_OFF: //2
 
         switch(power_off_step){
 
         case 0:
-             run_t.run_process_step=0;
+            run_t.run_process_step=0;
             SendWifiCmd_To_Order(WIFI_POWER_OFF); 
 		    HAL_Delay(5);//HAL_Delay(100);
             power_off_step =1;
@@ -519,59 +579,6 @@ void RunCommand_MainBoard_Fun(void)
       break;
       }
 	break;
-
-	case UPDATE_TO_PANEL_DATA: //3
-     if(run_t.gTimer_senddata_panel >30 && run_t.gPower_On==POWER_ON){ //300ms
-	   	    run_t.gTimer_senddata_panel=0;
-	        ActionEvent_Handler();
-	 }
-
-	if((run_t.gTimer_10s>30 && run_t.gPower_flag == POWER_ON)||power_just_on < 10){
-    	power_just_on ++ ;
-		run_t.gTimer_10s=0;
-		Update_DHT11_Value();
-        HAL_Delay(5);
-
-     }
-
-	if(run_t.app_appointment_time_power_on == WIFI_TIMER_POWER_ON && appointment_powr_onf_flag==0 ){ //
-		appointment_powr_onf_flag++;
-  
- 
-        sendData_Reference_Data(run_t.gDry,run_t.gPlasma,run_t.gUltrasonic);
-	    HAL_Delay(20);
-        Publish_Reference_Update_State();
-        run_t.gTimer_run_process_times =0;
-
-	}
-
-    if(run_t.app_appointment_time_power_on == WIFI_TIMER_POWER_ON &&  run_t.gTimer_run_process_times > 0){ //
-	
-     
-        run_t.app_appointment_time_power_on = WIFI_NULL;
-        
-
-
-        SendWifiData_To_PanelTime(run_t.set_timer_timing_value);
-  
-        HAL_Delay(5);
-      
-
-	}
-    
-	
-	 if(run_t.gTimer_ptc_adc_times > 2 ){ //3 minutes 120s
-         run_t.gTimer_ptc_adc_times=0;
-		 Get_PTC_Temperature_Voltage(ADC_CHANNEL_1,20);
-	     Judge_PTC_Temperature_Value();
-
-	 }
-
-	 if(run_t.gTimer_fan_adc_times > 1){ //2 minute 180s
-	     run_t.gTimer_fan_adc_times =0;
-	     Self_CheckFan_Handler(ADC_CHANNEL_0,30);
-	 }
-    break;
 
 	case POWER_OFF_NULL:
 
