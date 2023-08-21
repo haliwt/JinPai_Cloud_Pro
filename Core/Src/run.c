@@ -402,6 +402,7 @@ void RunCommand_MainBoard_Fun(void)
             SendWifiData_To_Cmd(0x54);
             HAL_Delay(5);//HAL_Delay(20);
              run_t.gTimer_run_process_times=0;
+             appointment_powr_onf_flag=0;
         }
 	    if(run_t.run_process_step ==0){
         run_t.run_process_step ++;  
@@ -438,8 +439,6 @@ void RunCommand_MainBoard_Fun(void)
                 run_t.gTimer_run_process_times=0;
                 run_t.run_process_step =2;
 
-                
-
             }
 			
           
@@ -453,6 +452,8 @@ void RunCommand_MainBoard_Fun(void)
        if(run_t.gTimer_run_process_times > 0 &&  run_t.run_process_step ==2){
 		       
     		    run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
+                run_t.gTimer_run_process_times=0;
+                appointment_powr_onf_flag=0;
 			
         }
 
@@ -475,24 +476,24 @@ void RunCommand_MainBoard_Fun(void)
 
      }
 
-	if(run_t.app_appointment_time_power_on == WIFI_TIMER_POWER_ON && appointment_powr_onf_flag==0 ){ //
+	if((run_t.app_appointment_time_power_on == WIFI_TIMER_POWER_ON && appointment_powr_onf_flag==0) &&  run_t.gTimer_run_process_times > 0 ){ //
 		appointment_powr_onf_flag++;
   
- 
+   
         sendData_Reference_Data(run_t.gDry,run_t.gPlasma,run_t.gUltrasonic);
-	    HAL_Delay(20);
-      //  Publish_Reference_Update_State();
+	    HAL_Delay(5);
+    
         run_t.gTimer_run_process_times =0;
 
 	}
 
-    if(run_t.app_appointment_time_power_on == WIFI_TIMER_POWER_ON &&  run_t.gTimer_run_process_times > 0){ //
+    if((run_t.app_appointment_time_power_on == WIFI_TIMER_POWER_ON &&  run_t.gTimer_run_process_times > 0) && appointment_powr_onf_flag==1){ //
 	
      
         run_t.app_appointment_time_power_on = WIFI_NULL;
         
 
-        
+       
         SendWifiData_To_PanelTime(run_t.set_timer_timing_value);
   
         HAL_Delay(5);
