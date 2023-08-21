@@ -189,6 +189,7 @@ static void Display_Command_ReceiveData(uint8_t cmd)
 	
 		
          run_t.RunCommand_Label= POWER_ON;
+         wifi_t.wifi_open_power_on_flag =0;
 		 esp8266_t.esp8266_config_wifi_net_label=0;
 
 		 
@@ -382,8 +383,8 @@ void SystemReset(void)
 void RunCommand_MainBoard_Fun(void)
 {
 
-   static uint8_t power_just_on,power_off_fan_flag,wifi_set_power_off=0;
-    
+   static uint8_t power_just_on,power_off_fan_flag,the_first_dc_power_on;
+   static uint8_t appointment_powr_onf_flag,power_off_step; 
     if(run_t.buzzer_sound_flag == 1){
 	 	run_t.buzzer_sound_flag = 0;
 	    Buzzer_KeySound();
@@ -393,21 +394,27 @@ void RunCommand_MainBoard_Fun(void)
    switch(run_t.RunCommand_Label){
 
 	case POWER_ON: //1
-	    run_t.run_off_process_step=0;
+	      power_off_step =0;
+        if(wifi_t.wifi_open_power_on_flag ==1){
+            wifi_t.wifi_open_power_on_flag =0;
+            SendWifiCmd_To_Order(WIFI_POWER_ON); //display pannel power on 
+            HAL_Delay(5);//HAL_Delay(20);
+            SendWifiData_To_Cmd(0x54);
+            HAL_Delay(5);//HAL_Delay(20);
+             run_t.gTimer_run_process_times=0;
+        }
 	    if(run_t.run_process_step ==0){
         run_t.run_process_step ++;  
 	    SetPowerOn_ForDoing();
 
-        wifi_set_power_off=0;
 		run_t.gPower_flag = POWER_ON;
 		run_t.gPower_On = POWER_ON;
 		esp8266_t.esp8266_config_wifi_net_label=0;
-	    power_off_fan_flag=0;
-		power_just_on=0;
         run_t.gTimer_10s=0;
 	
 		Update_DHT11_Value(); //to message display 
 		HAL_Delay(2);//HAL_Delay(20);
+		run_t.gTimer_run_process_times=0;
 
         }
 		
@@ -419,99 +426,98 @@ void RunCommand_MainBoard_Fun(void)
 	 	    SendWifiData_To_Cmd(0x01) ;
 			HAL_Delay(2);//HAL_Delay(100);  	
 			esp8266_t.esp8266_config_wifi_net_label=wifi_publish_update_data;
-			if(run_t.app_appointment_time_power_on == POWER_ON && run_t.run_process_step ==1){
-			    run_t.run_process_step ++;
+			if(run_t.app_appointment_time_power_on == WIFI_NORMAL_POWER_ON){
                //
-               SendWifiData_To_PanelTime(run_t.set_timer_timing_value);//WT.EDIT .2023-08-19
-               
-			   Publish_Reference_Update_State();
+               Publish_Reference_Update_State();
                run_t.gTimer_run_process_times=0;
+               run_t.run_process_step =2;
 			}
-			else if(run_t.run_process_step ==1){
-                run_t.run_process_step ++;
-			    Publish_Power_ON_State();
-                run_t.gTimer_run_process_times=0;
+            else{
 
-			   
-			}
-            if(run_t.gTimer_run_process_times > 0 &&  run_t.run_process_step ==2){
-		   // HAL_Delay(300);
-		         SendWifiCmd_To_Order(WIFI_POWER_ON); //display pannel power on 
-    		    run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
+                run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
+
+            }
 			
-             }
+          
 		}
         else{
-            SendWifiCmd_To_Order(WIFI_POWER_ON); //display pannel power on 
+         
     		run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
 
        }
+
+       if(run_t.gTimer_run_process_times > 0 &&  run_t.run_process_step ==2){
+		       
+    		    run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
+			
+        }
 
 	break;
 
     case POWER_OFF: //2
 
-        if(run_t.run_off_process_step ==0){
-           run_t.run_off_process_step++;
+        switch(power_off_step){
+
+        case 0:
+             run_t.run_process_step=0;
+            SendWifiCmd_To_Order(WIFI_POWER_OFF); 
+		    HAL_Delay(5);//HAL_Delay(100);
+            power_off_step =1;
+            run_t.gTimer_run_process_times=0;
+
+        break;
+
+        case 1:
+            SetPowerOff_ForDoing();
+            run_t.set_timer_timing_value=0;
             Publish_Power_OFF_State();
-           run_t.gTimer_run_process_times=0;
-	    }
+            power_off_step =2;
+            run_t.gTimer_run_process_times=0;
 
-        if(run_t.gTimer_run_process_times>0 && run_t.run_off_process_step==1 ){
+        break;
 
-           run_t.run_off_process_step++;
+        case 2:
+           if( run_t.gTimer_run_process_times >0){
+          
+            power_off_step =3;
+            run_t.gTimer_run_process_times=0;
 
-           SetPowerOff_ForDoing();
+           
+           }
+         
+       break;
 
+       case 3:
+
+        
           run_t.gTimer_run_process_times=0;
 
-
-        }
-    
-		
-
-	     if(power_off_fan_flag==0){
-		 	power_off_fan_flag++;
-            run_t.fan_set_level=5;
+	  
+           run_t.fan_set_level=5;
      
            run_t.gFan_counter =0;
-		   run_t.gFan_continueRun =1;
+           if(the_first_dc_power_on ==0){
+              the_first_dc_power_on++;
+
+           }
+           else
+		    run_t.gFan_continueRun =1;
     
-	     }
-	   run_t.gPower_flag =POWER_OFF;
-        run_t.run_process_step=0;
+	    run_t.gPower_flag =POWER_OFF;
+       
+          power_off_step =4;
+
+       break;
+
+       case 4:
 	
-
-	   if(run_t.theFirst_input_power_flag < 8){ //input DC the first 
-	   	run_t.theFirst_input_power_flag ++;
-		run_t.gFan_continueRun =0;
-
-	  
-		    Update_DHT11_Value(); //to message display 
-		    HAL_Delay(10);
-
-	   if(run_t.gDht11_humidity==0)
-	          run_t.gDht11_humidity=50;
-		if(run_t.gDht11_temperature==0)	run_t.gDht11_temperature=25;
-		
-
-	  // if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS && run_t.recoder_wifi_link_cloud_flag==0  ){ 
-	  	wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;
+        wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;
 		run_t.recoder_wifi_link_cloud_flag = 1; //recoder has been linked cloud flag
 	  
-      //  Publish_Power_OFF_State();
-	  //HAL_Delay(200);
-		if(wifi_set_power_off){
-			wifi_set_power_off++;
-			SendWifiCmd_To_Order(WIFI_POWER_OFF); 
-			HAL_Delay(100);
-		}
+        run_t.RunCommand_Label= 0xff;
 
-	   }
-        
-	    
-     //	run_t.RunCommand_Label= 0xff;
-	 
+      break;
+      }
 	break;
 
 	case UPDATE_TO_PANEL_DATA: //3
@@ -524,18 +530,35 @@ void RunCommand_MainBoard_Fun(void)
     	power_just_on ++ ;
 		run_t.gTimer_10s=0;
 		Update_DHT11_Value();
+        HAL_Delay(5);
 
      }
 
-	if(run_t.app_appointment_time_power_on == POWER_ON){
-		run_t.app_appointment_time_power_on ++;
-        SendWifiData_To_PanelTime(run_t.set_timer_timing_value);
+	if(run_t.app_appointment_time_power_on == WIFI_TIMER_POWER_ON && appointment_powr_onf_flag==0 ){ //
+		appointment_powr_onf_flag++;
   
-        HAL_Delay(2);
+ 
         sendData_Reference_Data(run_t.gDry,run_t.gPlasma,run_t.gUltrasonic);
-	    
+	    HAL_Delay(20);
+        Publish_Reference_Update_State();
+        run_t.gTimer_run_process_times =0;
 
 	}
+
+    if(run_t.app_appointment_time_power_on == WIFI_TIMER_POWER_ON &&  run_t.gTimer_run_process_times > 0){ //
+	
+     
+        run_t.app_appointment_time_power_on = WIFI_NULL;
+        
+
+
+        SendWifiData_To_PanelTime(run_t.set_timer_timing_value);
+  
+        HAL_Delay(5);
+      
+
+	}
+    
 	
 	 if(run_t.gTimer_ptc_adc_times > 2 ){ //3 minutes 120s
          run_t.gTimer_ptc_adc_times=0;
@@ -562,7 +585,6 @@ void RunCommand_MainBoard_Fun(void)
 
    if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS  &&  run_t.wifi_link_JPai_cloud==0){
 	 	    run_t.wifi_link_JPai_cloud++;
-			//SendWifiCmd_To_Order(WIFI_POWER_ON);
 	 	    SendWifiData_To_Cmd(0x01) ;
 	 }
 	 

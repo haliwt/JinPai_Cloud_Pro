@@ -31,7 +31,8 @@ typedef enum{
    WIFI_RESTART_INIT,
    WIFI_NORMAL_POWER_ON,
    WIFI_TIMER_POWER_ON,
-   POWER_OFF_NULL
+   POWER_OFF_NULL,
+   WIFI_NULL,
 
    
 
@@ -83,7 +84,7 @@ typedef struct _RUN_T{
     //run step
     uint8_t run_process_step ;
     uint8_t gTimer_run_process_times;
-    uint8_t run_off_process_step;
+  
 
     //display command 
     uint8_t display_cmd_link_wifi;
@@ -157,7 +158,7 @@ typedef struct _RUN_T{
 	  uint8_t wifi_link_JPai_cloud;
 	  uint8_t first_power_on_flag;
 	  uint8_t app_appointment_time_power_on;
-	  uint8_t theFirst_input_power_flag;
+
 	 
 	  
 	  

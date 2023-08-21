@@ -55,7 +55,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 	   
 		 
 	  }
-	//  run_t.theFirst_input_power_flag=1;
+	
       run_t.first_power_on_flag++;
 	  run_t.open_fan_works_flag=1;
      }
@@ -110,7 +110,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 			run_t.RunCommand_Label = POWER_OFF;
 
 			esp8266_t.esp8266_config_wifi_net_label=0;
-			run_t.theFirst_input_power_flag =1;
+			
 		     Buzzer_KeySound();
 
 		 }
