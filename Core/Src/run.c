@@ -23,8 +23,8 @@ static void Fan_ContinueRun_OneMinute_Fun(void);
 
 
 uint8_t no_buzzer_sound_dry_off;
-uint16_t receive_from_display_power_flag;
-uint8_t receive_from_display_power_off_flag;
+uint16_t receive_from_display_power_on_flag;
+uint16_t receive_from_display_power_off_flag;
 
 
 
@@ -176,16 +176,16 @@ static void Display_Command_ReceiveData(uint8_t cmd)
 
 
     case 0x01: // power on
-         receive_from_display_power_flag++;
+         receive_from_display_power_on_flag++;
          receive_from_display_power_off_flag++;
          SendWifiData_To_Cmd(0x54); //0x54= 'R',receive order from display power on command copy a command 
          
-         if(receive_from_display_power_flag !=buzzer_power_on_sound && first_power_off_flag !=1 ){ 
+         if(receive_from_display_power_on_flag !=buzzer_power_on_sound && first_power_off_flag !=1 ){ 
             first_power_off_flag++;
-            buzzer_power_on_sound = receive_from_display_power_flag ;
+            buzzer_power_on_sound = receive_from_display_power_on_flag ;
          	Buzzer_KeySound();
          }
-         SendWifiData_To_Cmd(0x54);
+        
 	
 		
          run_t.RunCommand_Label= POWER_ON;
@@ -197,7 +197,8 @@ static void Display_Command_ReceiveData(uint8_t cmd)
      break;
 
     case 0x00: //power off
-
+        receive_from_display_power_on_flag++;
+        //receive_from_display_power_off_flag++;
 
         SendWifiData_To_Cmd(0x53); //0x53= 'R' power off copy command from display power off
         if(first_power_off_flag==1)first_power_off_flag++;
@@ -206,7 +207,7 @@ static void Display_Command_ReceiveData(uint8_t cmd)
             buzzer_power_Off_sound= receive_from_display_power_off_flag;
             Buzzer_KeySound();
         }
-        SendWifiData_To_Cmd(0x53); //0x53= 'R' power off copy command from display power off
+       
 	    wifi_t.gTimer_wifi_send_cloud_success_times=0;
     
         run_t.RunCommand_Label = POWER_OFF;
@@ -420,6 +421,7 @@ void RunCommand_MainBoard_Fun(void)
 		run_t.gPower_On = POWER_ON;
 		esp8266_t.esp8266_config_wifi_net_label=0;
         run_t.gTimer_10s=0;
+        run_t.first_dc_power_on_flag=2;
 	
 		Update_DHT11_Value(); //to message display 
 		HAL_Delay(2);//HAL_Delay(20);
@@ -542,7 +544,7 @@ void RunCommand_MainBoard_Fun(void)
 	 }
     break;
 
-     case POWER_OFF: //2
+    case POWER_OFF: //2
 
         switch(power_off_step){
 
@@ -550,8 +552,10 @@ void RunCommand_MainBoard_Fun(void)
             run_t.wifi_normal_power_on =0;
             esp8266_t.esp8266_config_wifi_net_label=0xff;
             run_t.run_process_step=0;
-            SendWifiCmd_To_Order(WIFI_POWER_OFF); 
-		    HAL_Delay(5);//HAL_Delay(100);
+            if(run_t.first_dc_power_on_flag !=1){
+                SendWifiCmd_To_Order(WIFI_POWER_OFF); 
+    		    HAL_Delay(5);//HAL_Delay(100);
+            }
             power_off_step =1;
             run_t.gTimer_run_process_times=0;
 
@@ -592,14 +596,29 @@ void RunCommand_MainBoard_Fun(void)
            }
            else
 		    run_t.gFan_continueRun =1;
+
+         run_t.set_timer_timing_value=0;
+         Publish_Power_OFF_State();
     
 	    run_t.gPower_flag =POWER_OFF;
        
           power_off_step =4;
+           run_t.gTimer_run_process_times=0;
 
        break;
 
        case 4:
+         if( run_t.gTimer_run_process_times >0){
+
+             power_off_step =5;
+             run_t.gTimer_run_process_times=0;
+
+
+         }
+
+       break;
+
+       case 5:
 	
         wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;
 		run_t.recoder_wifi_link_cloud_flag = 1; //recoder has been linked cloud flag

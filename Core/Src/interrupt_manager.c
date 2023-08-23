@@ -115,8 +115,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	   wifi_t.gTimer_wifi_send_cloud_success_times++;
 
 	   //usart 1
-	   run_t.gTimer_check_iwdg_flag++;
-	   run_t.gTimer_iwdg++;
+
 	   run_t.gTimer_usart_error++;
 	   run_t.gTimer_fan_oneselt_test++;
        run_t.gTimer_run_process_times++ ;

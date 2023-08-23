@@ -65,9 +65,11 @@ typedef struct _RUN_T{
     
     //power on
 	uint8_t gPower_On;
+    uint8_t first_dc_power_on_flag ;
 
 	uint8_t gPower_flag;
 	uint8_t gDht11_flag;
+    
 	
 
 	uint8_t gDht11_humidity ;
@@ -135,12 +137,12 @@ typedef struct _RUN_T{
 	  
 
 	  //usart1
-	 uint8_t gTimer_iwdg;
-     uint8_t process_run_guarantee_flag ;
-    uint8_t gTimer_check_iwdg_flag;
+	
+  
+  
     uint8_t gTimer_check_iwdg_fla;
     uint8_t gTimer_usart_error;
-    uint8_t iwdg_feed_success_flag;
+  
 
 	//wifi 
 	uint8_t recoder_wifi_link_cloud_flag;

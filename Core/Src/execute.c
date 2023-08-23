@@ -8,12 +8,12 @@
 #include "esp8266.h"
 #include "buzzer.h"
 
-uint8_t set_power_off=0;
+
 
 void SetPowerOn_ForDoing(void)
 {
 
-    set_power_off=0;
+   
     run_t.gPower_flag = POWER_ON;
     run_t.gPower_On=POWER_ON;
 	run_t.open_fan_works_flag++;
@@ -50,8 +50,7 @@ void SetPowerOff_ForDoing(void)
 	run_t.gUltrasonic = 0; // "驱虫"
 	
 	
-    if(set_power_off==0){
-		set_power_off++;
+   
 	PLASMA_SetLow(); //
 	HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic Off 
 	PTC_SetLow();
@@ -59,7 +58,7 @@ void SetPowerOff_ForDoing(void)
 	FAN_Stop();
 		
 	
-    }
+    
 
 }
 
