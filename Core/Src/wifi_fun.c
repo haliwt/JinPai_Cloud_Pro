@@ -416,6 +416,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 				switch(wifi_t.usart_wifi_model){
 
                 case 1:
+                Buzzer_KeySound();
 				run_t.gPower_On = wifi_t.usart_wifi_model;
 			    run_t.gUltrasonic = wifi_t.usart_wifi_state;
 				run_t.gDry = wifi_t.usart_wifi_cloud_state;
@@ -426,7 +427,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 			    Publish_Reference_Update_State();
 				HAL_Delay(300); 
 		      
-				Buzzer_KeySound();
+				
 					run_t.app_appointment_time_power_on = WIFI_TIMER_POWER_ON;
 					run_t.gPower_flag = POWER_ON;
 				run_t.gPower_On = POWER_ON;
