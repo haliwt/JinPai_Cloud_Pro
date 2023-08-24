@@ -564,20 +564,9 @@ void RunCommand_MainBoard_Fun(void)
         case 1:
             SetPowerOff_ForDoing();
     
-            power_off_step =2;
-            run_t.gTimer_run_process_times=0;
-
-        break;
-
-    
-
-       case 2:
-
-        
-          run_t.gTimer_run_process_times=0;
-
-	  
-           run_t.fan_set_level=5;
+           
+          
+              run_t.fan_set_level=5;
      
            run_t.gFan_counter =0;
            if(the_first_dc_power_on ==0){
@@ -587,7 +576,18 @@ void RunCommand_MainBoard_Fun(void)
            else
 		    run_t.gFan_continueRun =1;
 
-         if(run_t.gDht11_humidity==0)
+           
+           run_t.gTimer_run_process_times=0;
+            power_off_step =2;
+
+        break;
+
+    
+
+       case 2:
+
+        
+        if(run_t.gDht11_humidity==0)
 	          run_t.gDht11_humidity=50;
 		if(run_t.gDht11_temperature==0)	run_t.gDht11_temperature=20;
 
@@ -621,7 +621,7 @@ void RunCommand_MainBoard_Fun(void)
 		run_t.recoder_wifi_link_cloud_flag = 1; //recoder has been linked cloud flag
 		run_t.set_timer_timing_value=0;
        
-       
+        power_off_step=0xff;
 
       break;
       }
