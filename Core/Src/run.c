@@ -563,25 +563,15 @@ void RunCommand_MainBoard_Fun(void)
 
         case 1:
             SetPowerOff_ForDoing();
-            run_t.set_timer_timing_value=0;
-            Publish_Power_OFF_State();
+    
             power_off_step =2;
             run_t.gTimer_run_process_times=0;
 
         break;
 
-        case 2:
-           if( run_t.gTimer_run_process_times >0){
-          
-            power_off_step =3;
-            run_t.gTimer_run_process_times=0;
+    
 
-           
-           }
-         
-       break;
-
-       case 3:
+       case 2:
 
         
           run_t.gTimer_run_process_times=0;
@@ -597,20 +587,24 @@ void RunCommand_MainBoard_Fun(void)
            else
 		    run_t.gFan_continueRun =1;
 
+         if(run_t.gDht11_humidity==0)
+	          run_t.gDht11_humidity=50;
+		if(run_t.gDht11_temperature==0)	run_t.gDht11_temperature=20;
+
          run_t.set_timer_timing_value=0;
          Publish_Power_OFF_State();
     
 	    run_t.gPower_flag =POWER_OFF;
        
-          power_off_step =4;
+          power_off_step =3;
            run_t.gTimer_run_process_times=0;
 
        break;
 
-       case 4:
+       case 3:
          if( run_t.gTimer_run_process_times >0){
 
-             power_off_step =5;
+             power_off_step =4;
              run_t.gTimer_run_process_times=0;
 
 
@@ -618,17 +612,15 @@ void RunCommand_MainBoard_Fun(void)
 
        break;
 
-       case 5:
+       case 4:
+
+       
+		
 	
         wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;
 		run_t.recoder_wifi_link_cloud_flag = 1; //recoder has been linked cloud flag
 		run_t.set_timer_timing_value=0;
-        if(run_t.gTimer_minuter_times >5){
-           run_t.gTimer_minuter_times=0;
-           run_t.set_timer_timing_value=0;
-           Publish_Power_OFF_State();
-
-       }
+       
        
 
       break;
