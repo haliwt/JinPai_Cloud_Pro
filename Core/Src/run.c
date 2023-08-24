@@ -552,11 +552,12 @@ void RunCommand_MainBoard_Fun(void)
             run_t.wifi_normal_power_on =0;
             esp8266_t.esp8266_config_wifi_net_label=0xff;
             run_t.run_process_step=0;
-            if(run_t.first_dc_power_on_flag !=1){
-                SendWifiCmd_To_Order(WIFI_POWER_OFF); 
-    		    HAL_Delay(5);//HAL_Delay(100);
-            }
+//            if(run_t.first_dc_power_on_flag !=1){
+//                SendWifiCmd_To_Order(WIFI_POWER_OFF); 
+//    		    HAL_Delay(5);//HAL_Delay(100);
+//            }
             power_off_step =1;
+            wifi_t.wifi_open_power_on_flag =0;
             run_t.gTimer_run_process_times=0;
 
         break;

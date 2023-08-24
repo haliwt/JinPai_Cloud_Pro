@@ -141,6 +141,10 @@ typedef struct _WIFI_FUN{
     uint8_t usart_wifi_pass_state;
 	uint8_t wifi_receive_data_codes_sum_flag;
     uint8_t wifi_receive_data_error;
+
+    //wifi power offf 
+    uint8_t wifi_open_power_on_flag;
+    uint8_t wifi_close_power_off_flag;
 	
 
 	uint8_t wifi_receive_data_state;
@@ -154,7 +158,7 @@ typedef struct _WIFI_FUN{
 	uint8_t publish_send_state_data;
 	uint8_t wifi_has_been_link_cloud;
 	uint8_t gTimer_wifi_send_cloud_success_times;
-	uint8_t wifi_open_power_on_flag;
+	
 
 
     uint8_t real_hours;
