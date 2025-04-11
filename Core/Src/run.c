@@ -1,18 +1,5 @@
-#include "run.h"
-#include "wifi_fun.h"
-#include "dht11.h"
-#include "fan.h"
-#include "tim.h"
-#include "cmd_link.h"
-#include "buzzer.h"
-#include "esp8266.h"
-#include "wifi_fun.h"
-#include "flash.h"
-#include "execute.h"
-#include "publish.h"
-#include "subscribe.h"
-#include "adc.h"
-#include "self_check.h"
+#include "bsp.h"
+
 
 RUN_T run_t; 
 
@@ -23,9 +10,6 @@ static void Fan_ContinueRun_OneMinute_Fun(void);
 
 
 uint8_t no_buzzer_sound_dry_off;
-uint16_t receive_from_display_power_flag;
-uint16_t receive_from_display_power_off_flag;
-
 
 
 /**********************************************************************
@@ -160,24 +144,15 @@ void Decode_RunCmd(void)
 static void Single_Power_ReceiveCmd(uint8_t cmd)
 {
   
-    static uint8_t buzzer_power_on_sound,buzzer_power_Off_sound;
-      static uint16_t first_power_off_flag;
-        switch(cmd){
+      switch(cmd){
     
     
         case 0x01: // power on
-             receive_from_display_power_flag++;
-             receive_from_display_power_off_flag++;
-             SendWifiData_To_Cmd(0x54); //0x54= 'R',receive order from display power on command copy a command 
+           
+             SendData_Copy_Cmd(copy_power_on);//SendWifiData_To_Cmd(0x54); //0x54= 'R',receive order from display power on command copy a command 
              
-             if(receive_from_display_power_flag !=buzzer_power_on_sound && first_power_off_flag !=1 ){ 
-                first_power_off_flag++;
-                buzzer_power_on_sound = receive_from_display_power_flag ;
-                Buzzer_KeySound();
-             }
+             Buzzer_KeySound();
              
-        
-            
              run_t.RunCommand_Label= POWER_ON;
              wifi_t.wifi_open_power_on_flag =0;
              esp8266_t.esp8266_config_wifi_net_label=0;
@@ -189,13 +164,11 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
         case 0x00: //power off
     
     
-            SendWifiData_To_Cmd(0x53); //0x53= 'R' power off copy command from display power off
-            if(first_power_off_flag==1)first_power_off_flag++;
+            SendData_Copy_Cmd(copy_power_off);//SendWifiData_To_Cmd(0x53); //0x53= 'R' power off copy command from display power off
+         
     
-            if(receive_from_display_power_off_flag !=buzzer_power_Off_sound){
-                buzzer_power_Off_sound= receive_from_display_power_off_flag;
-                Buzzer_KeySound();
-            }
+            Buzzer_KeySound();
+           
           
             wifi_t.gTimer_wifi_send_cloud_success_times=0;
         
@@ -243,7 +216,7 @@ static void Single_Command_ReceiveCmd(uint8_t cmd)
 			
 		 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 		    Publish_Reference_Update_State();//Publish_PTC_State();//Publish_PTC_ON_State();
-            HAL_Delay(300);
+            HAL_Delay(200);
 	      }
 		   
 		 
@@ -400,9 +373,9 @@ void RunCommand_MainBoard_Fun(void)
 			HAL_Delay(2);//HAL_Delay(100);  	
 			esp8266_t.esp8266_config_wifi_net_label=wifi_publish_update_data;
 			if(run_t.app_appointment_time_power_on == POWER_ON){
-			    SendWifiCmd_To_Order(WIFI_POWER_TIMER_ON); //WIFI_POWER_ON BY TIMER 
-			   Publish_Reference_Update_State();
-			   HAL_Delay(200);
+			  // SendWifiCmd_To_Order(WIFI_POWER_TIMER_ON); //WT.EDIT 2025.04.11
+			  // Publish_Reference_Update_State();
+			  // HAL_Delay(200);
 			}
 			else{
 				SendWifiCmd_To_Order(WIFI_POWER_ON); //display pannel power on 

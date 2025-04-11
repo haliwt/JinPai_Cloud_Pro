@@ -24,19 +24,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "delay.h"
-#include "esp8266.h"
-#include "cmd_link.h"
-#include "run.h"
-#include "subscribe.h"
-#include "publish.h"
-#include "interrupt_manager.h"
-#include "wifi_fun.h"
-#include "buzzer.h"
-#include "dht11.h" 
-#include "execute.h"
-#include "adc.h"
-#include "self_check.h"
+#include "bsp.h"
 
 /* USER CODE END Includes */
 

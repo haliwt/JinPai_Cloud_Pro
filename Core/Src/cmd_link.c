@@ -1,11 +1,4 @@
-#include "cmd_link.h"
-#include <string.h>
-#include "usart.h"
-#include "run.h"
-#include "fan.h"
-#include "esp8266.h"
-#include "interrupt_manager.h"
-#include "wifi_fun.h"
+#include "bsp.h"
 
 #define MAX_BUFFER_SIZE  30
 
@@ -53,13 +46,22 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 				state=1; //=1
 		break;
 		case 1: //#1
-             if(inputBuf[0] == 'K' || inputBuf[0]=='O' || inputBuf[0]=='R')  {//hex :4B - "K" -fixed
+             if(inputBuf[0] == 'K' || inputBuf[0]=='O' || inputBuf[0]=='R'|| inputBuf[0]=='Y'){//hex :4B - "K" -fixed
                 if(inputBuf[0]=='O' || inputBuf[0]=='R'){
                        inputCmd[0]= inputBuf[0];
 					   wr_flag=1;
-					   
+					   state=2; //=1
 				}
-				state=2; //=1
+				else if(inputBuf[0]=='Y'){
+
+                      state=0x0A; //=1
+
+				}
+				else{
+                   state=2; //=1
+
+				}
+				
 
              }
 			else{
@@ -90,6 +92,14 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	         state = 0;
         
         break;
+
+		case 0x0A:
+			
+            receive_copy_cmd(inputBuf[0]);
+
+			state = 0;
+
+		break;
 
 	
 	
@@ -189,6 +199,33 @@ void USART1_Cmd_Error_Handler(UART_HandleTypeDef *huart)
       }
    	}
   }
+
+
+/********************************************************************************
+	**
+	*Function Name:sendData_Real_TimeHum(uint8_t hum,uint8_t temp)
+	*Function :
+	*Input Ref: humidity value and temperature value
+	*Return Ref:NO
+	*
+*******************************************************************************/
+void SendData_Copy_Cmd(uint8_t tdata)
+{
+
+        outputBuf[0]='M'; //4D
+		outputBuf[1]='Y'; //"T"->temperature
+		outputBuf[2]=tdata; //53	//
+	
+		
+		transferSize=3;
+		if(transferSize)
+		{
+			while(transOngoingFlag);
+			transOngoingFlag=1;
+			HAL_UART_Transmit_IT(&huart1,outputBuf,transferSize);
+		}
+
+}
 
 /********************************************************************************
 	**

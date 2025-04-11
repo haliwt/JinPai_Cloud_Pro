@@ -77,6 +77,7 @@ void Eesp8266_TxData_ToSmartPhone(void);
 void SendWifiData_To_WifiSetTemp(uint8_t dat1);
 void USART1_Cmd_Error_Handler(UART_HandleTypeDef *huart);
 
+void SendData_Copy_Cmd(uint8_t tdata);
 
 
 
