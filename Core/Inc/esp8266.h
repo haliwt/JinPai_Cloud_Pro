@@ -25,12 +25,12 @@
 typedef enum _esp8266_para{
 
 	wifi_set_restor=0x01,
-	wifi_start_link_net,
-	wifi_smartconfig_model,
-	wifi_receive_data,
-	wifi_publish_init_ref,
-	wifi_subscribe_data,
-	wifi_publish_update_data,
+	wifi_start_link_net=2,
+	wifi_smartconfig_model=3,
+	wifi_receive_data=4,
+	wifi_publish_init_ref=5,
+	wifi_subscribe_data=6,
+	wifi_publish_update_data=7,
     wifi_null
 
 

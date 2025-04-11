@@ -1,18 +1,9 @@
-#include "wifi_fun.h"
+#include "bsp.h"
 //#include <stdio.h>
 //#include <stdlib.h>
 #include <string.h>
-#include "cmd_link.h"
-#include "run.h"
-#include "fan.h"
-#include "tim.h"
-#include "esp8266.h"
-#include "publish.h"
-#include "dht11.h"
-#include "usart.h"
-#include "subscribe.h"
-#include "flash.h"
-#include "buzzer.h"
+
+
 
 
 WIFI_FUN   wifi_t;
@@ -24,7 +15,8 @@ uint8_t sum_codes;
 uint8_t (*wifi_run_state_fun)(void);
 uint8_t wifi_receive_data_state_flag;
 uint8_t receive_usart_wifi_data;
-//static void Wifi_ReceiveData_Handler(void);
+uint8_t wifi_receive_power_on;
+uint8_t wifi_receive_power_off;
 /*********************************************************
  * 
   * @brief :void RunWifi_Command_Handler(uint8_t command)
@@ -267,22 +259,24 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                     case 0x02: //set Power on or off
                        
                          if(wifi_t.usart_wifi_model ==0){
-                         	  #if 0
+                         	#if 0
 							 wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
 
-						     wifi_t.gTimer_wifi_send_cloud_success_times=0;
+						    wifi_t.gTimer_wifi_send_cloud_success_times=0;
 					        run_t.gPower_On=POWER_OFF;
 					        run_t.gPower_flag = POWER_OFF;
 					        run_t.RunCommand_Label = POWER_OFF;
                             run_t.gFan_counter=0;
                             wifi_t.gTimer_wifi_send_cloud_success_times=0;
                             #endif 
+							wifi_receive_power_off++;
+							Buzzer_KeySound();
                             SendWifiCmd_To_Order(WIFI_POWER_OFF);
                             HAL_Delay(2);
-						 	Buzzer_KeySound();
+						 	
 							
                             Publish_Power_OFF_State();
-							HAL_Delay(300);
+							HAL_Delay(200);
 							
 							
 						 
@@ -299,7 +293,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 							run_t.app_appointment_time_power_on = WIFI_NORMAL_POWER_ON;
 							wifi_t.wifi_open_power_on_flag =1;
 							#endif 
-						
+						    wifi_receive_power_on++;
                             Buzzer_KeySound();
                             SendWifiCmd_To_Order(WIFI_POWER_ON_NORMAL);
 							HAL_Delay(2);
@@ -465,6 +459,8 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 
    break;
   }
+
+  
 
 
 }

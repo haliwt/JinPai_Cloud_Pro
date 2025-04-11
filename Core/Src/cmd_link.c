@@ -20,6 +20,7 @@ static uint8_t outputBuf[MAX_BUFFER_SIZE];
 volatile uint8_t transOngoingFlag;
 volatile uint8_t usart2_transOngoingFlag;
 
+uint8_t receive_displayboard_state;
 
 /********************************************************************************
 	**
@@ -94,7 +95,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         break;
 
 		case 0x0A:
-			
+			receive_displayboard_state = inputBuf[0];
             receive_copy_cmd(inputBuf[0]);
 
 			state = 0;

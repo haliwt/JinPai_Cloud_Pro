@@ -3,7 +3,7 @@
 
 void receive_copy_cmd(uint8_t cmd)
 {
-    switch(cmd){
+  switch(cmd){
 
 	case copy_power_off:
 
@@ -38,6 +38,8 @@ void receive_copy_cmd(uint8_t cmd)
     run_t.RunCommand_Label = POWER_OFF;
     run_t.gFan_counter=0;
     wifi_t.gTimer_wifi_send_cloud_success_times=0;
+
+	
 
 	break;
 
