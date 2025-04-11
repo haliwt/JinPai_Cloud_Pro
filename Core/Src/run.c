@@ -369,7 +369,7 @@ void RunCommand_MainBoard_Fun(void)
 		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 			run_t.recoder_wifi_link_cloud_flag = 1;
 			wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS; 
-	 	    SendWifiData_To_Cmd(0x01) ;
+	 	    SendWifiData_To_Cmd(0x01) ; //wifi connect net is success is "1"
 			HAL_Delay(2);//HAL_Delay(100);  	
 			esp8266_t.esp8266_config_wifi_net_label=wifi_publish_update_data;
 			if(run_t.app_appointment_time_power_on == POWER_ON){
@@ -390,46 +390,6 @@ void RunCommand_MainBoard_Fun(void)
       
 		run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
 
-	break;
-
-    case POWER_OFF: //2
-    
-		SetPowerOff_ForDoing();
-
-	     if(power_off_fan_flag==1){
-		 	power_off_fan_flag++;
-            run_t.fan_set_level=5;
-     
-           run_t.gFan_counter =0;
-		   run_t.gFan_continueRun =1;
-    
-	     }
-	   run_t.gPower_flag =POWER_OFF;
-	
-        if(run_t.gDht11_humidity==0)
-	          run_t.gDht11_humidity=50;
-		if(run_t.gDht11_temperature==0)	run_t.gDht11_temperature=20;
-		
-
-	 
-	  	wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;
-		 run_t.recoder_wifi_link_cloud_flag = 1; //recoder has been linked cloud flag
-	    run_t.set_timer_timing_value =0;
-        Publish_Power_OFF_State();
-		HAL_Delay(200);
-		
-	     SendWifiCmd_To_Order(WIFI_POWER_OFF); 
-		HAL_Delay(5);
-		
-
-	
-        
-	  
-
-	  
-     
-        run_t.RunCommand_Label= 0xff;
-	 
 	break;
 
 	case UPDATE_TO_PANEL_DATA: //3
@@ -479,20 +439,59 @@ void RunCommand_MainBoard_Fun(void)
 	 }
     break;
 
-	case POWER_OFF_NULL:
+    case POWER_OFF: //2
+    
+		SetPowerOff_ForDoing();
+
+	     if(power_off_fan_flag==1){
+		 	power_off_fan_flag++;
+            run_t.fan_set_level=5;
+     
+           run_t.gFan_counter =0;
+		   run_t.gFan_continueRun =1;
+    
+	     }
+	    run_t.gPower_flag =POWER_OFF;
+	
+        if(run_t.gDht11_humidity==0)
+	          run_t.gDht11_humidity=50;
+		if(run_t.gDht11_temperature==0)	run_t.gDht11_temperature=20;
+		
+		run_t.RunCommand_Label= POWER_OFF_STEP_2;
+
+	 
+	  	wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;
+		 run_t.recoder_wifi_link_cloud_flag = 1; //recoder has been linked cloud flag
+	    run_t.set_timer_timing_value =0;
+        Publish_Power_OFF_State();
+		HAL_Delay(200);
+		
+	     
+	 
+	break;
+
+	
+	case POWER_OFF_STEP_2:
+		
+	    Fan_ContinueRun_OneMinute_Fun();
+
 
 	break;
 
+	
+
+	
+
     }
 	
-   Fan_ContinueRun_OneMinute_Fun();
-
+  
 	
 
    if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS  &&  run_t.wifi_link_JPai_cloud==0){
 	 	    run_t.wifi_link_JPai_cloud++;
-	 	    SendWifiData_To_Cmd(0x01) ;
-	 }
+	 	    SendWifiData_To_Cmd(0x01) ; //wifi connect net is success
+	}
+    
 	 
 		
 	
@@ -506,6 +505,7 @@ static void Fan_ContinueRun_OneMinute_Fun(void)
 		if(run_t.gFan_counter < 60){
 
 		    Fan_Run_Fun();
+			SetPowerOff_ForDoing();
 		}       
         else if(run_t.gFan_counter > 59){
 

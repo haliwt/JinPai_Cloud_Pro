@@ -20,6 +20,7 @@
 #include "dht11.h" 
 #include "execute.h"
 #include "adc.h"
+#include "fan.h"
 #include "self_check.h"
 
 

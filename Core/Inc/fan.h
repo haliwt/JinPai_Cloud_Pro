@@ -54,5 +54,6 @@ void Dry_Function(uint8_t sel);
 void SetLevel_Fan_PWMA(uint8_t levelval);
 
 
+void FAN_Stop(void);
 
 #endif 

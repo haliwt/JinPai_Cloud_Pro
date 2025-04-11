@@ -114,12 +114,11 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    MainBoard_Self_Inspection_PowerOn_Fun();
+  MainBoard_Self_Inspection_PowerOn_Fun();
 	
 	Decode_Function();
     
-	
-  RunWifi_Command_Handler(esp8266_t.esp8266_config_wifi_net_label);
+	RunWifi_Command_Handler(esp8266_t.esp8266_config_wifi_net_label);
 
 	RunCommand_MainBoard_Fun();
 	
