@@ -1,9 +1,5 @@
-#include "interrupt_manager.h"
-#include "run.h"
-#include "esp8266.h"
-#include "wifi_fun.h"
-#include "cmd_link.h"
-#include "usart.h"
+#include "bsp.h"
+
 
 
 void USART2_WIFI_Receive_Interrupt_Data(void)
@@ -89,18 +85,18 @@ void USART2_WIFI_Receive_Data(void)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 
-    static uint8_t tm0,tm1,tm2 ;
+    static uint8_t tm0,tm2 ;
     if(htim->Instance==TIM14){
 		
 	   tm0 ++ ;
        run_t.gTimer_senddata_panel++;
 	 if(tm0 > 99){//100ms *10 = 1000ms =1s
         tm0 =0;
-		tm1 ++ ;
+	    gpro_t.gTimer_counter_minutes++;
 	    tm2++;
 		run_t.gFan_counter++;
 
-        run_t.gTimer_1s ++;
+
 	    run_t.gTimer_10s++;
 		
         wifi_t.gTimer_5s++;
@@ -109,7 +105,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	
 	   run_t.gTimer_send_cloud_state++;
 	 
-	   wifi_t.gTimer_wifi_send_cloud_success_times++;
+	
 
 	   //usart 1
 	    run_t.gTimer_check_iwdg_flag++;
@@ -118,10 +114,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	   run_t.gTimer_fan_oneselt_test++;
        run_t.gTimer_run_porcess_times++;
 		
-	  if(tm1 >59){ //minutes
-	  	tm1=0;
+	  if(gpro_t.gTimer_counter_minutes >59){ //minutes
+	  	gpro_t.gTimer_counter_minutes=0;
 	    run_t.gTimer_ptc_adc_times ++; 
         run_t.gTimer_fan_adc_times++ ;
+		gpro_t.gTimer_two_hours_counter++ ;
+		
 	  }
 
 	  if(tm2 > 46){ //46s 

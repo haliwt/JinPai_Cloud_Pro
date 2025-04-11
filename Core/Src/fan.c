@@ -68,7 +68,7 @@ void Fan_Run_Fun(void)
 {
 	if(run_t.set_wind_speed_value==0){
 		    run_t.fan_set_level = 1;
-		   SetLevel_Fan_PWMA(99);
+		   SetLevel_Fan_PWMA(100);
 	   }
 	   else{
 			 run_t.fan_set_level = 2;

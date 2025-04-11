@@ -37,8 +37,22 @@ typedef enum{
 }copy_cmd_t;
 
 
+typedef struct main_process{
+
+
+  uint8_t g_interval_times_flag;
+  uint8_t gTimer_two_hours_counter;
+  uint8_t gTimer_counter_minutes;
+
+
+}process_t;
+
+extern process_t gpro_t;
+
+
 void receive_copy_cmd(uint8_t cmd);
 
+void works_two_hours_handler(void);
 
 
 

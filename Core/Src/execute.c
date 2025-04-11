@@ -1,12 +1,5 @@
-#include "execute.h"
-#include "dht11.h"
-#include "fan.h"
-#include "tim.h"
-#include "cmd_link.h"
-#include "run.h"
-#include "wifi_fun.h"
-#include "esp8266.h"
-#include "buzzer.h"
+#include "bsp.h"
+
 
 uint8_t set_power_off=0;
 
@@ -65,8 +58,10 @@ void SetPowerOff_ForDoing(void)
 
 
 
-void ActionEvent_Handler(void)
+void mainboard_function_handler(void)
 {
+
+   if(gpro_t.g_interval_times_flag==0){
    if(run_t.ptc_too_heat_value ==0){
 	if(run_t.gDry == 1){
 	
@@ -113,17 +108,7 @@ void ActionEvent_Handler(void)
 
 	}
 	
-//    //shut off function and after 1 minutes shut off wind fan 
-//	if(run_t.gPlasma ==0 && run_t.gDry==0 && run_t.fan_start_shut_off_flag ==0 ){
-//
-//        run_t.gFan_counter=0;
-//		run_t.fan_start_shut_off_flag++ ;
-//		run_t.gFan_continueRun=1;        
-//
-//	}
-	
-		
-
+    }
 
 
 }

@@ -153,7 +153,7 @@ typedef struct _WIFI_FUN{
 	uint8_t usart_wifi_fan_speed_value;
 	uint8_t publish_send_state_data;
 	uint8_t wifi_has_been_link_cloud;
-	uint8_t gTimer_wifi_send_cloud_success_times;
+	
 	uint8_t wifi_open_power_on_flag;
 
 
@@ -162,7 +162,7 @@ typedef struct _WIFI_FUN{
 	uint8_t real_seconds;
 	uint8_t restart_link_tencent_cloud ;
 
-    uint8_t gTimer_1s;
+   
 	uint8_t gTimer_5s;
     uint8_t gTimer_get_beijing_time;
 	uint8_t gTimer_beijing_time;

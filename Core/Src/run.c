@@ -156,7 +156,9 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
              run_t.RunCommand_Label= POWER_ON;
              wifi_t.wifi_open_power_on_flag =0;
              esp8266_t.esp8266_config_wifi_net_label=0;
-    
+			 gpro_t.gTimer_two_hours_counter =0; //WT.EDIT 2025.04.11
+             gpro_t.g_interval_times_flag=0;//WT.EDIT 2025.04.11
+              gpro_t.gTimer_counter_minutes=0;//WT.EDIT 2025.04.11
              
          cmd=0xff;  
          break;
@@ -170,13 +172,13 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
             Buzzer_KeySound();
            
           
-            wifi_t.gTimer_wifi_send_cloud_success_times=0;
-        
+              
             run_t.RunCommand_Label = POWER_OFF;
     
             wifi_t.wifi_open_power_on_flag =0;
-        
-            
+             gpro_t.gTimer_two_hours_counter =0; //WT.EDIT 2025.04.11
+             gpro_t.g_interval_times_flag=0;//WT.EDIT 2025.04.11
+             gpro_t.gTimer_counter_minutes=0;//WT.EDIT 2025.04.11
     
      
     
@@ -395,7 +397,7 @@ void RunCommand_MainBoard_Fun(void)
 	case UPDATE_TO_PANEL_DATA: //3
      if(run_t.gTimer_senddata_panel >30 && run_t.gPower_On==POWER_ON){ //300ms
 	   	    run_t.gTimer_senddata_panel=0;
-	        ActionEvent_Handler();
+	        mainboard_function_handler();
 	 }
 
 	if((run_t.gTimer_10s>30 && run_t.gPower_flag == POWER_ON)||power_just_on < 10){
@@ -437,6 +439,7 @@ void RunCommand_MainBoard_Fun(void)
 	     run_t.gTimer_fan_adc_times =0;
 	     Self_CheckFan_Handler(ADC_CHANNEL_0,30);
 	 }
+	 works_two_hours_handler();
     break;
 
     case POWER_OFF: //2

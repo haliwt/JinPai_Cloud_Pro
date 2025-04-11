@@ -7,7 +7,7 @@ void SetPowerOff_ForDoing(void);
 
 void SetPowerOn_ForDoing(void);
 
-void ActionEvent_Handler(void);
+void mainboard_function_handler(void);
 
 
 

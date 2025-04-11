@@ -104,7 +104,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 	    
 			 run_t.first_power_on_flag= 0x0A;
              run_t.gTimer_fan_oneselt_test=0;
-			wifi_t.gTimer_wifi_send_cloud_success_times=0;
+	
 			run_t.gPower_On=POWER_OFF;
 			run_t.gPower_flag = POWER_OFF;
 			run_t.RunCommand_Label = POWER_OFF;

@@ -161,7 +161,7 @@ typedef struct _RUN_T{
 	 
 	  
 	  
-	uint8_t gTimer_1s;
+
 	uint8_t gTimer_10s;
 	uint8_t gTimer_send_cloud_state;
 	uint8_t gTimer_senddata_panel;
