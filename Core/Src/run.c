@@ -389,18 +389,15 @@ void RunCommand_MainBoard_Fun(void)
 			
 			
 		}
-      
+        run_t.gTimer_senddata_panel=5; //at once run mainboard function.
 		run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
 
 	break;
 
 	case UPDATE_TO_PANEL_DATA: //3
-     if(run_t.gTimer_senddata_panel >30 && run_t.gPower_On==POWER_ON){ //300ms
-	   	    run_t.gTimer_senddata_panel=0;
-	        mainboard_function_handler();
-	 }
+    
 
-	if((run_t.gTimer_10s>30 && run_t.gPower_flag == POWER_ON)||power_just_on < 10){
+	if((run_t.gTimer_10s>4 && run_t.gPower_flag == POWER_ON)||power_just_on < 10){
     	power_just_on ++ ;
 		run_t.gTimer_10s=0;
 		Update_DHT11_Value();
@@ -427,15 +424,20 @@ void RunCommand_MainBoard_Fun(void)
       
 
 	}
+
+	 if(run_t.gTimer_senddata_panel >2 && run_t.gPower_On==POWER_ON){ //2s
+	   	    run_t.gTimer_senddata_panel=0;
+	        mainboard_function_handler();
+	 }
 	
-	 if(run_t.gTimer_ptc_adc_times > 2 ){ //3 minutes 120s
+	 if(run_t.gTimer_ptc_adc_times > 0 ){ //1 minutes 
          run_t.gTimer_ptc_adc_times=0;
 		 Get_PTC_Temperature_Voltage(ADC_CHANNEL_1,20);
 	     Judge_PTC_Temperature_Value();
 
 	 }
 
-	 if(run_t.gTimer_fan_adc_times > 1){ //2 minute 180s
+	 if(run_t.gTimer_fan_adc_times > 1){ //2 minute
 	     run_t.gTimer_fan_adc_times =0;
 	     Self_CheckFan_Handler(ADC_CHANNEL_0,30);
 	 }

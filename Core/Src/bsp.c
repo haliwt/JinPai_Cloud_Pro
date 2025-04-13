@@ -102,9 +102,7 @@ void works_two_hours_handler(void)
 
 		}
 
-        
-
-	    PTC_SetLow();
+        PTC_SetLow();
 	    PLASMA_SetLow();
 	
 	    HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic off

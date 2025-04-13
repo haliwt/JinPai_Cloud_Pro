@@ -29,6 +29,7 @@ UART_HandleTypeDef huart2;
 
 /* USART1 init function */
 
+
 void MX_USART1_UART_Init(void)
 {
 

@@ -18,16 +18,10 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-#include "adc.h"
+#include "bsp.h"
 
 /* USER CODE BEGIN 0 */
-#include "buzzer.h"
-#include "run.h"
-#include "fan.h"
 
-#include "cmd_link.h"
-#include "publish.h"
-#include "delay.h"
 
 
 
@@ -286,7 +280,7 @@ void Get_Fan_Adc_Fun(uint32_t channel,uint8_t times)
 	uint16_t adc_fan_hex;
 	
 	run_t.fan_set_level = 4;
-	SetLevel_Fan_PWMA(100);
+	if(gpro_t.g_interval_times_flag==0)SetLevel_Fan_PWMA(100); //WT.EDIT 2025.04.12
 
 	adc_fan_hex = Get_Adc_Average(channel,times);
 
