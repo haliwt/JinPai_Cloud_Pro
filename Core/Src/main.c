@@ -123,7 +123,7 @@ int main(void)
 	mainboard_process_handler();
 	
 
-	USART1_Cmd_Error_Handler(&huart1);
+	//USART1_Cmd_Error_Handler(&huart1);
 	
   }
   /* USER CODE END 3 */
