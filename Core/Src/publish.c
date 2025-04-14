@@ -1,10 +1,5 @@
-#include "publish.h"
-#include "gpio.h"
-#include "esp8266.h"
-#include "wifi_fun.h"
-#include "dht11.h"
-#include "usart.h"
-#include "run.h"
+#include "bsp.h"
+
 
 
 
@@ -201,7 +196,7 @@ static void SendFrame_Alarm_Infor(uint8_t inf)
 *******************************************************************************/
 void Init_Publisher_Data_Ref(void)
 {
-   run_t.gPower_On = 1;
+   gpro_t.gPower_On = 1;
    run_t.gDry = 1;
    run_t.gPlasma = 1;
    run_t.gUltrasonic = 1;
@@ -406,7 +401,7 @@ void Publish_Reference_Update_State(void)
   SendFrame_Type(0x01);
   SendFrame_Numbers(0x01); //4
   SendFrame_Order(0x01);
-  if(run_t.gPower_On==POWER_ON){
+  if(gpro_t.gPower_On==POWER_ON){
       SendFrame_Power(0x01);
       power_number= 0x01;
   }

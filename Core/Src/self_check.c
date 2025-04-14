@@ -1,12 +1,5 @@
-#include "self_check.h"
-#include "run.h"
-#include "esp8266.h"
-#include "publish.h"
-#include "cmd_link.h"
-#include "wifi_fun.h"
-#include "adc.h"
-#include "buzzer.h"
-#include "fan.h"
+#include "bsp.h"
+
 
 void (*Self_CheckFan_Handler)(uint32_t channel,uint8_t times);
 
@@ -85,6 +78,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 				run_t.first_power_on_flag++;
                 Read_USART2_Wifi_Data(wifi_t.usart_wifi_frame_type,wifi_t.usart_wifi_frame_len,wifi_t.usart_wifi_order);
                 SendWifiData_To_Cmd(0x00) ; // wifi connect net fail
+                HAL_Delay(5);
            }
 
            if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS && run_t.first_power_on_flag == 1  ){
@@ -92,6 +86,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 			run_t.wifi_link_JPai_cloud = 1;
 			
 			SendWifiData_To_Cmd(0x01) ; // wifi connect net success 
+			 HAL_Delay(5);
            }
 
 		
@@ -99,21 +94,22 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
     
 	 break;
     }
-
-	  if(run_t.gPower_On == POWER_OFF){
+     
+	  if(gpro_t.gPower_On == POWER_OFF && run_t.first_power_on_flag !=0x0A ){
 	    
 			 run_t.first_power_on_flag= 0x0A;
              run_t.gTimer_fan_oneselt_test=0;
 	
-			run_t.gPower_On=POWER_OFF;
-			run_t.gPower_flag = POWER_OFF;
-			run_t.RunCommand_Label = POWER_OFF;
+			
+
+			//run_t.RunCommand_Label = POWER_OFF;
 
 			esp8266_t.esp8266_config_wifi_net_label=0;
 			run_t.theFirst_input_power_flag =1;
 		     Buzzer_KeySound();
 
 		 }
+	  
 		  if(the_first_power_on==0)run_t.open_fan_works_flag=1;
           run_t.gTimer_ptc_adc_times=0;
 

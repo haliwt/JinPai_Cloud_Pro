@@ -7,8 +7,9 @@ void SetPowerOn_ForDoing(void)
 {
 
     set_power_off=0;
-    run_t.gPower_flag = POWER_ON;
-    run_t.gPower_On=POWER_ON;
+    //run_t.gPower_flag = POWER_ON;
+    gpro_t.gPower_On=POWER_ON;
+	gpro_t.g_main_process_step=0;
 	run_t.open_fan_works_flag++;
     
     if(run_t.app_appointment_time_power_on != POWER_ON){
@@ -32,11 +33,6 @@ void SetPowerOn_ForDoing(void)
 void SetPowerOff_ForDoing(void)
 {
 
-   
-	run_t.gPower_flag = 0;
-	run_t.gPower_On = POWER_OFF;
-
- 
     run_t.gFan = 0;
     run_t.gDry = 0;
 	run_t.gPlasma =0;       //"杀菌"

@@ -66,7 +66,7 @@ typedef struct _RUN_T{
     //power on
 	uint8_t gPower_On;
 
-	uint8_t gPower_flag;
+	
 	uint8_t gDht11_flag;
 	
 
@@ -75,7 +75,7 @@ typedef struct _RUN_T{
 
     
 
-	uint8_t RunCommand_Label;
+	//uint8_t RunCommand_Label;
 	uint8_t dp_link_wifi_fail;
 	//buzzer
 	uint8_t buzzer_sound_flag ;
@@ -186,7 +186,7 @@ extern RUN_T run_t;
 
 
 
-void  RunCommand_MainBoard_Fun(void);
+void  mainboard_process_handler(void);
 
 void Decode_RunCmd(void);
 
@@ -198,6 +198,9 @@ void Single_Mode(void);
 
 void Single_ReceiveCmd(uint8_t cmd);
 void SystemReset(void);
+
+void power_on_handler(void);
+void power_off_handler(void);
 
 
 

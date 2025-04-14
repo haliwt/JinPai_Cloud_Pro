@@ -35,11 +35,13 @@ typedef enum{
 
 
 }copy_cmd_t;
+ 
 
 
 typedef struct main_process{
 
-
+  uint8_t gPower_On;
+  uint8_t g_main_process_step;
   uint8_t g_interval_times_flag;
   uint8_t gTimer_two_hours_counter;
   uint8_t gTimer_counter_minutes;
