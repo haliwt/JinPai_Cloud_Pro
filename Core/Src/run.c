@@ -377,7 +377,7 @@ void  mainboard_process_handler(void)
 void power_on_handler(void)
 {
 
-   static uint8_t power_just_on,wifi_set_power_off=0;
+   static uint8_t power_just_on;
    static uint8_t app_appointment_flag;
     
     if(run_t.buzzer_sound_flag == 1){
@@ -391,16 +391,16 @@ void power_on_handler(void)
 	case 0: //1
 	    SetPowerOn_ForDoing();
         power_off_fan_flag=1;
-        wifi_set_power_off=0;
-		//run_t.gPower_flag = POWER_ON;
-		gpro_t.gPower_On = POWER_ON;
+    
+	
+		
 		esp8266_t.esp8266_config_wifi_net_label=0;
 	  
 		power_just_on=0;
         run_t.gTimer_10s=0;
 	
 		Update_DHT11_Value(); //to message display 
-		HAL_Delay(2);//HAL_Delay(20);
+		HAL_Delay(5);//HAL_Delay(20);
 		
 
 		if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
@@ -409,19 +409,20 @@ void power_on_handler(void)
 	 	    SendWifiData_To_Cmd(0x01) ; //wifi connect net is success is "1"
 			HAL_Delay(2);//HAL_Delay(100);  	
 			esp8266_t.esp8266_config_wifi_net_label=wifi_publish_update_data;
+			#if 1
 			if(run_t.app_appointment_time_power_on == POWER_ON){
 			  // SendWifiCmd_To_Order(WIFI_POWER_TIMER_ON); //WT.EDIT 2025.04.11
 			  // Publish_Reference_Update_State();
 			  // HAL_Delay(200);
 			}
 			else{
-				SendWifiCmd_To_Order(WIFI_POWER_ON); //display pannel power on 
+				
 			    Publish_Power_ON_State();
-				HAL_Delay(200);
+				HAL_Delay(300);
 			   
 			}
 		   
-			
+			#endif 
 			
 		}
         run_t.gTimer_senddata_panel=5; //at once run mainboard function.
@@ -484,6 +485,7 @@ void power_on_handler(void)
     if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS  &&  run_t.wifi_link_JPai_cloud==0){
 	 	    run_t.wifi_link_JPai_cloud++;
 	 	    SendWifiData_To_Cmd(0x01) ; //wifi connect net is success
+	 	    HAL_Delay(5);
 	}
 
 }
@@ -513,15 +515,14 @@ void power_off_handler(void)
 		if(run_t.gDht11_temperature==0)	run_t.gDht11_temperature=20;
 		
 		
-
-	 
-	  	 wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS;
+         run_t.app_appointment_time_power_on= 0;
+	 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 		 run_t.recoder_wifi_link_cloud_flag = 1; //recoder has been linked cloud flag
 	    run_t.set_timer_timing_value =0;
         Publish_Power_OFF_State();
 		HAL_Delay(200);
-		
-	     //SetPowerOff_ForDoing();
+	 }
+
 	      gpro_t.g_main_process_step=1;
 	break;
 
@@ -539,10 +540,10 @@ void power_off_handler(void)
 
     }
 	
-   if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS  &&  run_t.wifi_link_JPai_cloud==0){
-	 	    run_t.wifi_link_JPai_cloud++;
-	 	    SendWifiData_To_Cmd(0x01) ; //wifi connect net is success
-	}
+//   if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS  &&  run_t.wifi_link_JPai_cloud==0){
+//	 	    run_t.wifi_link_JPai_cloud++;
+//	 	    SendWifiData_To_Cmd(0x01) ; //wifi connect net is success
+//	}
     
 	 
 		

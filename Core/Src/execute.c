@@ -1,12 +1,12 @@
 #include "bsp.h"
 
 
-uint8_t set_power_off=0;
+
 
 void SetPowerOn_ForDoing(void)
 {
 
-    set_power_off=0;
+    
     //run_t.gPower_flag = POWER_ON;
     gpro_t.gPower_On=POWER_ON;
 	gpro_t.g_main_process_step=0;
@@ -39,16 +39,15 @@ void SetPowerOff_ForDoing(void)
 	run_t.gUltrasonic = 0; // "驱虫"
 	
 	
-    if(set_power_off==0){
-		set_power_off++;
+ 
 	PLASMA_SetLow(); //
 	HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic Off 
 	PTC_SetLow();
-	 //input ac power be detect fan default 
-	FAN_Stop();
+    
+	//FAN_Stop();
 		
 	
-    }
+    
 
 }
 
