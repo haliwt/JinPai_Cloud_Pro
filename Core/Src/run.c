@@ -411,8 +411,8 @@ void power_on_handler(void)
 			
 			if(run_t.app_appointment_time_power_on == POWER_ON){
 			  // SendWifiCmd_To_Order(WIFI_POWER_TIMER_ON); //WT.EDIT 2025.04.11
-			  // Publish_Reference_Update_State();
-			   //HAL_Delay(300);
+			   Publish_Reference_Update_State();
+			   HAL_Delay(300);
 			}
 			else if(gpro_t.wifi_power_onoff_flag == WIFI_POWER_ON){
 				
@@ -517,8 +517,7 @@ void power_off_handler(void)
 	     }
 	   
 	    
-       if(run_t.gDht11_humidity==0)
-	          run_t.gDht11_humidity=20;
+       if(run_t.gDht11_humidity==0)run_t.gDht11_humidity=50;
 		if(run_t.gDht11_temperature==0)	run_t.gDht11_temperature=20;
 		
 		

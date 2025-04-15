@@ -404,7 +404,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 
                     case 0x0e : // set up temperature sensor value
 						Buzzer_KeySound();
-					    run_t.set_temperature_value = wifi_t.usart_wifi_model;
+					    run_t.set_temperature_value = wifi_t.usart_wifi_model; //WT.EDIT 2025.04.15
 						SendWifiData_To_PanelTemp(run_t.set_temperature_value);
 						 HAL_Delay(5);
                         
@@ -453,16 +453,17 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 					Buzzer_KeySound();
 					run_t.app_appointment_time_power_on = POWER_ON;
 				    SendWifiCmd_To_Order(WIFI_POWER_TIMER_ON); //WT.EDIT 2025.04.11
-				     HAL_Delay(10);
+				    HAL_Delay(10);
 					
 				}
 				else{   
-                      SendWifiCmd_To_Order(WIFI_POWER_OFF);//WT.EDIT 2025.04.14
+                       gpro_t.wifi_power_onoff_flag = WIFI_POWER_OFF;
+					   SendWifiCmd_To_Order(WIFI_POWER_OFF);//WT.EDIT 2025.04.14
                        HAL_Delay(5);
 						 	
 							
-                        Publish_Power_OFF_State();
-					    HAL_Delay(200);
+                        //Publish_Power_OFF_State();
+					    ///HAL_Delay(200);
 
 				}
               

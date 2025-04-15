@@ -65,6 +65,7 @@ typedef struct main_process{
 
 extern process_t gpro_t;
 
+void bsp_init(void);
 
 void receive_copy_cmd(uint8_t cmd);
 

@@ -2,6 +2,19 @@
 
 process_t gpro_t;
 
+
+void bsp_init(void)
+{
+
+	gpro_t.gPower_On = power_off;
+
+
+}
+
+
+
+
+
 void receive_copy_cmd(uint8_t cmd)
 {
   switch(cmd){

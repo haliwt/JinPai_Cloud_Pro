@@ -104,7 +104,7 @@ int main(void)
   //UART_Start_Receive_IT(&huart2,usart_wifi_t.usart_wifi,sizeof(usart_wifi_t.usart_wifi)/sizeof(usart_wifi_t.usart_wifi[0]));
   __HAL_UART_ENABLE_IT(&huart2,UART_IT_RXNE);
  
-  gpro_t.gPower_On = power_off;
+  bsp_init();
   /* USER CODE END 2 */
   
   /* Infinite loop */
