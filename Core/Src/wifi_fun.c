@@ -217,30 +217,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 
   switch(type){
 
-    case 0x01:
-
-       if(len == 0x14){
-          if(order == 1){
-              wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
-			  if(gpro_t.gPower_On == power_off){
-                   SendWifiData_To_Cmd(0x01) ; //wifi link net is success.
-                   HAL_Delay(5);
-			       Publish_Power_OFF_State();
-				   HAL_Delay(200);
-			       
-
-
-			  }
-         }
-
-
-	   }
-
-
-
-    break;
-
-    case 0xFE: //frame type
+     case 0xFE: //frame type
       if(len != 0x0D){
             if( wifi_t.usart_wifi_model==1 && wifi_t.usart_wifi_state==1 &&  wifi_t.usart_wifi_cloud_state==1){
 
@@ -426,10 +403,11 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 
 
                     case 0x0e : // set up temperature sensor value
-							Buzzer_KeySound();
-							SendWifiData_To_PanelTemp(run_t.set_temperature_value);
+						Buzzer_KeySound();
+					    run_t.set_temperature_value = wifi_t.usart_wifi_model;
+						SendWifiData_To_PanelTemp(run_t.set_temperature_value);
 						 HAL_Delay(5);
-                        run_t.set_temperature_value = wifi_t.usart_wifi_model;
+                        
 					
 					    
 					    Publish_Reference_Update_State();
@@ -525,8 +503,7 @@ void Wifi_Model_State_Handler(uint8_t (*wifi_state_sepical_fun)(void))
 void wifi_link_net_state(void)
 {
    
-
-	if(check_net_state ==0){
+    if(check_net_state ==0){
 	switch(wifi_t.usart_wifi_frame_type){
 	
 	  case 0x01:
