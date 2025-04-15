@@ -19,8 +19,8 @@ void receive_copy_cmd(uint8_t cmd)
 	case copy_wifi_power_on:
     
  	 
-	 gpro_t.gPower_On = POWER_ON;
-     gpro_t.g_main_process_step=0;
+	 gpro_t.gPower_On = power_on;
+     gpro_t.g_main_power_on_step=0;
 	
 	wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
 	run_t.app_appointment_time_power_on = WIFI_NORMAL_POWER_ON;
@@ -35,8 +35,8 @@ void receive_copy_cmd(uint8_t cmd)
     wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
 
   
-    gpro_t.gPower_On=POWER_OFF;
-	gpro_t.g_main_process_step=0;
+    gpro_t.gPower_On=power_off;
+	gpro_t.g_main_power_off_step=0;
  
     run_t.gFan_counter=0;
    
@@ -48,8 +48,8 @@ void receive_copy_cmd(uint8_t cmd)
 
 	case copy_wifi_timer_power_on:
 
-     gpro_t.gPower_On = POWER_ON;
-     gpro_t.g_main_process_step=0;
+     gpro_t.gPower_On = power_on;
+     gpro_t.g_main_power_on_step=0;
 	 gpro_t.gTimer_two_hours_counter =0;
 	 gpro_t.g_interval_times_flag=0;
 	 gpro_t.gTimer_counter_minutes=0;
@@ -71,7 +71,7 @@ void works_two_hours_handler(void)
 {
   static uint8_t interval_fan_one_minute;
 
-  if(gpro_t.gPower_On == POWER_ON){
+  if(gpro_t.gPower_On == power_on){
 
       if(gpro_t.gTimer_two_hours_counter > 119){//two hours
 		   gpro_t.gTimer_two_hours_counter=0;

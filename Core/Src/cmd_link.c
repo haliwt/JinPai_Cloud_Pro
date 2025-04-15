@@ -142,6 +142,7 @@ void Decode_Function(void)
     *Return Ref:NO
 
 *********************************************/ 
+#if 0
 void USART1_Cmd_Error_Handler(UART_HandleTypeDef *huart)
 {
    uint32_t temp;
@@ -202,7 +203,7 @@ void USART1_Cmd_Error_Handler(UART_HandleTypeDef *huart)
    	}
   }
 
-
+#endif 
 /********************************************************************************
 	**
 	*Function Name:sendData_Real_TimeHum(uint8_t hum,uint8_t temp)

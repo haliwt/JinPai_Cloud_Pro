@@ -24,6 +24,16 @@
 #include "self_check.h"
 
 
+
+typedef enum _power_onoff_state{
+
+   power_off,
+   power_on
+
+
+}power_onoff_state;
+
+
 typedef enum{
 
   copy_power_off = 0x1,
@@ -41,8 +51,12 @@ typedef enum{
 typedef struct main_process{
 
   uint8_t gPower_On;
-  uint8_t g_main_process_step;
+  uint8_t g_main_power_off_step;
+  uint8_t g_main_power_on_step;
   uint8_t g_interval_times_flag;
+  uint8_t wifi_power_onoff_flag;
+
+  //TIMER FOR INTERRUPT 
   uint8_t gTimer_two_hours_counter;
   uint8_t gTimer_counter_minutes;
 

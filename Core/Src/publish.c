@@ -401,7 +401,7 @@ void Publish_Reference_Update_State(void)
   SendFrame_Type(0x01);
   SendFrame_Numbers(0x01); //4
   SendFrame_Order(0x01);
-  if(gpro_t.gPower_On==POWER_ON){
+  if(gpro_t.gPower_On==power_on){
       SendFrame_Power(0x01);
       power_number= 0x01;
   }

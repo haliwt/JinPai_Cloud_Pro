@@ -64,7 +64,7 @@ typedef enum{
 typedef struct _RUN_T{
     
     //power on
-	uint8_t gPower_On;
+
 
 	
 	uint8_t gDht11_flag;
@@ -108,7 +108,7 @@ typedef struct _RUN_T{
 	uint8_t gTimer_fan_adc_times;
 	uint8_t self_check_fan_power_on;
 	uint8_t fan_set_level;
-	uint8_t open_fan_works_flag;
+	//uint8_t open_fan_works_flag;
 	uint8_t gFanSpeed;
 	
 

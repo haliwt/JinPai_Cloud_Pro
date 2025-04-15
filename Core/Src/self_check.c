@@ -34,6 +34,8 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 {
      static uint8_t self_power_on_flag=0, the_first_power_on =0,fan_error_flag;
 	if(run_t.first_power_on_flag==0){
+
+	    run_t.first_power_on_flag++;
          run_t.gTimer_ptc_adc_times=0;
        WIFI_IC_ENABLE();
        HAL_Delay(1000);
@@ -41,16 +43,16 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 		usart_wifi_t.usart_wifi_receive_read_data_flag=0;
        	usart_wifi_t.usart_wifi_start_receive_flag=0;
 		usart_wifi_t.usart_wifi_receive_success_flag=0;
-	  //  run_t.first_power_on_flag++ ;
+	
         HAL_Delay(200);
 		Publish_Data_ProdKey();	
 		HAL_Delay(200);
 	   
 		 
 	  }
-	//  run_t.theFirst_input_power_flag=1;
-      run_t.first_power_on_flag++;
-	  run_t.open_fan_works_flag=1;
+
+      
+	 
      }
 
     if(run_t.first_power_on_flag==1){
@@ -65,7 +67,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 		run_t.first_power_on_flag++;
 		wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
 	     SendWifiData_To_Cmd(0x01) ;
-
+         HAL_Delay(5);
 		
 
 	 break;
@@ -94,15 +96,13 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
     
 	 break;
     }
-     
+
+	 #if 1
 	  if(gpro_t.gPower_On == POWER_OFF && run_t.first_power_on_flag !=0x0A ){
 	    
 			 run_t.first_power_on_flag= 0x0A;
              run_t.gTimer_fan_oneselt_test=0;
 	
-			
-
-			//run_t.RunCommand_Label = POWER_OFF;
 
 			esp8266_t.esp8266_config_wifi_net_label=0;
 			run_t.theFirst_input_power_flag =1;
@@ -110,9 +110,9 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 
 		 }
 	  
-		  if(the_first_power_on==0)run_t.open_fan_works_flag=1;
-          run_t.gTimer_ptc_adc_times=0;
-
+		  //if(the_first_power_on==0)run_t.open_fan_works_flag=1;
+          //run_t.gTimer_ptc_adc_times=0;
+       #endif 
    } 
 }
  
