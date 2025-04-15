@@ -13,7 +13,7 @@ uint8_t usart_len;
 uint8_t sum_codes;
 
 uint8_t (*wifi_run_state_fun)(void);
-
+uint8_t check_net_state;
 
 
 
@@ -216,6 +216,29 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 {
 
   switch(type){
+
+    case 0x01:
+
+       if(len == 0x14){
+          if(order == 1){
+              wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
+			  if(gpro_t.gPower_On == power_off){
+                   SendWifiData_To_Cmd(0x01) ; //wifi link net is success.
+                   HAL_Delay(5);
+			       Publish_Power_OFF_State();
+				   HAL_Delay(200);
+			       
+
+
+			  }
+         }
+
+
+	   }
+
+
+
+    break;
 
     case 0xFE: //frame type
       if(len != 0x0D){
@@ -499,3 +522,42 @@ void Wifi_Model_State_Handler(uint8_t (*wifi_state_sepical_fun)(void))
      
 }
 
+void wifi_link_net_state(void)
+{
+   
+
+	if(check_net_state ==0){
+	switch(wifi_t.usart_wifi_frame_type){
+	
+	  case 0x01:
+	
+		 if(wifi_t.usart_wifi_frame_len == 0x14){
+			if(wifi_t.usart_wifi_order == 1){
+				wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
+				if(gpro_t.gPower_On == power_off){
+					 SendWifiData_To_Cmd(0x01) ; //wifi link net is success.
+					 HAL_Delay(5);
+					 Publish_Power_OFF_State();
+					 HAL_Delay(200);
+					 
+	                
+	
+				}
+				else{
+					Publish_Power_ON_State();
+				    HAL_Delay(300);
+				    SendWifiData_To_Cmd(0x01) ; //wifi link net is success.
+					HAL_Delay(5);
+				
+				    check_net_state++;
+
+
+				}
+		   }
+	
+	
+		 }
+	  break;
+	}
+	}
+}

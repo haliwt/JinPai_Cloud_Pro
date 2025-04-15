@@ -518,7 +518,7 @@ void power_off_handler(void)
 	   
 	    
        if(run_t.gDht11_humidity==0)
-	          run_t.gDht11_humidity=100;
+	          run_t.gDht11_humidity=20;
 		if(run_t.gDht11_temperature==0)	run_t.gDht11_temperature=20;
 		
 		

@@ -121,6 +121,8 @@ int main(void)
 	RunWifi_Command_Handler(esp8266_t.esp8266_config_wifi_net_label);
 
 	mainboard_process_handler();
+
+	wifi_link_net_state();
 	
 
 	//USART1_Cmd_Error_Handler(&huart1);

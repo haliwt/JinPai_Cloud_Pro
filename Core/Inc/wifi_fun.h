@@ -199,6 +199,7 @@ void Wifi_Model_State_Handler(uint8_t (*wifi_state_fun)(void));
 
 void Read_USART2_Wifi_Data(uint8_t sel,uint8_t len,uint8_t cmd);
 
+void wifi_link_net_state(void);
 
 #endif 
 
