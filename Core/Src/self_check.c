@@ -62,7 +62,7 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
      switch(run_t.recoder_wifi_link_cloud_flag){
 
 	   case 1: 
-	   	  run_t.gTimer_ptc_adc_times=0;
+	   	run_t.gTimer_ptc_adc_times=0;
 	   	run_t.recoder_wifi_link_cloud_flag++;
 		run_t.first_power_on_flag++;
 		wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
@@ -100,18 +100,14 @@ void MainBoard_Self_Inspection_PowerOn_Fun(void)
 	 #if 1
 	  if(gpro_t.gPower_On == POWER_OFF && run_t.first_power_on_flag !=0x0A ){
 	    
-			 run_t.first_power_on_flag= 0x0A;
-             run_t.gTimer_fan_oneselt_test=0;
-	
-
-			esp8266_t.esp8266_config_wifi_net_label=0;
+			run_t.first_power_on_flag= 0x0A;
+            esp8266_t.esp8266_config_wifi_net_label=0;
 			run_t.theFirst_input_power_flag =1;
 		     Buzzer_KeySound();
 
 		 }
 	  
-		  //if(the_first_power_on==0)run_t.open_fan_works_flag=1;
-          //run_t.gTimer_ptc_adc_times=0;
+
        #endif 
    } 
 }

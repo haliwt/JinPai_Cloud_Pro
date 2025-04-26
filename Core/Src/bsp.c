@@ -13,8 +13,14 @@ void bsp_init(void)
 
 
 
-
-
+/**********************************************************
+*
+*Function Name:void receive_copy_cmd(uint8_t cmd)
+*Function : 
+*
+*
+*
+**********************************************************/
 void receive_copy_cmd(uint8_t cmd)
 {
   switch(cmd){

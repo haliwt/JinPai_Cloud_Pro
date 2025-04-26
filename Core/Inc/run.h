@@ -104,7 +104,7 @@ typedef struct _RUN_T{
 	uint8_t gFan_continueRun;
 	uint8_t  gFan_counter;
 	uint8_t fan_start_shut_off_flag;
-	uint8_t gTimer_fan_oneselt_test ;
+
 	uint8_t gTimer_fan_adc_times;
 	uint8_t self_check_fan_power_on;
 	uint8_t fan_set_level;
@@ -130,11 +130,11 @@ typedef struct _RUN_T{
 	  
 
 	  //usart1
-	 uint8_t gTimer_iwdg;
+
      uint8_t process_run_guarantee_flag ;
-    uint8_t gTimer_check_iwdg_flag;
+
     uint8_t gTimer_check_iwdg_fla;
-    uint8_t gTimer_usart_error;
+
     uint8_t iwdg_feed_success_flag;
 
 	//wifi 

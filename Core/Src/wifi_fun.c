@@ -275,7 +275,9 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 					        run_t.RunCommand_Label = POWER_OFF;
                             run_t.gFan_counter=0;
                             wifi_t.gTimer_wifi_send_cloud_success_times=0;
-                            #endif 
+                            #endif
+							gpro_t.gwifi_power_on=power_off;
+							gpro_t.wifi_power_on_which_flag = 1;//WT.EDIT 2025.04.18
 				            wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
 							Buzzer_KeySound();
 							gpro_t.wifi_power_onoff_flag = WIFI_POWER_OFF;
@@ -299,6 +301,8 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 							run_t.app_appointment_time_power_on = WIFI_NORMAL_POWER_ON;
 							wifi_t.wifi_open_power_on_flag =1;
 							#endif 
+							gpro_t.gwifi_power_on=power_on;
+							gpro_t.wifi_power_on_which_flag = 2;//WT.EDIT 2025.04.18
 					
 							wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
                             Buzzer_KeySound();
@@ -419,7 +423,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 					case 0x0F : // set up timer timing value
                       	Buzzer_KeySound();
                       	SendWifiData_To_PanelTime(run_t.set_timer_timing_value);
-						 HAL_Delay(5);
+						HAL_Delay(5);
                         run_t.set_timer_timing_value = wifi_t.usart_wifi_model;
 						
 						Publish_Reference_Update_State();
@@ -437,27 +441,31 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
             break;
 
             case 0x0b: // set order status from
-				
-				
-				gpro_t.gPower_On = wifi_t.usart_wifi_model;
+				Buzzer_KeySound();
+				gpro_t.wifi_power_on_which_flag = 3;//WT.EDIT 2025.04.18
+				//gpro_t.gPower_On = wifi_t.usart_wifi_model;
+				gpro_t.gwifi_power_on =wifi_t.usart_wifi_model; //WT.EDIT 2025.04.18
 			    run_t.gUltrasonic = wifi_t.usart_wifi_state;
 				run_t.gDry = wifi_t.usart_wifi_cloud_state;
 				run_t.gPlasma = wifi_t.usart_wifi_signal_state;
 				run_t.set_timer_timing_value = wifi_t.usart_wifi_pass_state;
                 timer_timing[0] = run_t.set_timer_timing_value ;
-			 //   run_t.set_wind_speed_value = wifi_t.usart_wifi_fan_speed_value;
+			    
 			    Publish_Reference_Update_State();
 				HAL_Delay(200); 
 				wifi_t.wifi_link_JPai_cloud= WIFI_CLOUD_SUCCESS;
-				if(gpro_t.gPower_On == POWER_ON){
-					Buzzer_KeySound();
+				if(gpro_t.gwifi_power_on == POWER_ON){
+					gpro_t.wifi_power_on_which_flag = 5;//WT.EDIT 2025.04.18
+					gpro_t.wifi_power_onoff_flag = WIFI_POWER_TIMER_ON;//WT.EDIT 2025.04.19
 					run_t.app_appointment_time_power_on = POWER_ON;
 				    SendWifiCmd_To_Order(WIFI_POWER_TIMER_ON); //WT.EDIT 2025.04.11
-				    HAL_Delay(10);
+				    HAL_Delay(5);
 					
 				}
 				else{   
-                       gpro_t.wifi_power_onoff_flag = WIFI_POWER_OFF;
+                       gpro_t.gwifi_power_on=power_off;
+					   gpro_t.wifi_power_on_which_flag = 4;//WT.EDIT 2025.04.18
+					   gpro_t.wifi_power_onoff_flag = WIFI_POWER_OFF;
 					   SendWifiCmd_To_Order(WIFI_POWER_OFF);//WT.EDIT 2025.04.14
                        HAL_Delay(5);
 						 	
@@ -475,12 +483,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
    break;
 
    case 0xFF:
-//   	  Buzzer_KeySound();
-//	  HAL_Delay(200);
-//      Buzzer_KeySound();
-//	  HAL_Delay(200);
-//      Buzzer_KeySound();
-//	  HAL_Delay(200);
+
       wifi_t.wifi_receive_data_error = 1;
 
    break;
@@ -500,7 +503,14 @@ void Wifi_Model_State_Handler(uint8_t (*wifi_state_sepical_fun)(void))
        
      
 }
-
+/****************************************************************
+ *
+ * Function Name:void wifi_link_net_state(void)
+ * Function:
+ * Input Ref:
+ * Return Ref:
+ *
+****************************************************************/
 void wifi_link_net_state(void)
 {
    
@@ -516,9 +526,9 @@ void wifi_link_net_state(void)
 					 SendWifiData_To_Cmd(0x01) ; //wifi link net is success.
 					 HAL_Delay(5);
 					 Publish_Power_OFF_State();
-					 HAL_Delay(200);
+					 HAL_Delay(300);
 					 
-	                
+					 check_net_state++;
 	
 				}
 				else{

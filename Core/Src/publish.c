@@ -285,8 +285,8 @@ void Publish_Command_Query(void)
 void Publish_Return_Repeat_Data(void)
 {
   
-   static uint8_t data,numbers;
-   numbers = usart_wifi_t.usart_wifi_counter;
+   static uint8_t data;
+   //numbers = usart_wifi_t.usart_wifi_counter;
    
    for(send_data_numbers =0; send_data_numbers <usart_wifi_t.usart_wifi_counter;send_data_numbers++ ){
 
@@ -363,7 +363,7 @@ void Publish_Power_OFF_State(void)
   SendFrame_Dry(0);
   SendFrame_Ster(0);//8
   SendFrame_Mouse(0);
-  if(run_t.set_temperature_value < 20)run_t.set_temperature_value=20;
+  run_t.set_temperature_value=20;
   SendFrame_SetTemperature(run_t.set_temperature_value);//10
   SendFrame_SetTimer(run_t.set_timer_timing_value);
   SendFrame_SetFanSpeed(run_t.set_wind_speed_value);
@@ -401,7 +401,7 @@ void Publish_Reference_Update_State(void)
   SendFrame_Type(0x01);
   SendFrame_Numbers(0x01); //4
   SendFrame_Order(0x01);
-  if(gpro_t.gPower_On==power_on){
+  if(gpro_t.gPower_On==power_on || gpro_t.gwifi_power_on==power_on){
       SendFrame_Power(0x01);
       power_number= 0x01;
   }

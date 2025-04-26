@@ -40,9 +40,6 @@ void SetPowerOff_ForDoing(void)
     
 	//FAN_Stop();
 		
-	
-    
-
 }
 
 

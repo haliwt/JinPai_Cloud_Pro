@@ -473,7 +473,7 @@ void SendData_Real_GMT(uint8_t hdata,uint8_t mdata,uint8_t sdata)
 *******************************************************************************/
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {
-	if(huart==&huart1)
+	if(huart->Instance == USART1)
 	{
 		transOngoingFlag=0; //UART Transmit interrupt flag =0 ,RUN
 	}
@@ -484,6 +484,75 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 //
 //	}
 
+}
+/**
+  * @brief  UART错误回调函数，处理USART1通信错误
+  * @param  huart: UART句柄指针
+  */
+
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart) 
+{
+    
+
+	if (huart->Instance == USART1) {
+        // 重新初始化或报警
+        #if 0
+          __HAL_UART_CLEAR_OREFLAG(&huart1);
+          __HAL_UART_CLEAR_NEFLAG(&huart1);
+          __HAL_UART_CLEAR_FEFLAG(&huart1);
+           
+          
+          temp=USART1->ISR;
+          temp = USART1->RDR;
+		  
+     
+		  UART_Start_Receive_IT(&huart1,inputBuf,1);
+		 #endif 
+	    /* 1. 清除所有可能出现的错误标志 */
+	    // 使用单条语句清除多个标志（更高效）
+	    __HAL_UART_CLEAR_FLAG(huart, UART_CLEAR_OREF | UART_CLEAR_NEF | UART_CLEAR_FEF);
+
+	    /* 2. 读取状态和数据寄存器（清空残留数据）*/
+	    // 使用UNUSED宏避免编译器警告（如果不需要实际值）
+	    //UNUSED(uint32_t temp_isr = huart->Instance->ISR);  // 读取ISR会清除部分标志
+	    //UNUSED(uint32_t temp_rdr = huart->Instance->RDR);  // 清空接收寄存器
+	      /* 2. 清空寄存器（简洁写法）*/
+		    (void)huart->Instance->ISR;  // 清除状态标志
+		    (void)huart->Instance->RDR;  // 清空接收数据
+
+	    /* 3. 重启接收（带错误检查）*/
+	    if (HAL_UART_GetState(huart) == HAL_UART_STATE_READY) {
+	        HAL_UART_Receive_IT(huart, inputBuf, 1);  // 重新启动单字节中断接收
+	    } else {
+	        // 可选：硬件复位USART（严重错误时）
+	        __HAL_UART_DISABLE(huart);
+	        __HAL_UART_ENABLE(huart);
+	        HAL_UART_Receive_IT(huart, inputBuf, 1);
+	    }
+
+	    /* 4. 可选：记录错误日志或触发报警 */
+	    Error_Counter++;  // 全局错误计数器
+    }
+	else if (huart->Instance == USART2){
+
+		 /* 1. 清除所有可能出现的错误标志 */
+	    // 使用单条语句清除多个标志（更高效）
+	    __HAL_UART_CLEAR_FLAG(huart, UART_CLEAR_OREF | UART_CLEAR_NEF | UART_CLEAR_FEF);
+
+	    /* 2. 读取状态和数据寄存器（清空残留数据）*/
+	    // 使用UNUSED宏避免编译器警告（如果不需要实际值）
+	    //UNUSED(uint32_t temp_isr = huart->Instance->ISR);  // 读取ISR会清除部分标志
+	    //UNUSED(uint32_t temp_rdr = huart->Instance->RDR);  // 清空接收寄存器
+		  /* 2. 清空寄存器（简洁写法）*/
+    (void)huart->Instance->ISR;  // 清除状态标志
+    (void)huart->Instance->RDR;  // 清空接收数据
+
+//		  /* 3. 重启接收（带错误检查）*/
+//	    if (HAL_UART_GetState(huart) == HAL_UART_STATE_READY) {
+//	          // 重新启动单字节中断接收
+//	    }
+
+	}
 }
 
 

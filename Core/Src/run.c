@@ -10,7 +10,7 @@ static void Fan_ContinueRun_OneMinute_Fun(void);
 
 
 uint8_t no_buzzer_sound_dry_off;
-
+uint8_t detected_auto_power_flag;
 
 
 /**********************************************************************
@@ -356,14 +356,8 @@ void  mainboard_process_handler(void)
 
 	 break;
 
-
-
-
-	}
-
-
+    }
 }
-
 /**********************************************************************
 	*
 	*Functin Name: void power_on_handler(void)
@@ -390,10 +384,7 @@ void power_on_handler(void)
 	    gpro_t.g_main_power_off_step=0;
 	    SetPowerOn_ForDoing();
 
-    
-	
-		
-		esp8266_t.esp8266_config_wifi_net_label=0;
+        esp8266_t.esp8266_config_wifi_net_label=0;
 	  
 		power_just_on=0;
         run_t.gTimer_10s=0;
@@ -411,8 +402,8 @@ void power_on_handler(void)
 			
 			if(run_t.app_appointment_time_power_on == POWER_ON){
 			  // SendWifiCmd_To_Order(WIFI_POWER_TIMER_ON); //WT.EDIT 2025.04.11
-			   Publish_Reference_Update_State();
-			   HAL_Delay(300);
+			  // Publish_Reference_Update_State();
+			   ///HAL_Delay(300);
 			}
 			else if(gpro_t.wifi_power_onoff_flag == WIFI_POWER_ON){
 				
@@ -465,15 +456,16 @@ void power_on_handler(void)
 	        mainboard_function_handler();
 	 }
 	
-	 if(run_t.gTimer_ptc_adc_times > 0 ){ //1 minutes 
+	 if(run_t.gTimer_ptc_adc_times > 0 &&  gpro_t.g_interval_times_flag==0){ //1 minutes 
          run_t.gTimer_ptc_adc_times=0;
 		 Get_PTC_Temperature_Voltage(ADC_CHANNEL_1,20);
 	     Judge_PTC_Temperature_Value();
 
 	 }
 
-	 if(run_t.gTimer_fan_adc_times > 1){ //2 minute
+	 if(run_t.gTimer_fan_adc_times > 1 &&  gpro_t.g_interval_times_flag==0){ //2 minute
 	     run_t.gTimer_fan_adc_times =0;
+		
 	     Self_CheckFan_Handler(ADC_CHANNEL_0,30);
 	 }
 	 works_two_hours_handler();
@@ -489,16 +481,25 @@ void power_on_handler(void)
 
 }
 
-
+/**********************************************************************
+	*
+	*Functin Name: void power_off_handler(void)
+	*Function : 
+	*Input Ref:  NO
+	*Return Ref: NO
+	*
+**********************************************************************/
 void power_off_handler(void)
 {
-  static uint8_t power_off_fan_flag;
+  static uint8_t power_off_fan_flag,counter;
   switch(gpro_t.g_main_power_off_step){
 
     case 0: 
 
         gpro_t.g_main_power_on_step=0;
         gpro_t.g_main_power_off_step=1;
+        detected_auto_power_flag=1;
+		gpro_t.gwifi_power_on=power_off;
     
 		SetPowerOff_ForDoing();
 
@@ -517,8 +518,8 @@ void power_off_handler(void)
 	     }
 	   
 	    
-       if(run_t.gDht11_humidity==0)run_t.gDht11_humidity=50;
-		if(run_t.gDht11_temperature==0)	run_t.gDht11_temperature=20;
+       run_t.gDht11_humidity=50;
+	   run_t.gDht11_temperature=20;
 		
 		
      run_t.app_appointment_time_power_on= 0;
@@ -534,9 +535,16 @@ void power_off_handler(void)
 
 	
 	case 1:
-		
+		counter++;
 	    Fan_ContinueRun_OneMinute_Fun();
+	    if(detected_auto_power_flag < 10 && counter > 100){
+	    	detected_auto_power_flag++;
+			counter=0;
+	    	SendData_Copy_Cmd(copy_wifi_det_power_off);
+	    	HAL_Delay(5);
 
+
+	    }
 
 	break;
 
@@ -548,7 +556,14 @@ void power_off_handler(void)
 	
 
 }
-
+/********************************************************************************
+ *
+  * @brief :static void Fan_ContinueRun_OneMinute_Fun(void)
+  * @param
+  * @return
+  * @note
+  *
+  *******************************************************************************/
 static void Fan_ContinueRun_OneMinute_Fun(void)
 {
 	
@@ -564,9 +579,12 @@ static void Fan_ContinueRun_OneMinute_Fun(void)
 		run_t.gFan_counter=0;
 
 		run_t.gFan_continueRun++;
+
 		FAN_Stop();
 		}
 	  }
+
+
 
 
 

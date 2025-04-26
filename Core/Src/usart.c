@@ -28,7 +28,7 @@ UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 
 /* USART1 init function */
-
+/* communication to display board data USART1*/
 
 void MX_USART1_UART_Init(void)
 {
