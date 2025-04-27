@@ -531,7 +531,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 	    }
 
 	    /* 4. 可选：记录错误日志或触发报警 */
-	    Error_Counter++;  // 全局错误计数器
+	   // Error_Counter++;  // 全局错误计数器
     }
 	else if (huart->Instance == USART2){
 
