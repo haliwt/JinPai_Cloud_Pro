@@ -422,7 +422,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 
 					case 0x0F : // set up timer timing value
                       	Buzzer_KeySound();
-                      	SendWifiData_To_PanelTime(run_t.set_timer_timing_value);
+                      	SendWifiData_To_TimerValue(run_t.set_timer_timing_value);
 						HAL_Delay(5);
                         run_t.set_timer_timing_value = wifi_t.usart_wifi_model;
 						

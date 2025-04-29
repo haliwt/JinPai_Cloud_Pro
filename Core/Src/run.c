@@ -444,7 +444,7 @@ void power_on_handler(void)
 	
         app_appointment_flag ++;
         
-       SendWifiData_To_PanelTime(timer_timing[0]);
+       SendWifiData_To_TimerValue(timer_timing[0]);
   
         HAL_Delay(5);
       

@@ -1,8 +1,5 @@
-#include "dht11.h"
-#include "run.h"
-#include "cmd_link.h"
-#include "wifi_fun.h"
-#include "delay.h"
+#include "bsp.h"
+
 
 
 

@@ -1,6 +1,6 @@
 #include "bsp.h"
 
-#define MAX_BUFFER_SIZE  30
+#define MAX_BUFFER_SIZE  10
 
 USART_WIFI_T usart_wifi_t;
 
@@ -8,10 +8,6 @@ USART_WIFI_T usart_wifi_t;
 uint8_t  inputBuf[5];
 uint8_t  inputCmd[5];
 uint8_t  wifiInputBuf[1];
-uint8_t test_counter;
-uint8_t test_counter_usat1;
-
-
 
 
 static uint8_t transferSize;
@@ -33,89 +29,73 @@ uint8_t receive_displayboard_state;
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
     static uint8_t state,wr_flag;
- 
+    if (huart->Instance == USART1) // Motor Board receive data
+    {
+   
+        switch (state)
+        {
+        case 0:
+            if (inputBuf[0] == 'T') // hex: 54 - "T"
+            {
+                wr_flag = 0;
+                state = 1;
+            }
+            break;
 
-	if(huart->Instance==USART1)//if(huart==&huart1) // Motor Board receive data (filter)
-	{
-        test_counter_usat1++;
-		switch(state)
-		{
-		case 0:  //#0
-			if(inputBuf[0] == 'T')  //hex :54 - "T" -fixed
+        case 1:
+            if (strchr("KORY", inputBuf[0])) // Check for valid characters
+            {
+                if (inputBuf[0] == 'O' || inputBuf[0] == 'R')
+                {
+                    inputCmd[0] = inputBuf[0];
+                    wr_flag = 1;
+                    state = 2;
+                }
+                else if (inputBuf[0] == 'Y')
+                {
+                    state = 0x0A;
+                }
+                else
+                {
+                    state = 2;
+                }
+            }
+            else
+            {
+                wr_flag = 0;
+                state = 0;
+            }
+            break;
 
-			    wr_flag =0;
-				state=1; //=1
-		break;
-		case 1: //#1
-             if(inputBuf[0] == 'K' || inputBuf[0]=='O' || inputBuf[0]=='R'|| inputBuf[0]=='Y'){//hex :4B - "K" -fixed
-                if(inputBuf[0]=='O' || inputBuf[0]=='R'){
-                       inputCmd[0]= inputBuf[0];
-					   wr_flag=1;
-					   state=2; //=1
-				}
-				else if(inputBuf[0]=='Y'){
-
-                      state=0x0A; //=1
-
-				}
-				else{
-                   state=2; //=1
-
-				}
-				
-
-             }
-			else{
-			   wr_flag =0;
-			   state =0;
-			}
-			break;
-            
         case 2:
-			 if(wr_flag == 1){
-			    inputCmd[1]= inputBuf[0];
+            inputCmd[wr_flag ? 1 : 0] = inputBuf[0];
+            state = 3;
+            break;
+		case 3:
+            inputCmd[wr_flag ? 2 : 1] = inputBuf[0];
+            run_t.decodeFlag = 1;
+            state = 0;
+            break;
 
-			 }
-			 else
-             	inputCmd[0]= inputBuf[0];
-             state = 3;
-        
-        break;
-        
-        case 3:
-		     if(wr_flag ==1){
-	           inputCmd[2]= inputBuf[0];
-		     }
-			 else
-			  inputCmd[1]= inputBuf[0];
-	         run_t.decodeFlag =1;
-			
-	         state = 0;
-        
-        break;
-
-		case 0x0A:
-			receive_displayboard_state = inputBuf[0];
+        case 0x0A:
+            receive_displayboard_state = inputBuf[0];
             receive_copy_cmd(inputBuf[0]);
+            state = 0;
+            break;
 
-			state = 0;
+        default:
+            state = 0;
+            run_t.decodeFlag = 0;
+            break;
+        }
 
-		break;
+        __HAL_UART_CLEAR_OREFLAG(&huart1);
+        HAL_UART_Receive_IT(&huart1, inputBuf, 1); // Restart UART receive interrupt
 
 	
-	
-		default:
-			state=0;
-			run_t.decodeFlag =0;
-		}
-		__HAL_UART_CLEAR_OREFLAG(&huart1);
-		HAL_UART_Receive_IT(&huart1,inputBuf,1);//UART receive data interrupt 1 byte
-		
-	 }
-    
   
  }
-
+}
 /********************************************
 	*
 	*Function Name:void Decode_Function(void)
@@ -134,76 +114,9 @@ void Decode_Function(void)
       
      }
 }
-/********************************************
-	*
-	*Function Name:void Decode_Function(void)
-    *Function: receive dsipay panel of order
-    *Input Ref:NO
-    *Return Ref:NO
 
-*********************************************/ 
 #if 0
-void USART1_Cmd_Error_Handler(UART_HandleTypeDef *huart)
-{
-   uint32_t temp;
-   static uint8_t error_usart_flag;
-  
-   if(huart->Instance==USART1){
-    
 
-	  if(run_t.gTimer_usart_error >260){
-	  	run_t.gTimer_usart_error=0;
-	      __HAL_UART_GET_FLAG(&huart1,UART_FLAG_ORE);//UART_FLAG_NE
-         __HAL_UART_GET_FLAG(&huart1,UART_FLAG_NE); //USART_ISR_FE
-         __HAL_UART_GET_FLAG(&huart1,USART_ISR_FE);
-         if(UART_FLAG_ORE==1 || UART_FLAG_NE==1 ||USART_ISR_FE==1  ||error_usart_flag ==1){
-           __HAL_UART_CLEAR_OREFLAG(&huart1);
-              __HAL_UART_CLEAR_NEFLAG(&huart1);
-               __HAL_UART_CLEAR_FEFLAG(&huart1);
-             error_usart_flag=0;
-          
-          temp=USART1->ISR;
-          temp = USART1->RDR;
-		 
-          
-	       UART_Start_Receive_IT(&huart1,inputBuf,1);
-          
-		  
-          
-         }
-	  	}
-         
-     
-        
-     if(run_t.process_run_guarantee_flag ==1){
-        run_t.process_run_guarantee_flag=0;
-       run_t.iwdg_feed_success_flag =1;
-       run_t.gTimer_check_iwdg_flag =0;
-       
-      }
-    
-      if(run_t.gTimer_iwdg > 210){
-          run_t.gTimer_iwdg = 0;
-        // SendWifiCmd_To_Order(0xff);
-     }
-     if(run_t.gTimer_check_iwdg_flag >250){
-         run_t.gTimer_check_iwdg_flag=0;
-         if(run_t.iwdg_feed_success_flag==1){
-            run_t.iwdg_feed_success_flag=0;
-            error_usart_flag=0;
-         
-         }
-         else{
-             error_usart_flag=1;
-		    
-         
-         }
-
-      }
-   	}
-  }
-
-#endif 
 /********************************************************************************
 	**
 	*Function Name:sendData_Real_TimeHum(uint8_t hum,uint8_t temp)
@@ -292,7 +205,7 @@ void sendData_Real_TimeHum(uint8_t hum,uint8_t temp)
 
 
 }
-void SendWifiData_To_PanelTime(uint8_t dat1)
+void SendWifiData_To_TimerValue(uint8_t dat1)
 {
    
 	
@@ -460,31 +373,179 @@ void SendData_Real_GMT(uint8_t hdata,uint8_t mdata,uint8_t sdata)
 	}
 
 }
+#endif 
 
-
-
-/********************************************************************************
-**
-*Function Name:void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
-*Function :UART callback function  for UART interrupt for transmit data
-*Input Ref: structure UART_HandleTypeDef pointer
-*Return Ref:NO
-*
-*******************************************************************************/
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+/**
+ * @brief 通用发送数据函数
+ * @param cmd1 第一个命令字节
+ * @param cmd2 第二个命令字节
+ * @param cmd3 第三个命令字节
+ * @param data 数据数组
+ * @param dataSize 数据长度
+ */
+void SendData(uint8_t cmd1, uint8_t cmd2, uint8_t cmd3, uint8_t *data, uint8_t dataSize)
 {
-	if(huart->Instance == USART1)
-	{
-		transOngoingFlag=0; //UART Transmit interrupt flag =0 ,RUN
-	}
+    outputBuf[0] = cmd1;
+    outputBuf[1] = cmd2;
 
-//	if(huart== &huart2){
-//
-//       usart2_transOngoingFlag =0;
-//
-//	}
+    uint8_t offset = 2; // 数据起始偏移量
+    
+    if (cmd3 !=0)
+    {
+        outputBuf[2] = cmd3;
+        offset = 3;
+    }
+
+    for (uint8_t i = 0; i < dataSize; i++)
+    {
+        outputBuf[offset + i] = data[i];
+    }
+
+    transferSize = offset + dataSize;
+
+    if (transferSize)
+    {
+        while (transOngoingFlag); // Wait for ongoing transmission to complete
+        transOngoingFlag = 1;
+        HAL_UART_Transmit_IT(&huart1, outputBuf, transferSize);
+    }
+}
+
+
+
+/**
+ * @brief 发送实时湿度和温度数据
+ * @param hum 湿度值
+ * @param temp 温度值
+ */
+void SendData_Copy_Cmd(uint8_t tdata)
+{
+
+	uint8_t data[] = {tdata};
+	SendData('M', 'Y', 0, data, sizeof(data));
+
 
 }
+/**
+ * @brief 发送实时湿度和温度数据
+ * @param hum 湿度值
+ * @param temp 温度值
+ */
+void SendData_Real_TimeHum(uint8_t hum, uint8_t temp)
+{
+    uint8_t data[] = {hum, temp};
+    SendData('M', 'A', 'D', data, sizeof(data));
+}
+
+/***************************************************************
+ * 
+ * Function: panel power on and special function
+***************************************************************/
+void SendWifiCmd_To_Order(uint8_t odata)
+{
+   uint8_t data[] = {odata};
+	SendData('M', 'A', 'C', data, sizeof(data));
+
+}
+/***************************************************************
+ * 
+ * Function: void SendWifiData_To_Cmd(uint8_t wdata)
+***************************************************************/
+void SendWifiData_To_Cmd(uint8_t wdata)
+{
+     uint8_t data[] = {wdata};
+	 SendData('M', 'A', 'w', data, sizeof(data));
+
+}
+
+/**
+ * @brief 发送参考数据
+ * @param dry 干燥值
+ * @param kill 杀菌值
+ * @param mouse 鼠标值
+ */
+
+void sendData_Reference_Data(uint8_t dry, uint8_t kill, uint8_t mouse)
+{
+    uint8_t data[] = {dry, kill, mouse};
+    SendData('M', 'R', 0, data, sizeof(data));
+}
+
+/**
+ * @brief 发送WiFi设置温度数据
+ * @param temp 温度值
+ */
+void SendWifiData_To_WifiSetTemp(uint8_t temp)
+{
+    uint8_t data[] = {temp};
+    SendData('M', 'A', 'E', data, sizeof(data));
+}
+/**
+ * @brief 发送WiFi设置定时时间值
+ * @param dat1 (timer value)
+ */
+
+void SendWifiData_To_TimerValue(uint8_t dat1)
+{
+	uint8_t data[] = {dat1};
+	SendData('M', 'A', 'T', data, sizeof(data));
+
+
+}
+void SendWifiData_To_PanelWindSpeed(uint8_t dat1)
+{
+
+	uint8_t data[] = {dat1};
+	SendData('M', 'A', 'S', data, sizeof(data));
+
+}
+/**
+ * @brief UART传输完成回调函数
+ * @param huart UART句柄指针
+ */
+
+void SendData_Real_GMT(uint8_t hdata,uint8_t mdata,uint8_t sdata)
+{
+	    uint8_t data[] = {hdata,mdata,sdata};
+		SendData('M', 'A', 'B', data, sizeof(data));
+
+}
+/**
+ * @brief UART传输完成回调函数
+ * @param huart UART句柄指针
+ */
+void sendData_Real_TimeHum(uint8_t hum,uint8_t temp)
+{
+	uint8_t data[] = {hum,temp};
+	SendData('M', 'A', 'D', data, sizeof(data));
+
+}
+
+void SendWifiData_To_PanelTemp(uint8_t dat1)
+{
+
+	uint8_t data[] = {dat1};
+	SendData('M', 'A', 'P', data, sizeof(data));
+
+
+}
+
+
+
+/**
+ * @brief UART传输完成回调函数
+ * @param huart UART句柄指针
+ */
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+{
+    if (huart->Instance == USART1)
+    {
+        transOngoingFlag = 0; // Clear transmission flag
+    }
+}
+
+
+
 /**
   * @brief  UART错误回调函数，处理USART1通信错误
   * @param  huart: UART句柄指针
