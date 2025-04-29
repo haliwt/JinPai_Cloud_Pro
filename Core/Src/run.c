@@ -185,6 +185,32 @@ static void Single_Power_ReceiveCmd(uint8_t cmd)
     
        
         break;
+
+		case 0xB6://wifi_timer_power_off or display board timer power off : //wifi timer or display baord timer timing power off 
+
+		     SendData_Copy_Cmd(copy_power_off);//SendWifiData_To_Cmd(0x53); //0x53= 'R' power off copy command from display power off
+             HAL_Delay(5);
+    
+             gpro_t.gPower_On = POWER_OFF;
+             gpro_t.g_main_power_off_step=0;
+    
+             wifi_t.wifi_open_power_on_flag =0;
+             gpro_t.gTimer_two_hours_counter =0; //WT.EDIT 2025.04.11
+             gpro_t.g_interval_times_flag=0;//WT.EDIT 2025.04.11
+             gpro_t.gTimer_counter_minutes=0;//WT.EDIT 2025.04.11
+          
+			 Buzzer_KeySound();  
+
+			 run_t.time_remaining_minutes_one = 0;//inputCmd[1];
+			 run_t.time_remaining_minutes_two =  0;//inputCmd[2];
+
+              Publish_Reference_Update_State();//
+              HAL_Delay(200);
+             
+            
+
+
+		break;
     
        default:
     

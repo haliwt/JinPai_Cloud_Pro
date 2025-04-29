@@ -74,7 +74,7 @@ void receive_copy_cmd(uint8_t cmd)
 	 gpro_t.gTimer_counter_minutes=0;
 	break;
 
-   }
+    }
 
 }
 

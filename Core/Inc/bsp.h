@@ -43,7 +43,8 @@ typedef enum{
   copy_wifi_power_off=3,
   copy_wifi_power_on=4,
   copy_wifi_timer_power_on=5,
-  copy_wifi_det_power_off =6
+  copy_wifi_det_power_off =6,
+  copy_wifi_timer_power_off=0xB6
   
 
 }copy_cmd_t;
@@ -58,6 +59,7 @@ typedef struct main_process{
   uint8_t g_interval_times_flag;
   uint8_t wifi_power_onoff_flag;
   uint8_t gwifi_power_on;
+
 
   uint8_t wifi_power_on_which_flag;
 
