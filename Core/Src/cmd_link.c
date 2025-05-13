@@ -55,9 +55,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
                 {
                     state = 0x0A;
                 }
-                else
+                else if(inputBuf[0] == 'K')
                 {
-                    state = 2;
+                    state = 0x10;
                 }
             }
             else
@@ -68,7 +68,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
             break;
 
         case 2:
-            inputCmd[wr_flag ? 1 : 0] = inputBuf[0];
+            inputCmd[wr_flag ? 1 : 0] = inputBuf[0]; //T K W 
             state = 3;
             break;
 		case 3:
@@ -82,6 +82,19 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
             receive_copy_cmd(inputBuf[0]);
             state = 0;
             break;
+
+		case 0x10:
+			 inputCmd[0] = inputBuf[0]; //T K = W , M,T,C
+			 state = 0x11;
+             break;
+		break;
+
+		case 0x11:
+			 inputCmd[1] = inputBuf[0]; //T K W 
+			 run_t.decodeFlag = 1;
+             state = 0;
+
+		break;
 
         default:
             state = 0;
