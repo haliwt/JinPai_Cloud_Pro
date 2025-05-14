@@ -423,7 +423,7 @@ void power_on_handler(void)
 			run_t.recoder_wifi_link_cloud_flag = 1;
 			wifi_t.wifi_has_been_link_cloud = WIFI_CLOUD_SUCCESS; 
 	 	    SendWifiData_To_Cmd(0x01) ; //wifi connect net is success is "1"
-			HAL_Delay(2);//HAL_Delay(100);  	
+			HAL_Delay(5);//HAL_Delay(100);  	
 			esp8266_t.esp8266_config_wifi_net_label=wifi_publish_update_data;
 			
 			if(run_t.app_appointment_time_power_on == POWER_ON){

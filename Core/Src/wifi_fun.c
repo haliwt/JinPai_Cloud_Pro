@@ -535,7 +535,7 @@ void wifi_link_net_state(void)
 					Publish_Power_ON_State();
 				    HAL_Delay(300);
 				    SendWifiData_To_Cmd(0x01) ; //wifi link net is success.
-					HAL_Delay(5);
+					HAL_Delay(10);
 				
 				    check_net_state++;
 
