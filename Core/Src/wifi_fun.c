@@ -15,7 +15,7 @@ uint8_t sum_codes;
 uint8_t (*wifi_run_state_fun)(void);
 uint8_t check_net_state;
 
-
+uint8_t test_flag;
 
 /*********************************************************
  * 
@@ -407,6 +407,7 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
 
 
                     case 0x0e : // set up temperature sensor value
+				
 						Buzzer_KeySound();
 					    run_t.set_temperature_value = wifi_t.usart_wifi_model; //WT.EDIT 2025.04.15
 						SendWifiData_To_PanelTemp(run_t.set_temperature_value);
@@ -421,13 +422,18 @@ void Read_USART2_Wifi_Data(uint8_t type,uint8_t len,uint8_t order)
                     break;
 
 					case 0x0F : // set up timer timing value
-                      	Buzzer_KeySound();
-                      	SendWifiData_To_TimerValue(run_t.set_timer_timing_value);
-						HAL_Delay(5);
+					    test_flag ++ ;
+                      	
+                      	//SendWifiData_To_TimerValue(run_t.set_timer_timing_value);
+						//HAL_Delay(10);
+						Buzzer_KeySound();
                         run_t.set_timer_timing_value = wifi_t.usart_wifi_model;
 						
 						Publish_Reference_Update_State();
 						HAL_Delay(200);
+
+						SendWifiData_To_TimerValue(run_t.set_timer_timing_value);
+						HAL_Delay(10);
 						
 						
                     break;

@@ -428,23 +428,20 @@ void SendData(uint8_t cmd1, uint8_t cmd2, uint8_t cmd3, uint8_t *data, uint8_t d
 
 void SendWifiData_To_Cmd(uint8_t wdata)
 {
-	
-
-  
 	//crc=0x55;
-			outputBuf[0]='M'; //4D
-			outputBuf[1]='A'; //41
-			outputBuf[2]='W'; //44	// wifi ->infomation link wifi 	
-			outputBuf[3]=wdata; //
-			//for(i=3;i<6;i++) crc ^= outputBuf[i];
-			//outputBuf[i]=crc;
-			transferSize=4;
-			if(transferSize)
-			{
-				while(transOngoingFlag); //UART interrupt transmit flag ,disable one more send data.
-				transOngoingFlag=1;
-				HAL_UART_Transmit_IT(&huart1,outputBuf,transferSize);
-			}
+	outputBuf[0]='M'; //4D
+	outputBuf[1]='A'; //41
+	outputBuf[2]='W'; //44	// wifi ->infomation link wifi 	
+	outputBuf[3]=wdata; //
+	//for(i=3;i<6;i++) crc ^= outputBuf[i];
+	//outputBuf[i]=crc;
+	transferSize=4;
+	if(transferSize)
+	{
+		while(transOngoingFlag); //UART interrupt transmit flag ,disable one more send data.
+		transOngoingFlag=1;
+		HAL_UART_Transmit_IT(&huart1,outputBuf,transferSize);
+	}
 }
 
 
@@ -523,8 +520,20 @@ void SendWifiData_To_WifiSetTemp(uint8_t temp)
 
 void SendWifiData_To_TimerValue(uint8_t dat1)
 {
-	uint8_t data[] = {dat1};
-	SendData('M', 'A', 'T', data, sizeof(data));
+	//uint8_t data[] = {dat1};
+	//SendData('M', 'A', 'T', data, sizeof(data));
+	    outputBuf[0]='M'; //4D
+		outputBuf[1]='A'; //41
+		outputBuf[2]='T'; //44	// 'T' time
+		outputBuf[3]=dat1; //	
+		
+		transferSize=4;
+		if(transferSize)
+		{
+			while(transOngoingFlag); //UART interrupt transmit flag ,disable one more send data.
+			transOngoingFlag=1;
+			HAL_UART_Transmit_IT(&huart1,outputBuf,transferSize);
+		}
 
 
 }
