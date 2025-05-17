@@ -21,6 +21,7 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
+#include "dma.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -103,7 +104,7 @@ int main(void)
   UART_Start_Receive_IT(&huart1,inputBuf,1);
   //HAL_UART_Receive_IT(&huart2,usart_wifi_t.usart_wifi_data,1);
   //UART_Start_Receive_IT(&huart2,usart_wifi_t.usart_wifi,sizeof(usart_wifi_t.usart_wifi)/sizeof(usart_wifi_t.usart_wifi[0]));
-  __HAL_UART_ENABLE_IT(&huart2,UART_IT_RXNE);
+  //__HAL_UART_ENABLE_IT(&huart2,UART_IT_RXNE);
  
   bsp_init();
   /* USER CODE END 2 */
