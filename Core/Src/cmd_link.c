@@ -1,8 +1,11 @@
 #include "bsp.h"
 
 #define MAX_BUFFER_SIZE  10
+#define USAT1_INTERRUPT   0
+
 
 USART_WIFI_T usart_wifi_t;
+
 
 
 uint8_t  inputBuf[5];
@@ -28,7 +31,7 @@ uint8_t receive_displayboard_state;
 *******************************************************************************/
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-    static uint8_t state,wr_flag;
+    static uint8_t state;
     if (huart->Instance == USART1) // Motor Board receive data
     {
    
@@ -37,18 +40,24 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         case 0:
             if (inputBuf[0] == 'T') // hex: 54 - "T"
             {
-                wr_flag = 0;
+               
                 state = 1;
+				
             }
+			else{
+				state =0;
+			}
             break;
 
         case 1:
-            if (strchr("KORY", inputBuf[0])) // Check for valid characters
-            {
+            //if (strchr("KORY", inputBuf[0])) // Check for valid characters
+            //{
                 if (inputBuf[0] == 'O' || inputBuf[0] == 'R')
                 {
                     inputCmd[0] = inputBuf[0];
-                    wr_flag = 1;
+					inputCmd[1] = 0;
+				    inputCmd[2] = 0;
+                  
                     state = 2;
                 }
                 else if (inputBuf[0] == 'Y')
@@ -59,20 +68,19 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
                 {
                     state = 0x10;
                 }
-            }
-            else
-            {
-                wr_flag = 0;
-                state = 0;
-            }
+                else
+                {
+                 
+                  state = 0;
+                }
             break;
 
         case 2:
-            inputCmd[wr_flag ? 1 : 0] = inputBuf[0]; //T K W 
+            inputCmd[1] = inputBuf[0]; //T K W 
             state = 3;
             break;
 		case 3:
-            inputCmd[wr_flag ? 2 : 1] = inputBuf[0];
+            inputCmd[2] = inputBuf[0];
             run_t.decodeFlag = 1;
             state = 0;
             break;
@@ -417,13 +425,17 @@ void SendData(uint8_t cmd1, uint8_t cmd2, uint8_t cmd3, uint8_t *data, uint8_t d
     }
 
     transferSize = offset + dataSize;
-
+    #if USAT1_INTERRUPT
     if (transferSize)
     {
         while (transOngoingFlag); // Wait for ongoing transmission to complete
         transOngoingFlag = 1;
         HAL_UART_Transmit_IT(&huart1, outputBuf, transferSize);
     }
+	#else 
+        HAL_UART_Transmit_DMA(&huart1, outputBuf, transferSize);
+
+	#endif 
 }
 
 void SendWifiData_To_Cmd(uint8_t wdata)
@@ -436,12 +448,17 @@ void SendWifiData_To_Cmd(uint8_t wdata)
 	//for(i=3;i<6;i++) crc ^= outputBuf[i];
 	//outputBuf[i]=crc;
 	transferSize=4;
+	 #if USAT1_INTERRUPT
 	if(transferSize)
 	{
 		while(transOngoingFlag); //UART interrupt transmit flag ,disable one more send data.
 		transOngoingFlag=1;
 		HAL_UART_Transmit_IT(&huart1,outputBuf,transferSize);
 	}
+	#else 
+        HAL_UART_Transmit_DMA(&huart1, outputBuf, transferSize);
+
+	#endif 
 }
 
 
@@ -528,12 +545,17 @@ void SendWifiData_To_TimerValue(uint8_t dat1)
 		outputBuf[3]=dat1; //	
 		
 		transferSize=4;
+		#if USAT1_INTERRUPT
 		if(transferSize)
 		{
 			while(transOngoingFlag); //UART interrupt transmit flag ,disable one more send data.
 			transOngoingFlag=1;
 			HAL_UART_Transmit_IT(&huart1,outputBuf,transferSize);
 		}
+		#else 
+        HAL_UART_Transmit_DMA(&huart1, outputBuf, transferSize);
+
+	    #endif 
 
 
 }

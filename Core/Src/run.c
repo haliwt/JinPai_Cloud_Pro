@@ -102,19 +102,20 @@ void Decode_RunCmd(void)
 			 	run_t.work_time_minutes_one =  inputCmd[1];
                 run_t.work_time_minutes_two =  inputCmd[2];
                 Publish_Reference_Update_State();//
-                HAL_Delay(300);
+                HAL_Delay(200);
 		      }
         }
 	  break;
 
 	  case 'R': //remaining time minutes value ?
           if(gpro_t.gPower_On==POWER_ON){
+		  	
+		  if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
 
 		     run_t.time_remaining_minutes_one = inputCmd[1];
 			 run_t.time_remaining_minutes_two =  inputCmd[2];
-		    if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS){
-                Publish_Reference_Update_State();//
-                HAL_Delay(300);
+		     Publish_Reference_Update_State();//
+                HAL_Delay(200);
              }
 	        }
       break;
@@ -395,7 +396,7 @@ void  mainboard_process_handler(void)
 void power_on_handler(void)
 {
 
-   static uint8_t power_just_on;
+   static uint8_t power_just_on,sed_works_time;
    static uint8_t app_appointment_flag;
     
     if(run_t.buzzer_sound_flag == 1){
@@ -442,6 +443,9 @@ void power_on_handler(void)
 			
 		}
         run_t.gTimer_senddata_panel=5; //at once run mainboard function.
+        sed_works_time=1;
+		inputCmd[1]=0;
+		inputCmd[2]=0;
 		gpro_t.g_main_power_on_step = 1;//run_t.RunCommand_Label= UPDATE_TO_PANEL_DATA;
 
 	break;
@@ -494,6 +498,16 @@ void power_on_handler(void)
 		
 	     Self_CheckFan_Handler(ADC_CHANNEL_0,30);
 	 }
+
+	 if(wifi_t.wifi_link_JPai_cloud== WIFI_CLOUD_SUCCESS && sed_works_time == 1){
+	 	sed_works_time ++;
+	 	run_t.work_time_minutes_one = 0; //inputCmd[1];
+        run_t.work_time_minutes_two = 0; //inputCmd[2];
+        Publish_Reference_Update_State();//
+        HAL_Delay(200);
+		inputCmd[1]=0;
+		inputCmd[2]=0;
+		}
 	 works_two_hours_handler();
 	 
     break;
