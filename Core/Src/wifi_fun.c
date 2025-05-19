@@ -179,7 +179,7 @@ void RunWifi_Command_Handler(uint8_t command)
 			  wifi_t.publish_send_state_data=0;
 			
              Read_USART2_Wifi_Data(wifi_t.usart_wifi_frame_type,wifi_t.usart_wifi_frame_len,wifi_t.usart_wifi_order);
-            
+             
 			
 		}
 

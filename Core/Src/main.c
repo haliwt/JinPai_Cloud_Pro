@@ -102,9 +102,10 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim14);//HAL_TIM_Base_Start(&htim3);
   UART_Start_Receive_IT(&huart1,inputBuf,1);
-  //HAL_UART_Receive_IT(&huart2,usart_wifi_t.usart_wifi_data,1);
-  //UART_Start_Receive_IT(&huart2,usart_wifi_t.usart_wifi,sizeof(usart_wifi_t.usart_wifi)/sizeof(usart_wifi_t.usart_wifi[0]));
-  //__HAL_UART_ENABLE_IT(&huart2,UART_IT_RXNE);
+  //UART_Start_Receive_IT(&huart2,usart_wifi_t.usart_wifi_data,1);
+  #if 1
+  __HAL_UART_ENABLE_IT(&huart2,UART_IT_RXNE);
+  #endif 
  
   bsp_init();
   /* USER CODE END 2 */
